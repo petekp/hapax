@@ -42,24 +42,33 @@ export function reconcileWords(
   existing: WordState[],
   newTokens: WordToken[]
 ): WordState[] {
-  const existingByNormalized = new Map<string, WordState>()
+  const existingByNormalized = new Map<string, WordState[]>()
   for (const word of existing) {
-    existingByNormalized.set(word.token.normalized, word)
+    const key = word.token.normalized
+    const list = existingByNormalized.get(key) || []
+    list.push(word)
+    existingByNormalized.set(key, list)
   }
 
-  return newTokens.map((token) => {
-    const cached = existingByNormalized.get(token.normalized)
+  const usedIds = new Set<string>()
 
-    if (cached) {
-      return {
-        token: {
-          ...cached.token,
-          position: token.position,
-          raw: token.raw,
-        },
-        resolution: cached.resolution,
-        fontLoaded: cached.fontLoaded,
-        phraseGroupId: cached.phraseGroupId,
+  return newTokens.map((token) => {
+    const cachedList = existingByNormalized.get(token.normalized)
+
+    if (cachedList) {
+      const available = cachedList.find((w) => !usedIds.has(w.token.id))
+      if (available) {
+        usedIds.add(available.token.id)
+        return {
+          token: {
+            ...available.token,
+            position: token.position,
+            raw: token.raw,
+          },
+          resolution: available.resolution,
+          fontLoaded: available.fontLoaded,
+          phraseGroupId: available.phraseGroupId,
+        }
       }
     }
 

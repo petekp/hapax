@@ -35,6 +35,7 @@ export async function POST(request: NextRequest) {
     // Check cache first
     const cached = await getCachedFont(normalized)
     if (cached) {
+      console.log(`[STYLED] "${normalized}" (cache) → ${cached.family} ${cached.weight} ${cached.style} | hue=${cached.colorIntent.hue} sat=${cached.colorIntent.saturation}`)
       // Fire and forget hit count increment
       incrementHitCount(normalized).catch(console.error)
 
@@ -47,6 +48,8 @@ export async function POST(request: NextRequest) {
     // Cache miss - call LLM
     const variant = await resolveWordWithLLM(normalized)
 
+    console.log(`[STYLED] "${normalized}" → ${variant.family} ${variant.weight} | hue=${variant.colorIntent.hue} sat=${variant.colorIntent.saturation}`)
+
     // Store in cache (fire and forget)
     setCachedFont(normalized, variant).catch(console.error)
 
@@ -55,7 +58,7 @@ export async function POST(request: NextRequest) {
       source: "llm" as const,
     })
   } catch (error) {
-    console.error("Font resolution error:", error)
+    console.error("[api/resolve-font] Font resolution error:", error)
 
     // Return a fallback on error - still 200 so client works
     return NextResponse.json({

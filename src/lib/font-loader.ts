@@ -8,9 +8,9 @@ export function buildGoogleFontsUrl(
   requests: Array<{ variant: FontVariant; characters: string }>
 ): string {
   const base = "https://fonts.googleapis.com/css2"
-  const params = new URLSearchParams()
 
   const allChars = new Set<string>()
+  const familyParams: string[] = []
   const seenFamilies = new Set<string>()
 
   for (const req of requests) {
@@ -25,20 +25,22 @@ export function buildGoogleFontsUrl(
     const family = req.variant.family.replace(/ /g, "+")
 
     if (req.variant.style === "italic") {
-      params.append("family", `${family}:ital,wght@1,${req.variant.weight}`)
+      familyParams.push(`family=${family}:ital,wght@1,${req.variant.weight}`)
     } else {
-      params.append("family", `${family}:wght@${req.variant.weight}`)
+      familyParams.push(`family=${family}:wght@${req.variant.weight}`)
     }
   }
 
+  const parts = [...familyParams]
+
   const uniqueChars = [...allChars].join("")
   if (uniqueChars) {
-    params.set("text", uniqueChars)
+    parts.push(`text=${encodeURIComponent(uniqueChars)}`)
   }
 
-  params.set("display", "swap")
+  parts.push("display=swap")
 
-  return `${base}?${params.toString()}`
+  return `${base}?${parts.join("&")}`
 }
 
 export function buildFontString(variant: FontVariant): string {

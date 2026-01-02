@@ -2,7 +2,7 @@ import type { FontVariant } from "./schemas"
 
 const CACHE_PREFIX = "vibe:word:"
 const SCHEMA_VERSION = 1
-const MODEL_VERSION = "gpt-4o-mini-v1"
+const MODEL_VERSION = "gpt-4o-mini-v5-unique"
 
 interface CacheEntry {
   variant: FontVariant
@@ -46,11 +46,16 @@ export async function getCachedFont(word: string): Promise<FontVariant | null> {
     try {
       const entry = await kv.get<CacheEntry>(key)
 
+      if (entry) {
+        console.log(`[font-cache] KV entry for "${word}": modelVersion=${entry.modelVersion}, current=${MODEL_VERSION}`)
+      }
+
       if (
         entry &&
         entry.schemaVersion === SCHEMA_VERSION &&
         entry.modelVersion === MODEL_VERSION
       ) {
+        console.log(`[font-cache] KV cache HIT for "${word}": ${entry.variant.family}`)
         return entry.variant
       }
     } catch (error) {
@@ -59,15 +64,22 @@ export async function getCachedFont(word: string): Promise<FontVariant | null> {
   } else {
     // Fallback to memory cache
     const entry = memoryCache.get(key)
+
+    if (entry) {
+      console.log(`[font-cache] Memory entry for "${word}": modelVersion=${entry.modelVersion}, current=${MODEL_VERSION}`)
+    }
+
     if (
       entry &&
       entry.schemaVersion === SCHEMA_VERSION &&
       entry.modelVersion === MODEL_VERSION
     ) {
+      console.log(`[font-cache] Memory cache HIT for "${word}": ${entry.variant.family}`)
       return entry.variant
     }
   }
 
+  console.log(`[font-cache] Cache MISS for "${word}"`)
   return null
 }
 

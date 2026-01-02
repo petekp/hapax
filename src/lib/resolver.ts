@@ -5,11 +5,15 @@ interface ResolveResponse {
   source: "cache" | "llm"
 }
 
-export async function resolveFont(word: string): Promise<ResolveResponse> {
+export async function resolveFont(
+  word: string,
+  signal?: AbortSignal
+): Promise<ResolveResponse> {
   const response = await fetch("/api/resolve-font", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ word }),
+    signal,
   })
 
   if (!response.ok) {

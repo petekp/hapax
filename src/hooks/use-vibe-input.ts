@@ -30,6 +30,7 @@ type Action =
       wordIds: string[];
       phraseGroupId: string;
       variant: FontVariant;
+      source: "cache" | "llm";
     };
 
 function reducer(state: InputState, action: Action): InputState {
@@ -106,19 +107,18 @@ function reducer(state: InputState, action: Action): InputState {
     }
 
     case "SET_PHRASE_GROUP": {
-      const phraseGroupId = action.phraseGroupId;
       return {
         ...state,
         words: state.words.map((word) =>
           action.wordIds.includes(word.token.id)
             ? {
                 ...word,
-                phraseGroupId,
+                phraseGroupId: action.phraseGroupId,
                 fontLoaded: false,
                 resolution: {
                   status: "resolved",
                   variant: action.variant,
-                  source: "cache",
+                  source: action.source,
                 },
               }
             : word
@@ -139,7 +139,10 @@ function createInitialState(initialText: string = ""): InputState {
   };
 }
 
-export type WordResolver = (word: string) => Promise<{
+export type WordResolver = (
+  word: string,
+  signal?: AbortSignal
+) => Promise<{
   variant: FontVariant;
   source: "cache" | "llm";
 }>;
@@ -166,8 +169,9 @@ export function useVibeInput(options: UseVibeInputOptions = {}) {
   resolverRef.current = resolver;
   const phraseResolverRef = useRef(phraseResolver);
   phraseResolverRef.current = phraseResolver;
-  const phraseCheckTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const lastPhraseCheckRef = useRef<string>("");
+  const abortControllersRef = useRef<Map<string, AbortController>>(new Map());
+  const resolveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const resolutionGenRef = useRef(0);
 
   const setText = useCallback((text: string) => {
     dispatch({ type: "SET_TEXT", text });
@@ -178,12 +182,13 @@ export function useVibeInput(options: UseVibeInputOptions = {}) {
   }, []);
 
   const setPhraseGroup = useCallback(
-    (wordIds: string[], variant: FontVariant) => {
+    (wordIds: string[], variant: FontVariant, source: "cache" | "llm" = "llm") => {
       dispatch({
         type: "SET_PHRASE_GROUP",
         wordIds,
         phraseGroupId: nanoid(),
         variant,
+        source,
       });
     },
     []
@@ -193,86 +198,134 @@ export function useVibeInput(options: UseVibeInputOptions = {}) {
     if (prevTextRef.current === state.rawText) return;
     prevTextRef.current = state.rawText;
 
+    const currentWordIds = new Set(state.words.map((w) => w.token.id));
+    for (const [wordId, controller] of abortControllersRef.current) {
+      if (!currentWordIds.has(wordId)) {
+        controller.abort();
+        abortControllersRef.current.delete(wordId);
+      }
+    }
+
+    if (resolveTimeoutRef.current) {
+      clearTimeout(resolveTimeoutRef.current);
+    }
+
     const pendingWords = state.words.filter(
       (word) => word.resolution.status === "pending"
     );
 
     if (pendingWords.length === 0 || !resolverRef.current) return;
 
-    for (const word of pendingWords) {
-      const requestId = nanoid();
+    resolutionGenRef.current += 1;
+    const thisGeneration = resolutionGenRef.current;
+    const capturedWords = state.words;
 
-      dispatch({
-        type: "WORD_LOADING",
-        wordId: word.token.id,
-        requestId,
-      });
+    resolveTimeoutRef.current = setTimeout(async () => {
+      const wordsInPhrases = new Set<string>();
+      const pendingWordIds = new Set(
+        capturedWords
+          .filter((w) => w.resolution.status === "pending")
+          .map((w) => w.token.id)
+      );
 
-      resolverRef
-        .current(word.token.normalized)
-        .then((result) => {
-          dispatch({
-            type: "WORD_RESOLVED",
-            wordId: word.token.id,
-            requestId,
-            variant: result.variant,
-            source: result.source,
-          });
-        })
-        .catch((error) => {
-          dispatch({
-            type: "WORD_ERROR",
-            wordId: word.token.id,
-            requestId,
-            message: error instanceof Error ? error.message : "Unknown error",
-          });
-        });
-    }
-  }, [state.rawText, state.words]);
+      // Phase 1: Phrase detection (runs first, only for 2+ words)
+      if (phraseResolverRef.current && capturedWords.length >= 2) {
+        try {
+          const wordStrings = capturedWords.map((w) => w.token.normalized);
+          const result = await phraseResolverRef.current(wordStrings);
 
-  useEffect(() => {
-    if (!phraseResolverRef.current) return;
-    if (state.words.length < 2) return;
+          // Check if stale BEFORE processing results
+          if (resolutionGenRef.current !== thisGeneration) {
+            console.log("[use-vibe-input] Stale phrase detection, discarding");
+            return;
+          }
 
-    const allResolved = state.words.every(
-      (w) => w.resolution.status === "resolved" || w.resolution.status === "error"
-    );
-    if (!allResolved) return;
+          for (const phrase of result.phrases) {
+            const phraseWordIds = capturedWords
+              .slice(phrase.startIndex, phrase.endIndex + 1)
+              .map((w) => w.token.id);
 
-    const wordsKey = state.words.map((w) => w.token.normalized).join("|");
-    if (wordsKey === lastPhraseCheckRef.current) return;
+            // Only process phrase if at least one word is pending
+            const hasPendingWord = phraseWordIds.some((id) =>
+              pendingWordIds.has(id)
+            );
+            if (!hasPendingWord) continue;
 
-    if (phraseCheckTimeoutRef.current) {
-      clearTimeout(phraseCheckTimeoutRef.current);
-    }
+            phraseWordIds.forEach((id) => wordsInPhrases.add(id));
 
-    phraseCheckTimeoutRef.current = setTimeout(() => {
-      lastPhraseCheckRef.current = wordsKey;
-
-      const words = state.words.map((w) => w.token.normalized);
-
-      phraseResolverRef.current!(words).then((result) => {
-        for (const phrase of result.phrases) {
-          const wordIds = state.words
-            .slice(phrase.startIndex, phrase.endIndex + 1)
-            .map((w) => w.token.id);
-
-          dispatch({
-            type: "SET_PHRASE_GROUP",
-            wordIds,
-            phraseGroupId: nanoid(),
-            variant: phrase.variant,
-          });
+            dispatch({
+              type: "SET_PHRASE_GROUP",
+              wordIds: phraseWordIds,
+              phraseGroupId: nanoid(),
+              variant: phrase.variant,
+              source: phrase.source,
+            });
+          }
+        } catch (error) {
+          console.error("Phrase detection failed:", error);
         }
-      });
-    }, 200);
+      }
+
+      // Check generation again after phrase detection
+      if (resolutionGenRef.current !== thisGeneration) {
+        console.log("[use-vibe-input] Stale after phrase detection, discarding");
+        return;
+      }
+
+      // Phase 2: Resolve non-phrase words individually
+      const wordsToResolve = capturedWords.filter(
+        (w) =>
+          w.resolution.status === "pending" && !wordsInPhrases.has(w.token.id)
+      );
+
+      for (const word of wordsToResolve) {
+        const requestId = nanoid();
+        const controller = new AbortController();
+        abortControllersRef.current.set(word.token.id, controller);
+
+        dispatch({
+          type: "WORD_LOADING",
+          wordId: word.token.id,
+          requestId,
+        });
+
+        // Note: We do NOT check generation in the callbacks below.
+        // The reducer's requestId check handles stale results.
+        // Generation checks would incorrectly discard valid results
+        // when user types more words while a fetch is in progress.
+        resolverRef
+          .current!(word.token.normalized, controller.signal)
+          .then((result) => {
+            abortControllersRef.current.delete(word.token.id);
+            dispatch({
+              type: "WORD_RESOLVED",
+              wordId: word.token.id,
+              requestId,
+              variant: result.variant,
+              source: result.source,
+            });
+          })
+          .catch((error) => {
+            abortControllersRef.current.delete(word.token.id);
+            if (error instanceof Error && error.name === "AbortError") {
+              return;
+            }
+            dispatch({
+              type: "WORD_ERROR",
+              wordId: word.token.id,
+              requestId,
+              message: error instanceof Error ? error.message : "Unknown error",
+            });
+          });
+      }
+    }, 300);
 
     return () => {
-      if (phraseCheckTimeoutRef.current) {
-        clearTimeout(phraseCheckTimeoutRef.current);
+      if (resolveTimeoutRef.current) {
+        clearTimeout(resolveTimeoutRef.current);
       }
     };
-  }, [state.words]);
+  }, [state.rawText, state.words]);
 
   return {
     state,

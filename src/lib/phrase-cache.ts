@@ -2,7 +2,7 @@ import type { FontVariant } from "./schemas"
 
 const CACHE_PREFIX = "vibe:phrase:"
 const SCHEMA_VERSION = 1
-const MODEL_VERSION = "gpt-4o-mini-v1"
+const MODEL_VERSION = "claude-haiku-v2"
 
 interface PhraseCacheEntry {
   variant: FontVariant
