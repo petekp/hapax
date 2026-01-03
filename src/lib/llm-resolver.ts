@@ -1,5 +1,5 @@
 import { generateText, tool, stepCountIs, hasToolCall } from "ai";
-import { openai } from "@ai-sdk/openai";
+import { anthropic } from "@ai-sdk/anthropic";
 import { z } from "zod/v4";
 import type { FontVariant } from "./schemas";
 import {
@@ -46,88 +46,78 @@ function searchFonts(
 }
 
 function buildPrompt(word: string): string {
-  return `You are a typographic synesthete. Words have SHAPES and TEXTURES in your mind.
+  return `You experience grapheme-color synesthesia for typography. The word "${word}" triggers a vivid, involuntary perception of a specific font and color.
 
-Word: "${word}"
+## STEP 1: FEEL THE WORD
 
-## FONT PERSONALITY GUIDE (critical - learn these vibes):
+Before searching, sense "${word}":
+- What WEIGHT does it have? (massive? featherlight? medium?)
+- What TEXTURE? (sharp edges? smooth curves? rough? refined?)
+- What ERA? (ancient? futuristic? timeless?)
+- What TEMPERATURE? (burning? icy? neutral?)
+- What EMOTION? (aggressive? serene? chaotic? elegant?)
 
-AGGRESSIVE/POWERFUL fonts:
-- Black Ops One, Anton, Bebas Neue, Staatliches, Oswald → military, bold, commanding
-- Bungee, Rubik Mono One → blocky, impactful
-- Creepster, Nosifer, Eater → horror, disturbing
+## STEP 2: SEARCH FOR FONTS
 
-ELEGANT/REFINED fonts:
-- Playfair Display, Cormorant, Bodoni Moda → sophisticated, literary
-- Cinzel, Trajan → classical, monumental
-- Crimson Text, EB Garamond → bookish, traditional
+Use searchFonts. Match your sensations:
+- WEIGHT: minWeight 700+ for heavy words, maxWeight 300 for delicate
+- CATEGORY: "display" for impactful, "serif" for literary, "handwriting" for organic, "monospace" for technical
 
-PLAYFUL/FRIENDLY fonts (NEVER use for dark/intense words!):
-- Baloo, Nunito, Quicksand, Comfortaa → cute, approachable, childlike
-- Gluten, Sniglet, Patrick Hand → fun, casual
-- Lobster, Pacifico → retro-friendly script
-- Corben → chunky rounded, TOO FRIENDLY for serious words
+## STEP 3: MATCH FONT TO WORD
 
-DARK/GOTHIC fonts:
-- UnifrakturCook, Grenze Gotisch → blackletter, medieval dark
-- IM Fell, Pirata One → weathered, ominous
-- Nosifer, Creepster, Butcherman → horror
+BANNED FONTS (never pick these, they're wrong for almost everything):
+- Corben: chunky, childish, cartoonish - NEVER USE
+- Baloo, Nunito, Quicksand, Comfortaa: too cute/childish
+- Gluten, Sniglet, Patrick Hand: too playful
+- Lobster, Pacifico: overused casual scripts
 
-TECHY/MODERN fonts:
-- Orbitron, Share Tech, Rajdhani → sci-fi, digital
-- Space Mono, JetBrains Mono → code, technical
-- Audiowide, Michroma → futuristic
+GOTHIC/BLACKLETTER fonts (UnifrakturCook, Grenze Gotisch, Pirata One):
+- ONLY for: medieval, dark, evil, doom, death, gothic, ancient, curse, demon
+- NEVER for: star, movie, science, modern, bright, happy, tech, nature
 
-DELICATE/LIGHT fonts:
-- Cormorant (light weights), Lora → graceful serif
-- Dancing Script, Alex Brush → flowing script
+MATCH THE WORD'S ESSENCE:
+- Bright/sparkling words (star, shine, light) → clean, modern fonts with personality
+- Cinema/film words → elegant serifs, classic Hollywood feel
+- Nature words → organic, flowing fonts
+- Tech words → geometric, monospace
+- Elegant words → refined serifs with contrast
+- Playful words (monkey, silly) → fun display fonts (but not the banned ones)
 
-## BAD MATCHES TO AVOID:
-- "haunted" + Baloo = WRONG (Baloo is cute/friendly)
-- "war" + Lobster = WRONG (Lobster is casual script)
-- "chaos" + clean geometric = WRONG (too orderly)
-- "madman" + Gluten = WRONG (Gluten is playful/fun)
-- Dark words + bright playful fonts = ALWAYS WRONG
+Font names reveal personality:
+- "Black", "Ultra", "Heavy" in name → bold, powerful
+- "Light", "Thin" in name → delicate
+- Evocative names (Creepster, Butcherman) → match their vibe
 
-## Search strategy:
-Use searchFonts with category + weight filters.
-After getting results, pick a font whose NAME suggests the right vibe.
-When unsure, prefer fonts with evocative names (Creepster for horror, Orbitron for tech).
+## STEP 4: CHOOSE YOUR COLOR
 
-VARIETY IS KEY - don't keep picking the same fonts:
-- UnifrakturCook is great but don't use it for every dark word
-- Grenze Gotisch is great but don't use it for every gothic word
-- Explore the FULL results, pick something that fits THIS specific word
-- "war" and "armageddon" should have DIFFERENT fonts - they're different vibes
+Close your eyes. "${word}" appears in your mind. What color IS it?
 
-## Color (HSL) - BE UNIQUE AND BOLD!
+DO NOT DEFAULT TO hue=210. That's lazy. 210 is sky blue - is "${word}" really sky blue?
 
-Every word deserves its OWN distinct color. Don't default to obvious choices.
+The hue wheel has 360 degrees. USE THEM:
+0-30: reds, rusts, ambers (blood, fire, rust, anger, heat)
+30-60: oranges, golds (warmth, energy, autumn, honey)
+60-90: yellows, limes (sunshine, acid, electric, caution)
+90-150: greens (nature, poison, envy, growth, decay)
+150-210: teals, cyans (ocean, ice, clinical, digital)
+210-270: blues, indigos (depth, sadness, night, mystery)
+270-330: purples, magentas (royal, mystic, corrupt, fantasy)
+330-360: roses, crimsons (passion, flesh, romantic, violent)
 
-AVOID COLOR CLICHÉS:
-- Not everything intense is red (hue=0)
-- Not everything calm is blue (hue=240)
-- Think about the SPECIFIC word, not the category
+Saturation - BE BOLD:
+- Default to 65-80 (vivid and alive)
+- 80-95 for intense/electric words
+- 40-65 for sophisticated/muted words
+- Below 25 ONLY for void/ash/shadow/fog
 
-UNEXPECTED COLOR IDEAS:
-- "war" could be hue=30 (burnt orange) or hue=350 (dark crimson), not just pure red
-- "madman" could be hue=280 (violet) or hue=50 (sickly yellow)
-- "chaos" could be hue=300 (magenta) or hue=15 (vermillion)
-- "saturn" → hue=45 (golden), NOT blue
-- "jupiter" → hue=25 (tan/orange bands), NOT blue
-- "mars" → hue=15 (rust red)
-- "destroyer" could be hue=270 (deep purple) or hue=0 (crimson)
+IMPORTANT: If "${word}" doesn't strongly suggest a color, pick something UNEXPECTED rather than defaulting to blue. A random hue is better than another hue=210.
 
-USE THE FULL HUE WHEEL:
-0=red, 15=vermillion, 30=orange, 45=gold, 60=yellow, 90=chartreuse
-120=green, 150=spring, 180=cyan, 210=sky, 240=blue, 270=purple, 300=magenta, 330=rose
+## STEP 5: SUBMIT
 
-Saturation: Most words sat 50-80. Only "void/ash/fog/mist/shadow" can be sat 0-25.
-
-Think: What SPECIFIC shade is THIS word? Not what category of color.
-
-## Submit
-Call selectFont. The font must EMBODY "${word}" - if it doesn't feel right, search again.`;
+Call selectFont with:
+- A font that captures the ESSENCE of "${word}"
+- A color that IS "${word}" - precise hue and appropriate saturation
+- The weight that matches the word's presence`;
 }
 
 const FinalChoiceSchema = z.object({
@@ -157,7 +147,7 @@ export async function resolveWordWithLLM(word: string): Promise<FontVariant> {
 
   try {
     const { steps } = await generateText({
-      model: openai("gpt-4o-mini"),
+      model: anthropic("claude-sonnet-4-20250514"),
       tools: {
         searchFonts: tool({
           description:

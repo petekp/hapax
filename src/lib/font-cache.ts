@@ -2,7 +2,7 @@ import type { FontVariant } from "./schemas"
 
 const CACHE_PREFIX = "vibe:word:"
 const SCHEMA_VERSION = 1
-const MODEL_VERSION = "gpt-4o-mini-v5-unique"
+const MODEL_VERSION = "claude-sonnet-4-v1"
 
 interface CacheEntry {
   variant: FontVariant

@@ -75,7 +75,9 @@ export function VibeWord({ word, colorMode }: VibeWordProps) {
 
   const fontStyle = useMemo(() => {
     if (word.resolution.status !== "resolved") {
-      return {}
+      return {
+        color: "inherit",
+      }
     }
 
     const { variant } = word.resolution
@@ -93,23 +95,24 @@ export function VibeWord({ word, colorMode }: VibeWordProps) {
     const base: React.CSSProperties = {
       display: "inline-block",
       willChange: "transform, opacity, filter",
+      transition: "opacity 0.3s ease-out, filter 0.3s ease-out, transform 0.3s ease-out",
     }
 
     switch (animationPhase) {
       case "hidden":
         return {
           ...base,
-          opacity: 0,
-          transform: "scale(0.7) translateY(20px)",
-          filter: "blur(12px)",
+          opacity: 1,
+          transform: "scale(1)",
+          filter: "blur(0px)",
         }
       case "waiting":
         return {
           ...base,
-          opacity: 0.3,
-          transform: "scale(0.95)",
-          filter: "blur(4px)",
-          animation: "pulse 1.2s ease-in-out infinite",
+          opacity: 0.7,
+          transform: "scale(1)",
+          filter: "blur(0.5px)",
+          animation: "pulse 1.5s ease-in-out infinite",
         }
       case "blooming":
         return {
