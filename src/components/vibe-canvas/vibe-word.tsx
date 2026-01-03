@@ -4,6 +4,7 @@ import { useMemo, useEffect, useState, useRef, useCallback, useLayoutEffect } fr
 import { motion, AnimatePresence } from "motion/react"
 import type { WordState, FontVariant } from "@/lib/schemas"
 import { deriveColor } from "@/lib/color"
+import { getCapHeightScale } from "@/lib/font-metrics"
 
 type AnimationPhase = "unformed" | "breathing" | "revealing" | "settled"
 
@@ -16,6 +17,7 @@ interface VariantSnapshot {
   key: string
   variant: FontVariant
   color: string
+  scale: number
 }
 
 const CROSSFADE_TRANSITION = {
@@ -50,40 +52,48 @@ export function VibeWord({ word, colorMode }: VibeWordProps) {
     if (word.resolution.status !== "resolved" || !word.fontLoaded) {
       return null
     }
+    const { variant } = word.resolution
+    const scale = getCapHeightScale(variant.family, variant.weight, variant.style)
     return {
       key: variantKey!,
-      variant: word.resolution.variant,
-      color: deriveColor(word.resolution.variant.colorIntent, colorMode),
+      variant,
+      color: deriveColor(variant.colorIntent, colorMode),
+      scale,
     }
   }, [word.resolution, word.fontLoaded, variantKey, colorMode])
 
-  const layoutFontStyle = useMemo((): React.CSSProperties => {
-    if (word.resolution.status === "resolved" && word.fontLoaded) {
-      const { variant } = word.resolution
-      return {
-        fontFamily: `"${variant.family}", sans-serif`,
-        fontWeight: variant.weight,
-        fontStyle: variant.style,
-      }
-    }
-    return {}
-  }, [word.resolution, word.fontLoaded])
-
-  const fontStyleFor = useCallback((variant: FontVariant | null): React.CSSProperties => {
-    if (!variant) return {}
+  const fontStyleFor = useCallback((variant: FontVariant, scale: number = 1): React.CSSProperties => {
     return {
       fontFamily: `"${variant.family}", sans-serif`,
       fontWeight: variant.weight,
       fontStyle: variant.style,
+      fontSize: `${scale}em`,
     }
   }, [])
 
-  useLayoutEffect(() => {
-    if (measureRef.current) {
-      const width = measureRef.current.getBoundingClientRect().width
-      setTargetWidth(width)
+  const measureStyle = useMemo((): React.CSSProperties => {
+    if (resolvedVariant) {
+      return fontStyleFor(resolvedVariant.variant, resolvedVariant.scale)
     }
-  }, [layoutFontStyle, word.token.raw])
+    return {}
+  }, [resolvedVariant, fontStyleFor])
+
+  useEffect(() => {
+    let cancelled = false
+
+    const measure = () => {
+      if (cancelled || !measureRef.current) return
+      const rect = measureRef.current.getBoundingClientRect()
+      setTargetWidth(rect.width + 2)
+    }
+
+    // Double RAF ensures font is fully rendered before measuring
+    requestAnimationFrame(() => {
+      requestAnimationFrame(measure)
+    })
+
+    return () => { cancelled = true }
+  }, [measureStyle, word.token.raw])
 
   useEffect(() => {
     const prev = currentVariantRef.current
@@ -152,6 +162,7 @@ export function VibeWord({ word, colorMode }: VibeWordProps) {
               display: "inline-block",
               color: mutedColor,
               whiteSpace: "nowrap",
+              transformOrigin: "left baseline",
             }}
             initial={{ opacity: 0.4, filter: "blur(4px)" }}
             animate={
@@ -179,7 +190,7 @@ export function VibeWord({ word, colorMode }: VibeWordProps) {
               color: revealingFrom.color,
               whiteSpace: "nowrap",
               pointerEvents: "none",
-              ...fontStyleFor(revealingFrom.variant),
+              ...fontStyleFor(revealingFrom.variant, revealingFrom.scale),
             }}
             initial={{ opacity: 1, filter: "blur(0px)" }}
             animate={{ opacity: 0, filter: "blur(4px)" }}
@@ -203,7 +214,7 @@ export function VibeWord({ word, colorMode }: VibeWordProps) {
               display: "inline-block",
               color: resolvedVariant.color,
               whiteSpace: "nowrap",
-              ...fontStyleFor(resolvedVariant.variant),
+              ...fontStyleFor(resolvedVariant.variant, resolvedVariant.scale),
             }}
             initial={{ opacity: 0, filter: "blur(6px)" }}
             animate={{ opacity: 1, filter: "blur(0px)" }}
@@ -220,7 +231,7 @@ export function VibeWord({ word, colorMode }: VibeWordProps) {
           position: "absolute",
           visibility: "hidden",
           whiteSpace: "nowrap",
-          ...layoutFontStyle,
+          ...measureStyle,
         }}
         aria-hidden="true"
       >
@@ -233,7 +244,7 @@ export function VibeWord({ word, colorMode }: VibeWordProps) {
           visibility: "hidden",
           whiteSpace: "nowrap",
           width: targetWidth || "auto",
-          ...layoutFontStyle,
+          height: resolvedVariant ? `${resolvedVariant.scale}em` : "1em",
         }}
         aria-hidden="true"
       >
