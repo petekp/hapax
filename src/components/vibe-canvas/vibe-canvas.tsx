@@ -43,19 +43,6 @@ export function VibeCanvas({ resolver, phraseResolver }: VibeCanvasProps) {
     inputRef.current?.focus()
   }, [])
 
-  const renderWords = () => {
-    if (state.words.length === 0) {
-      return null
-    }
-
-    return state.words.map((word, index) => (
-      <span key={index}>
-        {index > 0 && " "}
-        <VibeWord word={word} colorMode={colorMode} />
-      </span>
-    ))
-  }
-
   return (
     <div
       className="fixed inset-0 flex items-center justify-center cursor-text bg-zinc-50 dark:bg-zinc-950"
@@ -76,9 +63,19 @@ export function VibeCanvas({ resolver, phraseResolver }: VibeCanvasProps) {
         <div className="text-3xl md:text-5xl lg:text-6xl font-normal leading-relaxed md:leading-relaxed lg:leading-relaxed tracking-wide text-center text-zinc-800 dark:text-zinc-100">
           {state.rawText ? (
             <>
-              {state.words.length > 0 ? renderWords() : state.rawText}
+              {state.words.map((word, index) => (
+                <span
+                  key={word.token.id}
+                  style={{
+                    display: "inline-block",
+                    marginLeft: index > 0 ? "0.3em" : 0,
+                  }}
+                >
+                  <VibeWord word={word} colorMode={colorMode} />
+                </span>
+              ))}
               {isFocused && (
-                <span className="caret-blink text-zinc-400 dark:text-zinc-500">|</span>
+                <span className="caret-blink text-zinc-400 dark:text-zinc-500 ml-1">|</span>
               )}
             </>
           ) : (

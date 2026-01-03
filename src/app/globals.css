@@ -124,33 +124,6 @@
   }
 }
 
-@keyframes word-bloom {
-  0% {
-    opacity: 0.5;
-    transform: scale(0.8) translateY(8px);
-    filter: blur(6px);
-  }
-  60% {
-    opacity: 1;
-    transform: scale(1.08) translateY(-2px);
-    filter: blur(0px);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-    filter: blur(0px);
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 0.4;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-
 @keyframes caret-blink {
   0%, 50% {
     opacity: 1;

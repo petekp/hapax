@@ -1,143 +1,244 @@
 "use client"
 
-import { useMemo, useEffect, useState, useRef } from "react"
-import type { WordState } from "@/lib/schemas"
+import { useMemo, useEffect, useState, useRef, useCallback, useLayoutEffect } from "react"
+import { motion, AnimatePresence } from "motion/react"
+import type { WordState, FontVariant } from "@/lib/schemas"
 import { deriveColor } from "@/lib/color"
 
-type AnimationPhase = "hidden" | "waiting" | "blooming" | "settled"
+type AnimationPhase = "unformed" | "breathing" | "revealing" | "settled"
 
 interface VibeWordProps {
   word: WordState
   colorMode: "light" | "dark"
 }
 
+interface VariantSnapshot {
+  key: string
+  variant: FontVariant
+  color: string
+}
+
+const CROSSFADE_TRANSITION = {
+  duration: 0.4,
+  ease: [0.4, 0, 0.2, 1] as const,
+}
+
+const BREATHING_TRANSITION = {
+  duration: 1.2,
+  ease: "easeInOut" as const,
+  repeat: Infinity,
+  repeatType: "mirror" as const,
+}
+
 export function VibeWord({ word, colorMode }: VibeWordProps) {
-  const [animationPhase, setAnimationPhase] = useState<AnimationPhase>("hidden")
-  const lastVariantKeyRef = useRef<string | null>(null)
-  const bloomTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [phase, setPhase] = useState<AnimationPhase>("unformed")
+  const [revealingFrom, setRevealingFrom] = useState<VariantSnapshot | null>(null)
+  const [targetWidth, setTargetWidth] = useState<number>(0)
+
+  const measureRef = useRef<HTMLSpanElement>(null)
+  const currentVariantRef = useRef<VariantSnapshot | null>(null)
+  const phaseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const layoutTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const mutedColor = colorMode === "dark" ? "hsl(0, 0%, 45%)" : "hsl(0, 0%, 55%)"
 
   const variantKey = word.resolution.status === "resolved"
     ? `${word.resolution.variant.family}:${word.resolution.variant.weight}:${word.phraseGroupId}`
     : null
 
-  useEffect(() => {
-    if (bloomTimerRef.current) {
-      clearTimeout(bloomTimerRef.current)
-      bloomTimerRef.current = null
+  const resolvedVariant = useMemo((): VariantSnapshot | null => {
+    if (word.resolution.status !== "resolved" || !word.fontLoaded) {
+      return null
     }
-
-    if (word.resolution.status === "pending") {
-      setAnimationPhase("hidden")
-      lastVariantKeyRef.current = null
-      return
+    return {
+      key: variantKey!,
+      variant: word.resolution.variant,
+      color: deriveColor(word.resolution.variant.colorIntent, colorMode),
     }
+  }, [word.resolution, word.fontLoaded, variantKey, colorMode])
 
-    if (word.resolution.status === "loading") {
-      setAnimationPhase("waiting")
-      return
-    }
-
-    const variantChanged = variantKey !== lastVariantKeyRef.current
-
-    if (!word.fontLoaded) {
-      setAnimationPhase("waiting")
-      if (variantChanged && variantKey) {
-        lastVariantKeyRef.current = variantKey
-      }
-
-      // Failsafe: if stuck in waiting for too long, just show the word
-      // The font is likely already loaded, just the callback didn't fire
-      bloomTimerRef.current = setTimeout(() => {
-        setAnimationPhase((current) => {
-          if (current === "waiting") {
-            return "settled"
-          }
-          return current
-        })
-      }, 1500)
-      return
-    }
-
-    if (variantChanged || animationPhase === "waiting") {
-      lastVariantKeyRef.current = variantKey
-      setAnimationPhase("blooming")
-      bloomTimerRef.current = setTimeout(() => {
-        setAnimationPhase("settled")
-      }, 600)
-    }
-
-    return () => {
-      if (bloomTimerRef.current) {
-        clearTimeout(bloomTimerRef.current)
-      }
-    }
-  }, [word.resolution.status, word.fontLoaded, word.phraseGroupId, variantKey, animationPhase])
-
-  const fontStyle = useMemo(() => {
-    if (word.resolution.status !== "resolved") {
+  const layoutFontStyle = useMemo((): React.CSSProperties => {
+    if (word.resolution.status === "resolved" && word.fontLoaded) {
+      const { variant } = word.resolution
       return {
-        color: "inherit",
+        fontFamily: `"${variant.family}", sans-serif`,
+        fontWeight: variant.weight,
+        fontStyle: variant.style,
       }
     }
+    return {}
+  }, [word.resolution, word.fontLoaded])
 
-    const { variant } = word.resolution
-    const color = deriveColor(variant.colorIntent, colorMode)
-
+  const fontStyleFor = useCallback((variant: FontVariant | null): React.CSSProperties => {
+    if (!variant) return {}
     return {
       fontFamily: `"${variant.family}", sans-serif`,
       fontWeight: variant.weight,
       fontStyle: variant.style,
-      color,
     }
-  }, [word.resolution, colorMode])
+  }, [])
 
-  const animationStyle = useMemo((): React.CSSProperties => {
-    const base: React.CSSProperties = {
-      display: "inline-block",
-      willChange: "transform, opacity, filter",
-      transition: "opacity 0.3s ease-out, filter 0.3s ease-out, transform 0.3s ease-out",
+  useLayoutEffect(() => {
+    if (measureRef.current) {
+      const width = measureRef.current.getBoundingClientRect().width
+      setTargetWidth(width)
+    }
+  }, [layoutFontStyle, word.token.raw])
+
+  useEffect(() => {
+    const prev = currentVariantRef.current
+    if (resolvedVariant && resolvedVariant.key !== prev?.key) {
+      if (prev) {
+        setRevealingFrom(prev)
+      }
+    }
+    currentVariantRef.current = resolvedVariant
+  }, [resolvedVariant])
+
+  useEffect(() => {
+    if (phaseTimerRef.current) {
+      clearTimeout(phaseTimerRef.current)
+      phaseTimerRef.current = null
+    }
+    if (layoutTimerRef.current) {
+      clearTimeout(layoutTimerRef.current)
+      layoutTimerRef.current = null
     }
 
-    switch (animationPhase) {
-      case "hidden":
-        return {
-          ...base,
-          opacity: 1,
-          transform: "scale(1)",
-          filter: "blur(0px)",
-        }
-      case "waiting":
-        return {
-          ...base,
-          opacity: 0.7,
-          transform: "scale(1)",
-          filter: "blur(0.5px)",
-          animation: "pulse 1.5s ease-in-out infinite",
-        }
-      case "blooming":
-        return {
-          ...base,
-          animation: "word-bloom 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
-        }
-      case "settled":
-        return {
-          ...base,
-          opacity: 1,
-          transform: "scale(1)",
-          filter: "blur(0px)",
-        }
-      default:
-        return base
+    const { status } = word.resolution
+
+    if (status === "pending") {
+      setPhase("unformed")
+    } else if (status === "loading" || (status === "resolved" && !word.fontLoaded)) {
+      setPhase("breathing")
+    } else if (status === "resolved" && word.fontLoaded) {
+      layoutTimerRef.current = setTimeout(() => {
+        setPhase("revealing")
+        phaseTimerRef.current = setTimeout(() => {
+          setPhase("settled")
+        }, 500)
+      }, 50)
     }
-  }, [animationPhase])
+
+    return () => {
+      if (phaseTimerRef.current) clearTimeout(phaseTimerRef.current)
+      if (layoutTimerRef.current) clearTimeout(layoutTimerRef.current)
+    }
+  }, [word.resolution.status, word.fontLoaded])
+
+  const handleFadeOutComplete = useCallback(() => {
+    setRevealingFrom(null)
+  }, [])
+
+  const isRevealed = phase === "revealing" || phase === "settled"
+  const showDefaultLayer = !isRevealed
+  const showFinalLayer = isRevealed && resolvedVariant !== null
+  const showPreviousVariantFade = isRevealed && revealingFrom !== null
 
   return (
     <span
-      style={{ ...fontStyle, ...animationStyle }}
+      style={{ position: "relative", display: "inline-block", verticalAlign: "baseline" }}
       data-word-id={word.token.id}
-      data-phase={animationPhase}
+      data-phase={phase}
     >
-      {word.token.raw}
+      <AnimatePresence mode="sync">
+        {showDefaultLayer && (
+          <motion.span
+            key="default"
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              display: "inline-block",
+              color: mutedColor,
+              whiteSpace: "nowrap",
+            }}
+            initial={{ opacity: 0.4, filter: "blur(4px)" }}
+            animate={
+              phase === "breathing"
+                ? { opacity: [0.4, 0.55], filter: ["blur(4px)", "blur(8px)"] }
+                : { opacity: 0.4, filter: "blur(4px)" }
+            }
+            exit={{ opacity: 0, filter: "blur(6px)" }}
+            transition={phase === "breathing" ? BREATHING_TRANSITION : CROSSFADE_TRANSITION}
+          >
+            {word.token.raw}
+          </motion.span>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence mode="sync">
+        {showPreviousVariantFade && revealingFrom && (
+          <motion.span
+            key={revealingFrom.key}
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              display: "inline-block",
+              color: revealingFrom.color,
+              whiteSpace: "nowrap",
+              pointerEvents: "none",
+              ...fontStyleFor(revealingFrom.variant),
+            }}
+            initial={{ opacity: 1, filter: "blur(0px)" }}
+            animate={{ opacity: 0, filter: "blur(4px)" }}
+            exit={{ opacity: 0 }}
+            transition={CROSSFADE_TRANSITION}
+            onAnimationComplete={handleFadeOutComplete}
+          >
+            {word.token.raw}
+          </motion.span>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence mode="sync">
+        {showFinalLayer && resolvedVariant && (
+          <motion.span
+            key={resolvedVariant.key}
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              display: "inline-block",
+              color: resolvedVariant.color,
+              whiteSpace: "nowrap",
+              ...fontStyleFor(resolvedVariant.variant),
+            }}
+            initial={{ opacity: 0, filter: "blur(6px)" }}
+            animate={{ opacity: 1, filter: "blur(0px)" }}
+            transition={CROSSFADE_TRANSITION}
+          >
+            {word.token.raw}
+          </motion.span>
+        )}
+      </AnimatePresence>
+
+      <span
+        ref={measureRef}
+        style={{
+          position: "absolute",
+          visibility: "hidden",
+          whiteSpace: "nowrap",
+          ...layoutFontStyle,
+        }}
+        aria-hidden="true"
+      >
+        {word.token.raw}
+      </span>
+
+      <span
+        style={{
+          display: "inline-block",
+          visibility: "hidden",
+          whiteSpace: "nowrap",
+          width: targetWidth || "auto",
+          ...layoutFontStyle,
+        }}
+        aria-hidden="true"
+      >
+        {word.token.raw}
+      </span>
     </span>
   )
 }
