@@ -5,6 +5,7 @@ import { motion } from "motion/react"
 import type { FontVariant } from "@/lib/schemas"
 import { deriveColor } from "@/lib/color"
 import { getFontLoader } from "@/lib/font-loader"
+import { useActiveColor } from "@/lib/active-color-context"
 import Link from "next/link"
 
 interface GalleryWordProps {
@@ -15,10 +16,19 @@ interface GalleryWordProps {
 
 export function GalleryWord({ word, variant, colorMode = "dark" }: GalleryWordProps) {
   const [fontLoaded, setFontLoaded] = useState(false)
+  const { setActiveColor } = useActiveColor()
 
   const handleFontLoaded = useCallback(() => {
     setFontLoaded(true)
   }, [])
+
+  const handleMouseEnter = useCallback(() => {
+    setActiveColor(variant.colorIntent)
+  }, [setActiveColor, variant.colorIntent])
+
+  const handleMouseLeave = useCallback(() => {
+    setActiveColor(null)
+  }, [setActiveColor])
 
   useEffect(() => {
     const fontLoader = getFontLoader()
@@ -26,18 +36,9 @@ export function GalleryWord({ word, variant, colorMode = "dark" }: GalleryWordPr
   }, [variant, word, handleFontLoaded])
 
   const color = deriveColor(variant.colorIntent, colorMode)
-  const mutedColor = colorMode === "dark" ? "hsl(0, 0%, 45%)" : "hsl(0, 0%, 55%)"
 
   if (!fontLoaded) {
-    return (
-      <motion.span
-        style={{ color: mutedColor }}
-        animate={{ opacity: [0.4, 0.55], filter: ["blur(4px)", "blur(8px)"] }}
-        transition={{ duration: 1.2, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }}
-      >
-        {word}
-      </motion.span>
-    )
+    return <span style={{ visibility: "hidden" }}>{word}</span>
   }
 
   return (
@@ -54,6 +55,8 @@ export function GalleryWord({ word, variant, colorMode = "dark" }: GalleryWordPr
         animate={{ opacity: 1, filter: "blur(0px)" }}
         transition={{ duration: 0.4 }}
         whileHover={{ scale: 1.05 }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         {word}
       </motion.span>

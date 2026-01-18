@@ -4,9 +4,11 @@ import { useEffect, useState, use } from "react"
 import { motion } from "motion/react"
 import Link from "next/link"
 import type { FontVariant } from "@/lib/schemas"
-import { deriveColor } from "@/lib/color"
+import { deriveColor, deriveBackgroundColor, deriveTintedTextColor, deriveTintedMutedColor } from "@/lib/color"
+import { useActiveColor } from "@/lib/active-color-context"
 import { getFontLoader } from "@/lib/font-loader"
-import type { GalleryWordEntry } from "@/app/api/gallery/route"
+import type { WordResponse } from "@/app/api/word/[word]/route"
+import type { WordContent } from "@/lib/words"
 
 interface Definition {
   partOfSpeech: string
@@ -22,6 +24,17 @@ interface DictionaryEntry {
   meanings: Definition[]
 }
 
+async function fetchWordContent(word: string): Promise<WordContent | null> {
+  try {
+    const response = await fetch(`/api/word/${encodeURIComponent(word)}`)
+    if (!response.ok) return null
+    const data: WordResponse = await response.json()
+    return data.content
+  } catch {
+    return null
+  }
+}
+
 async function fetchDefinition(word: string): Promise<DictionaryEntry | null> {
   try {
     const response = await fetch(
@@ -35,77 +48,52 @@ async function fetchDefinition(word: string): Promise<DictionaryEntry | null> {
   }
 }
 
-async function fetchWordStyle(word: string): Promise<GalleryWordEntry | null> {
-  try {
-    const response = await fetch(`/api/gallery?search=${encodeURIComponent(word)}&limit=1`)
-    if (!response.ok) return null
-    const data = await response.json()
-    return data.words[0] || null
-  } catch {
-    return null
-  }
-}
-
 function StyledWord({ word, variant }: { word: string; variant: FontVariant }) {
-  const [fontLoaded, setFontLoaded] = useState(false)
   const color = deriveColor(variant.colorIntent, "dark")
-  const mutedColor = "hsl(0, 0%, 45%)"
-
-  useEffect(() => {
-    const fontLoader = getFontLoader()
-    fontLoader.requestFont(variant, word, () => setFontLoaded(true))
-  }, [variant, word])
-
-  if (!fontLoaded) {
-    return (
-      <motion.span
-        style={{ color: mutedColor }}
-        animate={{ opacity: [0.4, 0.55], filter: ["blur(4px)", "blur(8px)"] }}
-        transition={{ duration: 1.2, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }}
-        className="text-6xl md:text-8xl"
-      >
-        {word}
-      </motion.span>
-    )
-  }
 
   return (
-    <motion.span
+    <span
       style={{
         color,
         fontFamily: `"${variant.family}", sans-serif`,
         fontWeight: variant.weight,
         fontStyle: variant.style,
       }}
-      initial={{ opacity: 0, filter: "blur(6px)" }}
-      animate={{ opacity: 1, filter: "blur(0px)" }}
-      transition={{ duration: 0.4 }}
       className="text-6xl md:text-8xl"
     >
       {word}
-    </motion.span>
+    </span>
   )
 }
 
 export default function WordPage({ params }: { params: Promise<{ word: string }> }) {
   const { word } = use(params)
   const decodedWord = decodeURIComponent(word)
+  const { setActiveColor } = useActiveColor()
 
-  const [styleEntry, setStyleEntry] = useState<GalleryWordEntry | null>(null)
+  const [wordContent, setWordContent] = useState<WordContent | null>(null)
   const [definition, setDefinition] = useState<DictionaryEntry | null>(null)
-  const [styleLoading, setStyleLoading] = useState(true)
-  const [definitionLoading, setDefinitionLoading] = useState(true)
+  const [contentLoaded, setContentLoaded] = useState(false)
+  const [definitionLoaded, setDefinitionLoaded] = useState(false)
+  const [fontLoaded, setFontLoaded] = useState(false)
 
   useEffect(() => {
-    fetchWordStyle(decodedWord).then((entry) => {
-      setStyleEntry(entry)
-      setStyleLoading(false)
+    fetchWordContent(decodedWord).then((content) => {
+      setWordContent(content)
+      setContentLoaded(true)
     })
     fetchDefinition(decodedWord).then((entry) => {
       setDefinition(entry)
-      setDefinitionLoading(false)
+      setDefinitionLoaded(true)
     })
   }, [decodedWord])
+
+  useEffect(() => {
+    if (wordContent) {
+      setActiveColor(wordContent.frontmatter.style.colorIntent)
+    }
+    return () => setActiveColor(null)
+  }, [wordContent, setActiveColor])
 
   const fallbackVariant: FontVariant = {
     family: "Inter",
@@ -114,8 +102,26 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
     colorIntent: { hue: 220, chroma: 0.15, lightness: 70 },
   }
 
+  const variant = wordContent?.frontmatter.style || fallbackVariant
+  const phonetic = wordContent?.frontmatter.phonetic || definition?.phonetic
+  const hasMdxContent = wordContent && wordContent.content.length > 0
+
+  useEffect(() => {
+    if (!contentLoaded) return
+    const fontLoader = getFontLoader()
+    fontLoader.requestFont(variant, decodedWord, () => setFontLoaded(true))
+  }, [contentLoaded, variant, decodedWord])
+
+  const ready = contentLoaded && definitionLoaded && fontLoaded
+  const backgroundColor = ready ? deriveBackgroundColor(variant.colorIntent) : undefined
+  const textColor = ready ? deriveTintedTextColor(variant.colorIntent) : undefined
+  const mutedColor = ready ? deriveTintedMutedColor(variant.colorIntent) : undefined
+
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-200">
+    <div
+      className="min-h-screen text-zinc-200 transition-colors duration-700"
+      style={{ backgroundColor: backgroundColor || "#09090b" }}
+    >
       <header className="fixed top-0 left-0 p-8 z-10">
         <Link
           href="/"
@@ -126,78 +132,68 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
       </header>
 
       <main className="flex flex-col items-center px-6 pt-32 pb-24">
-        {/* Word display */}
-        <div className="text-center mb-6">
-          {styleLoading ? (
-            <div className="text-6xl md:text-8xl lg:text-9xl text-zinc-700 animate-pulse">
-              {decodedWord}
-            </div>
-          ) : (
-            <StyledWord
-              word={decodedWord}
-              variant={styleEntry?.variant || fallbackVariant}
-            />
-          )}
-        </div>
+        <motion.div
+          className="flex flex-col items-center w-full"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: ready ? 1 : 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <div className="text-center mb-4">
+            <StyledWord word={decodedWord} variant={variant} />
+          </div>
 
-        {/* Phonetic - tight coupling with word */}
-        {!definitionLoading && definition?.phonetic && (
-          <p className="text-zinc-600 text-lg md:text-xl font-light tracking-wide mb-16">
-            {definition.phonetic}
-          </p>
-        )}
-
-        {/* Definitions */}
-        <div className="max-w-xl w-full">
-          {definitionLoading ? (
-            <div className="space-y-6">
-              <div className="h-4 bg-zinc-900 rounded animate-pulse w-20" />
-              <div className="h-5 bg-zinc-900 rounded animate-pulse w-full" />
-              <div className="h-5 bg-zinc-900 rounded animate-pulse w-4/5" />
-            </div>
-          ) : definition ? (
-            <div className="space-y-12">
-              {definition.meanings.map((meaning, i) => (
-                <section key={i}>
-                  {/* Part of speech */}
-                  <h2 className="text-zinc-500 text-xs uppercase tracking-widest mb-6 pb-2 border-b border-zinc-800">
-                    {meaning.partOfSpeech}
-                  </h2>
-
-                  {/* Definition list */}
-                  <ol className="space-y-6">
-                    {meaning.definitions.slice(0, 3).map((def, j) => (
-                      <li key={j} className="flex gap-4">
-                        {/* Definition number */}
-                        <span className="text-zinc-700 text-sm font-light tabular-nums flex-shrink-0 pt-0.5">
-                          {j + 1}.
-                        </span>
-
-                        <div className="space-y-3">
-                          {/* Definition text */}
-                          <p className="text-zinc-300 text-lg md:text-xl leading-relaxed font-light">
-                            {def.definition}
-                          </p>
-
-                          {/* Example */}
-                          {def.example && (
-                            <p className="text-zinc-500 text-base leading-relaxed italic pl-4 border-l-2 border-zinc-800">
-                              {def.example}
-                            </p>
-                          )}
-                        </div>
-                      </li>
-                    ))}
-                  </ol>
-                </section>
-              ))}
-            </div>
-          ) : (
-            <p className="text-zinc-600 text-center text-lg">
-              No definition found.
+          {phonetic && (
+            <p className="text-zinc-500 text-lg font-light tracking-wide mb-20">
+              {phonetic}
             </p>
           )}
-        </div>
+
+          <div className="max-w-prose w-full" style={{ fontFamily: "var(--font-serif), Georgia, serif" }}>
+            {definition ? (
+              <div className="space-y-14">
+                {definition.meanings.map((meaning, i) => (
+                  <section key={i}>
+                    <h2 className="font-sans text-zinc-500 text-[11px] uppercase tracking-wider mb-8 pb-3 border-b border-zinc-800/60">
+                      {meaning.partOfSpeech}
+                    </h2>
+
+                    <ol className="space-y-7">
+                      {meaning.definitions.slice(0, 3).map((def, j) => (
+                        <li key={j} className="flex gap-5">
+                          <span className="font-sans text-zinc-600 text-base tabular-nums flex-shrink-0 pt-1 select-none">
+                            {j + 1}.
+                          </span>
+
+                          <div className="space-y-5">
+                            <p
+                              className="text-2xl leading-[1.7] font-normal transition-colors duration-700"
+                              style={{ color: textColor || "#e4e4e7" }}
+                            >
+                              {def.definition}
+                            </p>
+
+                            {def.example && (
+                              <p
+                                className="text-xl leading-[1.65] italic pl-5 border-l border-zinc-700/50 transition-colors duration-700"
+                                style={{ color: mutedColor || "#a1a1aa" }}
+                              >
+                                "{def.example}"
+                              </p>
+                            )}
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                  </section>
+                ))}
+              </div>
+            ) : (
+              <p className="text-zinc-500 text-center text-lg">
+                No definition found.
+              </p>
+            )}
+          </div>
+        </motion.div>
       </main>
     </div>
   )

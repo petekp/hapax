@@ -32,10 +32,10 @@ async function getKV() {
   return kv;
 }
 
-function loadVettedStylesFallback(): GalleryWordEntry[] {
+function loadWordsIndex(): GalleryWordEntry[] {
   try {
-    const vettedPath = join(process.cwd(), "src", "data", "vetted-styles.json");
-    const content = readFileSync(vettedPath, "utf-8");
+    const indexPath = join(process.cwd(), "src", "generated", "words-index.json");
+    const content = readFileSync(indexPath, "utf-8");
     const data = JSON.parse(content);
 
     const entries: GalleryWordEntry[] = [];
@@ -104,8 +104,8 @@ export async function GET(request: Request) {
     }
   }
 
-  // Fallback to vetted styles
-  const vettedEntries = loadVettedStylesFallback();
+  // Fallback to words index
+  const vettedEntries = loadWordsIndex();
   const startIndex = parseInt(cursor);
 
   let filteredEntries = vettedEntries;

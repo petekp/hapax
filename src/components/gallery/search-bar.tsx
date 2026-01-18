@@ -26,18 +26,22 @@ export function SearchBar() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search for a word..."
-          className="w-full px-6 py-4 text-xl bg-zinc-900/80 border border-zinc-700 rounded-2xl
-                     text-white placeholder-zinc-500
-                     focus:outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500/20
-                     transition-all duration-200"
+          className="w-full px-6 py-4 text-xl bg-black/30 rounded-2xl border
+                     text-white placeholder:text-zinc-500
+                     focus:outline-none focus:ring-2 focus:ring-white/20
+                     transition-all duration-700"
+          style={{ borderColor: "var(--tint-border)" }}
           autoComplete="off"
           spellCheck={false}
         />
         <button
           type="submit"
           className="absolute right-3 top-1/2 -translate-y-1/2 px-4 py-2
-                     bg-zinc-700 hover:bg-zinc-600 rounded-xl text-zinc-300
-                     transition-colors duration-200"
+                     rounded-xl transition-colors duration-700"
+          style={{
+            backgroundColor: "color-mix(in oklch, var(--tint-muted) 40%, transparent)",
+            color: "var(--tint-text)",
+          }}
         >
           Go
         </button>

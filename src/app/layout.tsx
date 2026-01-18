@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Cormorant_Garamond } from "next/font/google";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
+import { ActiveColorProvider } from "@/lib/active-color-context";
 import { PRELOAD_URLS } from "@/lib/font-preload";
 import "./globals.css";
 
@@ -12,6 +13,13 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const cormorant = Cormorant_Garamond({
+  variable: "--font-serif",
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -38,10 +46,12 @@ export default function RootLayout({
         ))}
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${cormorant.variable} antialiased`}
       >
         <ServiceWorkerRegister />
-        {children}
+        <ActiveColorProvider>
+          {children}
+        </ActiveColorProvider>
       </body>
     </html>
   );
