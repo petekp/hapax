@@ -77,7 +77,7 @@ export function VibeInput({
         value={state.rawText}
         onChange={handleChange}
         className="absolute inset-0 h-full w-full cursor-text bg-transparent text-transparent caret-transparent outline-none"
-        aria-label="Vibetype input"
+        aria-label="Hapax input"
       />
 
       {showPlaceholder ? (

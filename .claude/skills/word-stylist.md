@@ -1,6 +1,6 @@
 ---
 name: word-stylist
-description: Match words with their perfect Google Font and OKLCH color. Use when styling words for the vibetype dictionary, reviewing existing word styles, or when the user asks to improve word styling.
+description: Match words with their perfect Google Font and OKLCH color. Use when styling words for the Hapax dictionary, reviewing existing word styles, or when the user asks to improve word styling.
 ---
 
 # Word Stylist

@@ -1,4 +1,4 @@
-# Vibetype: LLM-Powered Semantic Font Styling
+# Hapax: LLM-Powered Semantic Font Styling
 
 A creative text input that uses an LLM to infer the perfect Google Font (+ color) for each word as you type, in real time.
 

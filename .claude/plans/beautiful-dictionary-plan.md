@@ -2,7 +2,7 @@
 
 ## Vision
 
-Transform vibetype into a beautiful online dictionary where every word has unique, LLM-generated styling (typography + color). The app becomes a visual experience for exploring language.
+Transform Hapax into a beautiful online dictionary where every word has unique, LLM-generated styling (typography + color). The app becomes a visual experience for exploring language.
 
 ## Product
 

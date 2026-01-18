@@ -1,1 +1,1 @@
-export * from "./vibetype"
+export * from "./hapax"

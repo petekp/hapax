@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { GalleryWord } from "@/components/gallery"
-import type { FontVariant } from "@/lib/schemas/vibetype"
+import type { FontVariant } from "@/lib/schemas/hapax"
 
 interface Comparison {
   word: string
