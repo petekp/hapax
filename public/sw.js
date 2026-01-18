@@ -1,4 +1,4 @@
-const FONT_CACHE = 'vibetype-fonts-v1'
+const FONT_CACHE = 'hapax-fonts-v1'
 
 // Font domains to cache
 const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com']

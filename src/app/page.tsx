@@ -7,7 +7,7 @@ export default function Home() {
     <div className="fixed inset-0 bg-zinc-950 flex flex-col">
       <header className="flex-shrink-0 flex flex-col items-center justify-center pt-16 pb-8 px-4 z-10">
         <h1 className="text-4xl md:text-5xl font-light text-zinc-200 mb-8 tracking-tight">
-          vibetype
+          hapax
         </h1>
         <SearchBar />
       </header>

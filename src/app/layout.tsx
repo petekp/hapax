@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Vibetype",
-  description: "Every word finds its voice",
+  title: "Hapax",
+  description: "A cabinet of rare words",
 };
 
 export default function RootLayout({
