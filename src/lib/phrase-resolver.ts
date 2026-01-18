@@ -40,13 +40,18 @@ const LLMPhraseResponseSchema = z.object({
     .min(0)
     .max(360)
     .describe(
-      "HSL hue value (0=red, 60=yellow, 120=green, 180=cyan, 240=blue, 300=magenta)"
+      "OKLCH hue value (0=red, 60=yellow, 120=green, 180=cyan, 240=blue, 300=magenta)"
     ),
-  saturation: z
+  chroma: z
     .number()
     .min(0)
-    .max(100)
-    .describe("HSL saturation (0=gray, 50=muted, 100=vivid)"),
+    .max(0.4)
+    .describe("OKLCH chroma/intensity (0=gray, 0.15=muted, 0.25=vivid, 0.4=electric)"),
+  lightness: z
+    .number()
+    .min(30)
+    .max(90)
+    .describe("OKLCH lightness (30=dark/dramatic, 60=rich, 75=balanced, 90=bright/airy)"),
   category: z
     .enum(["serif", "sans-serif", "display", "handwriting", "monospace"])
     .describe("The font category you chose from"),
@@ -87,23 +92,26 @@ Match the font to the phrase's soul:
 
 But these are just sparks - use ANY Google Font that captures "${phrase}".
 
-## Color (Hue 0-360)
+## Color (OKLCH)
 
 What color IS this phrase? Not what color it "should" be - what color do you SEE?
 
+**Hue (0-360):** The color family
+- 0=red, 60=yellow, 120=green, 180=cyan, 240=blue, 300=magenta
 - "California Dreaming" might be warm amber (40), not obvious blue
 - "I love you" might be deep burgundy (350) or soft coral (15)
-- "Tech industry" might be electric cyan (185) or cold gray (0 sat)
 
-Trust your instinct. The whole spectrum: 0=red, 60=yellow, 120=green, 180=cyan, 240=blue, 300=magenta
+**Chroma (0-0.4):** Color intensity
+- 0-0.1: faded, nostalgic, near-gray
+- 0.1-0.2: muted, sophisticated, vintage
+- 0.2-0.3: natural, vivid, alive
+- 0.3-0.4: electric, neon, impossible to ignore
 
-## Saturation (0-100)
-
-- 0-20: faded, nostalgic, timeworn
-- 20-45: muted, sophisticated, vintage
-- 45-65: natural, balanced
-- 65-85: vivid, alive, present
-- 85-100: electric, neon, impossible to ignore
+**Lightness (30-90):** How light or dark
+- 30-45: dark, dramatic, heavy (shadows, doom, night)
+- 45-60: rich, deep, saturated (ocean depths, wine, forest)
+- 60-75: balanced, natural (most phrases)
+- 75-90: bright, airy, luminous (sunshine, glow, heaven)
 
 ## Weight (100-900)
 
@@ -119,7 +127,7 @@ function getFallbackVariant(): FontVariant {
     family: "Inter",
     weight: 400,
     style: "normal",
-    colorIntent: { hue: 220, saturation: 50 },
+    colorIntent: { hue: 220, chroma: 0.15, lightness: 70 },
   };
 }
 
@@ -178,7 +186,8 @@ export async function resolvePhraseWithLLM(
       style: validStyle,
       colorIntent: {
         hue: Math.round(object.hue) % 360,
-        saturation: Math.min(100, Math.max(0, Math.round(object.saturation))),
+        chroma: Math.min(0.4, Math.max(0, object.chroma)),
+        lightness: Math.min(90, Math.max(30, Math.round(object.lightness))),
       },
     };
   } catch (error) {

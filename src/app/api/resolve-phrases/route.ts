@@ -3,6 +3,7 @@ import { z } from "zod/v4"
 import { detectPhrases, type DetectedPhrase } from "@/lib/phrase-detector"
 import { getCachedPhrase, setCachedPhrase, incrementPhraseHitCount } from "@/lib/phrase-cache"
 import { resolvePhraseWithLLM } from "@/lib/phrase-resolver"
+import { getVettedPhraseStyle } from "@/lib/vetted-cache"
 import type { FontVariant } from "@/lib/schemas"
 
 const RequestSchema = z.object({
@@ -14,7 +15,7 @@ export interface ResolvedPhrase {
   startIndex: number
   endIndex: number
   variant: FontVariant
-  source: "cache" | "llm"
+  source: "cache" | "llm" | "vetted"
 }
 
 export async function POST(request: NextRequest) {
@@ -42,9 +43,24 @@ export async function POST(request: NextRequest) {
 
     for (const phrase of detectedPhrases) {
       const phraseWords = normalizedWords.slice(phrase.startIndex, phrase.endIndex + 1)
+      const phraseText = phraseWords.join(" ")
+
+      const vetted = getVettedPhraseStyle(phraseText)
+      if (vetted) {
+        console.log(`[phrase] "${phraseText}" (vetted) → ${vetted.family} ${vetted.weight} | hue=${vetted.colorIntent.hue} chroma=${vetted.colorIntent.chroma} L=${vetted.colorIntent.lightness}`)
+        resolvedPhrases.push({
+          words: phraseWords,
+          startIndex: phrase.startIndex,
+          endIndex: phrase.endIndex,
+          variant: vetted,
+          source: "vetted",
+        })
+        continue
+      }
 
       const cached = await getCachedPhrase(phraseWords)
       if (cached) {
+        console.log(`[phrase] "${phraseText}" (cache) → ${cached.family} ${cached.weight} | hue=${cached.colorIntent.hue} chroma=${cached.colorIntent.chroma} L=${cached.colorIntent.lightness}`)
         incrementPhraseHitCount(phraseWords).catch(console.error)
         resolvedPhrases.push({
           words: phraseWords,
@@ -56,7 +72,9 @@ export async function POST(request: NextRequest) {
         continue
       }
 
+      console.log(`[phrase] Styling "${phraseText}" (${phrase.reason})...`)
       const variant = await resolvePhraseWithLLM(phraseWords, phrase.reason)
+      console.log(`[phrase] "${phraseText}" → ${variant.family} ${variant.weight} | hue=${variant.colorIntent.hue} chroma=${variant.colorIntent.chroma} L=${variant.colorIntent.lightness}`)
 
       setCachedPhrase(phraseWords, variant).catch(console.error)
 

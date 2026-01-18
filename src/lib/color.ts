@@ -3,17 +3,54 @@ import type { ColorIntent } from "./schemas"
 export type ColorMode = "light" | "dark"
 
 export function deriveColor(intent: ColorIntent, mode: ColorMode): string {
-  const lightness = mode === "light" ? 30 : 75
-  return `hsl(${intent.hue}, ${intent.saturation}%, ${lightness}%)`
+  const { hue } = intent
+
+  // Handle both old (saturation) and new (chroma/lightness) formats
+  const chroma = "chroma" in intent ? intent.chroma : 0.2
+  const lightness = "lightness" in intent ? intent.lightness : 70
+
+  if (mode === "dark") {
+    // Dark mode: ensure readable on dark background (min 50% lightness)
+    const l = Math.max(50, Math.min(90, lightness))
+    return `oklch(${l}% ${chroma} ${hue})`
+  } else {
+    // Light mode: invert lightness for dark text on light background
+    const l = Math.max(20, Math.min(45, 100 - lightness))
+    return `oklch(${l}% ${chroma} ${hue})`
+  }
 }
 
-export function deriveCssVariables(
-  intent: ColorIntent
-): Record<string, string> {
+// Generate color with P3 fallback for wider gamut displays
+export function deriveColorWithFallback(intent: ColorIntent, mode: ColorMode): {
+  base: string
+  p3: string
+} {
+  const { hue } = intent
+
+  // Handle both old (saturation) and new (chroma/lightness) formats
+  const chroma = "chroma" in intent ? intent.chroma : 0.2
+  const lightness = "lightness" in intent ? intent.lightness : 70
+
+  const l = mode === "dark"
+    ? Math.max(50, Math.min(90, lightness))
+    : Math.max(20, Math.min(45, 100 - lightness))
+
+  // Base OKLCH (works in all modern browsers, auto-gamut-maps)
+  const base = `oklch(${l}% ${chroma} ${hue})`
+
+  // P3 version with slightly boosted chroma for wider gamut displays
+  const p3Chroma = Math.min(0.45, chroma * 1.15)
+  const p3 = `oklch(${l}% ${p3Chroma} ${hue})`
+
+  return { base, p3 }
+}
+
+export function deriveCssVariables(intent: ColorIntent): Record<string, string> {
   return {
     "--vibe-color-light": deriveColor(intent, "light"),
     "--vibe-color-dark": deriveColor(intent, "dark"),
     "--vibe-hue": String(intent.hue),
-    "--vibe-saturation": `${intent.saturation}%`,
+    "--vibe-chroma": String(intent.chroma),
+    "--vibe-lightness": `${intent.lightness}%`,
   }
 }

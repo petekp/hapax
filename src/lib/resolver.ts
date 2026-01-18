@@ -2,13 +2,41 @@ import type { FontVariant } from "./schemas"
 
 interface ResolveResponse {
   variant: FontVariant
-  source: "cache" | "llm"
+  source: "cache" | "llm" | "vetted"
+}
+
+const wordCache = new Map<string, { variant: FontVariant; timestamp: number }>()
+const WORD_CACHE_TTL = 30 * 60 * 1000 // 30 minutes
+
+function getWordCacheKey(word: string): string {
+  const normalized = word.toLowerCase().trim()
+  const isCapitalized = word.trim()[0] === word.trim()[0].toUpperCase() &&
+    word.trim()[0] !== word.trim()[0].toLowerCase()
+  return isCapitalized ? `${normalized}:cap` : normalized
+}
+
+export function checkWordCache(word: string): FontVariant | null {
+  const cacheKey = getWordCacheKey(word)
+  const cached = wordCache.get(cacheKey)
+
+  if (cached && Date.now() - cached.timestamp < WORD_CACHE_TTL) {
+    return cached.variant
+  }
+  return null
 }
 
 export async function resolveFont(
   word: string,
   signal?: AbortSignal
 ): Promise<ResolveResponse> {
+  const cacheKey = getWordCacheKey(word)
+  const cached = wordCache.get(cacheKey)
+
+  if (cached && Date.now() - cached.timestamp < WORD_CACHE_TTL) {
+    console.log(`[resolver] Client cache HIT: "${word}" → ${cached.variant.family}`)
+    return { variant: cached.variant, source: "cache" }
+  }
+
   const response = await fetch("/api/resolve-font", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -20,7 +48,12 @@ export async function resolveFont(
     throw new Error(`Font resolution failed: ${response.status}`)
   }
 
-  return response.json()
+  const result: ResolveResponse = await response.json()
+
+  wordCache.set(cacheKey, { variant: result.variant, timestamp: Date.now() })
+  console.log(`[resolver] Cached: "${word}" → ${result.variant.family}`)
+
+  return result
 }
 
 export interface ResolvedPhrase {
@@ -28,7 +61,7 @@ export interface ResolvedPhrase {
   startIndex: number
   endIndex: number
   variant: FontVariant
-  source: "cache" | "llm"
+  source: "cache" | "llm" | "vetted"
 }
 
 interface ResolvePhraseResponse {

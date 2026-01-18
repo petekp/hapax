@@ -22,7 +22,8 @@ export type FontStyle = z.infer<typeof FontStyle>
 
 export const ColorIntent = z.object({
   hue: z.number().min(0).max(360),
-  saturation: z.number().min(0).max(100),
+  chroma: z.number().min(0).max(0.4),
+  lightness: z.number().min(30).max(90),
 })
 export type ColorIntent = z.infer<typeof ColorIntent>
 
@@ -132,7 +133,7 @@ export const WordResolutionLoading = z.object({
 export const WordResolutionResolved = z.object({
   status: z.literal("resolved"),
   variant: FontVariant,
-  source: z.enum(["cache", "llm"]),
+  source: z.enum(["cache", "llm", "vetted"]),
 })
 
 export const WordResolutionError = z.object({

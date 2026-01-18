@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod/v4"
+import { getVettedStyle } from "@/lib/vetted-cache"
 import { getCachedFont, setCachedFont, incrementHitCount } from "@/lib/font-cache"
 import { resolveWordWithLLM } from "@/lib/llm-resolver"
 import type { FontVariant } from "@/lib/schemas"
@@ -13,7 +14,7 @@ function getFallbackVariant(): FontVariant {
     family: "Inter",
     weight: 400,
     style: "normal",
-    colorIntent: { hue: 220, saturation: 50 },
+    colorIntent: { hue: 220, chroma: 0.15, lightness: 70 },
   }
 }
 
@@ -30,14 +31,24 @@ export async function POST(request: NextRequest) {
     }
 
     const { word } = parseResult.data
-    const normalized = word.toLowerCase().trim()
+    const trimmed = word.trim()
 
-    // Check cache first
-    const cached = await getCachedFont(normalized)
+    // Check vetted styles first (highest priority, normalized lookup)
+    const vetted = getVettedStyle(trimmed)
+    if (vetted) {
+      console.log(`[word] "${trimmed}" (vetted) → ${vetted.family} ${vetted.weight} | hue=${vetted.colorIntent.hue} chroma=${vetted.colorIntent.chroma} L=${vetted.colorIntent.lightness}`)
+      return NextResponse.json({
+        variant: vetted,
+        source: "vetted" as const,
+      })
+    }
+
+    // Check runtime cache (cache key includes capitalization)
+    const cached = await getCachedFont(trimmed)
     if (cached) {
-      console.log(`[STYLED] "${normalized}" (cache) → ${cached.family} ${cached.weight} ${cached.style} | hue=${cached.colorIntent.hue} sat=${cached.colorIntent.saturation}`)
+      console.log(`[word] "${trimmed}" (cache) → ${cached.family} ${cached.weight} | hue=${cached.colorIntent.hue} chroma=${cached.colorIntent.chroma} L=${cached.colorIntent.lightness}`)
       // Fire and forget hit count increment
-      incrementHitCount(normalized).catch(console.error)
+      incrementHitCount(trimmed).catch(console.error)
 
       return NextResponse.json({
         variant: cached,
@@ -45,13 +56,13 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Cache miss - call LLM
-    const variant = await resolveWordWithLLM(normalized)
+    // Cache miss - call LLM (pass original word with capitalization)
+    const variant = await resolveWordWithLLM(trimmed)
 
-    console.log(`[STYLED] "${normalized}" → ${variant.family} ${variant.weight} | hue=${variant.colorIntent.hue} sat=${variant.colorIntent.saturation}`)
+    console.log(`[word] "${trimmed}" → ${variant.family} ${variant.weight} | hue=${variant.colorIntent.hue} chroma=${variant.colorIntent.chroma} L=${variant.colorIntent.lightness}`)
 
     // Store in cache (fire and forget)
-    setCachedFont(normalized, variant).catch(console.error)
+    setCachedFont(trimmed, variant).catch(console.error)
 
     return NextResponse.json({
       variant,

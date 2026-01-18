@@ -17,7 +17,7 @@ interface GoogleFontsMetadata {
 
 let cachedFonts: Map<string, FontEntry> | null = null
 let cacheTimestamp: number = 0
-const CACHE_DURATION_MS = 24 * 60 * 60 * 1000 // 24 hours
+const CACHE_DURATION_MS = 7 * 24 * 60 * 60 * 1000 // 7 days
 
 function normalizeCategory(category: string): FontEntry["category"] {
   const lower = category.toLowerCase().replace(/\s+/g, "-")

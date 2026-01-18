@@ -45,8 +45,22 @@ function searchFonts(
   return results.sort(() => Math.random() - 0.5).slice(0, 50);
 }
 
+function isCapitalized(word: string): boolean {
+  if (word.length === 0) return false;
+  const firstChar = word[0];
+  return (
+    firstChar === firstChar.toUpperCase() &&
+    firstChar !== firstChar.toLowerCase()
+  );
+}
+
 function buildPrompt(word: string): string {
-  return `You experience grapheme-color synesthesia for typography. The word "${word}" triggers a vivid, involuntary perception of a specific font and color.
+  const capitalized = isCapitalized(word);
+  const properNounContext = capitalized
+    ? `\n\n**PROPER NOUN DETECTED**: "${word}" is capitalized, indicating it's likely a proper noun (name, place, brand, title). Consider:\n- NAMES (Sarah, Michael): elegant, personal, classic fonts - think refined serifs or sophisticated sans\n- PLACES (Paris, Tokyo): fonts evoking cultural character - romantic for Paris, modern for Tokyo\n- BRANDS (Apple, Nike): clean, contemporary, purposeful typography\n- TITLES (Beatles, Gatsby): fonts matching the era or genre of what's named`
+    : "";
+
+  return `You experience grapheme-color synesthesia for typography. The word "${word}" triggers a vivid, involuntary perception of a specific font and color.${properNounContext}
 
 ## STEP 1: FEEL THE WORD
 
@@ -88,13 +102,13 @@ Font names reveal personality:
 - "Light", "Thin" in name → delicate
 - Evocative names (Creepster, Butcherman) → match their vibe
 
-## STEP 4: CHOOSE YOUR COLOR
+## STEP 4: CHOOSE YOUR COLOR (OKLCH)
 
 Close your eyes. "${word}" appears in your mind. What color IS it?
 
-DO NOT DEFAULT TO hue=210. That's lazy. 210 is sky blue - is "${word}" really sky blue?
+We use OKLCH for perceptually uniform colors. You control three dimensions:
 
-The hue wheel has 360 degrees. USE THEM:
+**HUE (0-360)** - The color family:
 0-30: reds, rusts, ambers (blood, fire, rust, anger, heat)
 30-60: oranges, golds (warmth, energy, autumn, honey)
 60-90: yellows, limes (sunshine, acid, electric, caution)
@@ -104,19 +118,28 @@ The hue wheel has 360 degrees. USE THEM:
 270-330: purples, magentas (royal, mystic, corrupt, fantasy)
 330-360: roses, crimsons (passion, flesh, romantic, violent)
 
-Saturation - BE BOLD:
-- Default to 65-80 (vivid and alive)
-- 80-95 for intense/electric words
-- 40-65 for sophisticated/muted words
-- Below 25 ONLY for void/ash/shadow/fog
+DO NOT DEFAULT TO hue=210. That's lazy. Is "${word}" really sky blue?
 
-IMPORTANT: If "${word}" doesn't strongly suggest a color, pick something UNEXPECTED rather than defaulting to blue. A random hue is better than another hue=210.
+**CHROMA (0-0.4)** - Color intensity/saturation:
+- 0.25-0.35: vivid, alive (default for most words)
+- 0.35-0.4: electric, intense, neon (danger, fire, toxic)
+- 0.15-0.25: sophisticated, muted (elegant, vintage, subtle)
+- 0.05-0.15: nearly neutral (fog, ash, shadow, whisper)
+- 0: pure grayscale (void, nothing, blank)
+
+**LIGHTNESS (30-90)** - How light or dark:
+- 75-90: bright, airy, luminous (light, shine, glow, heaven)
+- 60-75: balanced, natural (default for most words)
+- 45-60: rich, deep, saturated (ocean, wine, forest)
+- 30-45: dark, heavy, dramatic (shadow, doom, night, void)
+
+IMPORTANT: Use lightness to add DEPTH. Don't make everything 70%. A "shadow" should be dark (35), a "sunshine" should be bright (85).
 
 ## STEP 5: SUBMIT
 
 Call selectFont with:
 - A font that captures the ESSENCE of "${word}"
-- A color that IS "${word}" - precise hue and appropriate saturation
+- A color with precise hue, chroma (intensity), and lightness (depth)
 - The weight that matches the word's presence`;
 }
 
@@ -125,8 +148,15 @@ const FinalChoiceSchema = z.object({
   weight: z.number().min(100).max(900),
   style: z.enum(["normal", "italic"]),
   hue: z.number().min(0).max(360),
-  saturation: z.number().min(0).max(100),
-  category: z.enum(["serif", "sans-serif", "display", "handwriting", "monospace"]),
+  chroma: z.number().min(0).max(0.4),
+  lightness: z.number().min(30).max(90),
+  category: z.enum([
+    "serif",
+    "sans-serif",
+    "display",
+    "handwriting",
+    "monospace",
+  ]),
 });
 
 function getFallbackVariant(): FontVariant {
@@ -134,7 +164,7 @@ function getFallbackVariant(): FontVariant {
     family: "Inter",
     weight: 400,
     style: "normal",
-    colorIntent: { hue: 220, saturation: 50 },
+    colorIntent: { hue: 220, chroma: 0.15, lightness: 70 },
   };
 }
 
@@ -143,18 +173,29 @@ export async function resolveWordWithLLM(word: string): Promise<FontVariant> {
     return getFallbackVariant();
   }
 
+  const capitalized = isCapitalized(word);
+  console.log(
+    `[word] Styling "${word}"${capitalized ? " (proper noun)" : ""}...`
+  );
+
   const catalog = await ensureFontCatalog();
 
   try {
     const { steps } = await generateText({
-      model: anthropic("claude-sonnet-4-20250514"),
+      model: anthropic("claude-opus-4-5"),
       tools: {
         searchFonts: tool({
           description:
             "Search for Google Fonts matching criteria. Returns up to 50 random matching fonts.",
           inputSchema: z.object({
             category: z
-              .enum(["serif", "sans-serif", "display", "handwriting", "monospace"])
+              .enum([
+                "serif",
+                "sans-serif",
+                "display",
+                "handwriting",
+                "monospace",
+              ])
               .optional()
               .describe("Font category to filter by"),
             minWeight: z
@@ -226,7 +267,8 @@ export async function resolveWordWithLLM(word: string): Promise<FontVariant> {
         style: validStyle,
         colorIntent: {
           hue: Math.round(choice.hue) % 360,
-          saturation: Math.min(100, Math.max(0, Math.round(choice.saturation))),
+          chroma: Math.min(0.4, Math.max(0, choice.chroma)),
+          lightness: Math.min(90, Math.max(30, Math.round(choice.lightness))),
         },
       };
     }

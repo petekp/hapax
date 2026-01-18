@@ -124,6 +124,11 @@ export function createFontLoaderState() {
     link.href = url
     link.crossOrigin = "anonymous"
 
+    // Prioritize first few font batches (above-fold content)
+    if (injectedUrls.size <= 3) {
+      ;(link as HTMLLinkElement & { fetchPriority: string }).fetchPriority = "high"
+    }
+
     link.onload = async () => {
       try {
         await document.fonts.ready

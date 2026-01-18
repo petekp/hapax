@@ -1,8 +1,8 @@
 import type { FontVariant } from "./schemas"
 
 const CACHE_PREFIX = "vibe:phrase:"
-const SCHEMA_VERSION = 1
-const MODEL_VERSION = "claude-haiku-v2"
+const SCHEMA_VERSION = 2  // Bumped: OKLCH color system (hue/chroma/lightness)
+const MODEL_VERSION = "claude-haiku-4-5"
 
 interface PhraseCacheEntry {
   variant: FontVariant

@@ -11,7 +11,7 @@ import {
   reconcileWords,
   createInitialWordState,
 } from "@/lib/tokenize";
-import type { ResolvedPhrase } from "@/lib/resolver";
+import { checkWordCache, type ResolvedPhrase } from "@/lib/resolver";
 
 type Action =
   | { type: "SET_TEXT"; text: string }
@@ -21,7 +21,7 @@ type Action =
       wordId: string;
       requestId: string;
       variant: FontVariant;
-      source: "cache" | "llm";
+      source: "cache" | "llm" | "vetted";
     }
   | { type: "WORD_ERROR"; wordId: string; requestId: string; message: string }
   | { type: "FONT_LOADED"; wordId: string }
@@ -30,7 +30,25 @@ type Action =
       wordIds: string[];
       phraseGroupId: string;
       variant: FontVariant;
-      source: "cache" | "llm";
+      source: "cache" | "llm" | "vetted";
+    }
+  | {
+      type: "UPDATE_VARIANT";
+      wordId: string;
+      variant: FontVariant;
+    }
+  | {
+      type: "SET_LOADING";
+      wordId: string;
+    }
+  | {
+      type: "SET_PHRASE_LOADING";
+      wordIds: string[];
+    }
+  | {
+      type: "UPDATE_PHRASE_VARIANT";
+      wordIds: string[];
+      variant: FontVariant;
     };
 
 function reducer(state: InputState, action: Action): InputState {
@@ -63,8 +81,14 @@ function reducer(state: InputState, action: Action): InputState {
         ...state,
         words: state.words.map((word) => {
           if (word.token.id !== action.wordId) return word;
-          if (word.resolution.status !== "loading") return word;
-          if (word.resolution.requestId !== action.requestId) return word;
+
+          // Instant cache bypasses loading state
+          if (action.requestId === "instant-cache") {
+            if (word.resolution.status !== "pending") return word;
+          } else {
+            if (word.resolution.status !== "loading") return word;
+            if (word.resolution.requestId !== action.requestId) return word;
+          }
 
           return {
             ...word,
@@ -126,6 +150,82 @@ function reducer(state: InputState, action: Action): InputState {
       };
     }
 
+    case "UPDATE_VARIANT": {
+      return {
+        ...state,
+        words: state.words.map((word) =>
+          word.token.id === action.wordId
+            ? {
+                ...word,
+                fontLoaded: false,
+                resolution: {
+                  status: "resolved",
+                  variant: action.variant,
+                  source: "llm" as const,
+                },
+              }
+            : word
+        ),
+      };
+    }
+
+    case "SET_LOADING": {
+      return {
+        ...state,
+        words: state.words.map((word) =>
+          word.token.id === action.wordId
+            ? {
+                ...word,
+                fontLoaded: false,
+                resolution: {
+                  status: "loading",
+                  requestId: "regenerating",
+                },
+              }
+            : word
+        ),
+      };
+    }
+
+    case "SET_PHRASE_LOADING": {
+      const wordIdSet = new Set(action.wordIds);
+      return {
+        ...state,
+        words: state.words.map((word) =>
+          wordIdSet.has(word.token.id)
+            ? {
+                ...word,
+                fontLoaded: false,
+                resolution: {
+                  status: "loading",
+                  requestId: "regenerating-phrase",
+                },
+              }
+            : word
+        ),
+      };
+    }
+
+    case "UPDATE_PHRASE_VARIANT": {
+      const wordIdSet = new Set(action.wordIds);
+      return {
+        ...state,
+        words: state.words.map((word) =>
+          wordIdSet.has(word.token.id)
+            ? {
+                ...word,
+                fontLoaded: false,
+                resolution: {
+                  status: "resolved",
+                  variant: action.variant,
+                  source: "llm" as const,
+                },
+              }
+            : word
+        ),
+      };
+    }
+
     default:
       return state;
   }
@@ -144,7 +244,7 @@ export type WordResolver = (
   signal?: AbortSignal
 ) => Promise<{
   variant: FontVariant;
-  source: "cache" | "llm";
+  source: "cache" | "llm" | "vetted";
 }>;
 
 export type PhraseResolver = (words: string[]) => Promise<{
@@ -182,13 +282,55 @@ export function useVibeInput(options: UseVibeInputOptions = {}) {
   }, []);
 
   const setPhraseGroup = useCallback(
-    (wordIds: string[], variant: FontVariant, source: "cache" | "llm" = "llm") => {
+    (wordIds: string[], variant: FontVariant, source: "cache" | "llm" | "vetted" = "llm") => {
       dispatch({
         type: "SET_PHRASE_GROUP",
         wordIds,
         phraseGroupId: nanoid(),
         variant,
         source,
+      });
+    },
+    []
+  );
+
+  const updateVariant = useCallback(
+    (wordId: string, variant: FontVariant) => {
+      dispatch({
+        type: "UPDATE_VARIANT",
+        wordId,
+        variant,
+      });
+    },
+    []
+  );
+
+  const setWordLoading = useCallback(
+    (wordId: string) => {
+      dispatch({
+        type: "SET_LOADING",
+        wordId,
+      });
+    },
+    []
+  );
+
+  const setPhraseLoading = useCallback(
+    (wordIds: string[]) => {
+      dispatch({
+        type: "SET_PHRASE_LOADING",
+        wordIds,
+      });
+    },
+    []
+  );
+
+  const updatePhraseVariant = useCallback(
+    (wordIds: string[], variant: FontVariant) => {
+      dispatch({
+        type: "UPDATE_PHRASE_VARIANT",
+        wordIds,
+        variant,
       });
     },
     []
@@ -215,6 +357,27 @@ export function useVibeInput(options: UseVibeInputOptions = {}) {
     );
 
     if (pendingWords.length === 0 || !resolverRef.current) return;
+
+    // Phase 0: Immediately apply client-cached results (no debounce)
+    const uncachedWords: typeof pendingWords = [];
+    for (const word of pendingWords) {
+      const cached = checkWordCache(word.token.raw);
+      if (cached) {
+        console.log(`[apply] Instant cache: "${word.token.raw}" → ${cached.family} ${cached.weight}`);
+        dispatch({
+          type: "WORD_RESOLVED",
+          wordId: word.token.id,
+          requestId: "instant-cache",
+          variant: cached,
+          source: "cache",
+        });
+      } else {
+        uncachedWords.push(word);
+      }
+    }
+
+    // If all words were cached, we're done
+    if (uncachedWords.length === 0) return;
 
     resolutionGenRef.current += 1;
     const thisGeneration = resolutionGenRef.current;
@@ -251,6 +414,9 @@ export function useVibeInput(options: UseVibeInputOptions = {}) {
             );
             if (!hasPendingWord) continue;
 
+            const phraseText = phrase.words.join(" ");
+            console.log(`[apply] Phrase "${phraseText}" → ${phrase.variant.family} ${phrase.variant.weight} (${phrase.source})`);
+
             phraseWordIds.forEach((id) => wordsInPhrases.add(id));
 
             dispatch({
@@ -278,6 +444,10 @@ export function useVibeInput(options: UseVibeInputOptions = {}) {
           w.resolution.status === "pending" && !wordsInPhrases.has(w.token.id)
       );
 
+      if (wordsToResolve.length > 0) {
+        console.log(`[apply] Resolving ${wordsToResolve.length} individual word(s): ${wordsToResolve.map(w => `"${w.token.raw}"`).join(", ")}`);
+      }
+
       for (const word of wordsToResolve) {
         const requestId = nanoid();
         const controller = new AbortController();
@@ -294,7 +464,7 @@ export function useVibeInput(options: UseVibeInputOptions = {}) {
         // Generation checks would incorrectly discard valid results
         // when user types more words while a fetch is in progress.
         resolverRef
-          .current!(word.token.normalized, controller.signal)
+          .current!(word.token.raw, controller.signal)
           .then((result) => {
             abortControllersRef.current.delete(word.token.id);
             dispatch({
@@ -332,5 +502,9 @@ export function useVibeInput(options: UseVibeInputOptions = {}) {
     setText,
     markFontLoaded,
     setPhraseGroup,
+    updateVariant,
+    setWordLoading,
+    setPhraseLoading,
+    updatePhraseVariant,
   };
 }

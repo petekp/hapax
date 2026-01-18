@@ -1,201 +1,225 @@
 "use client"
 
-import { useMemo, useEffect, useState, useRef, useCallback, useLayoutEffect } from "react"
+import { useEffect, useState, useRef, useCallback } from "react"
 import { motion, AnimatePresence } from "motion/react"
 import type { WordState, FontVariant } from "@/lib/schemas"
 import { deriveColor } from "@/lib/color"
-import { getCapHeightScale } from "@/lib/font-metrics"
 
-type AnimationPhase = "unformed" | "breathing" | "revealing" | "settled"
+type VisualState = "unformed" | "breathing" | "revealed"
+
+interface PhraseContext {
+  phraseText: string
+  wordIds: string[]
+}
 
 interface VibeWordProps {
   word: WordState
   colorMode: "light" | "dark"
+  onVariantChange?: (wordId: string, variant: FontVariant) => void
+  onSetLoading?: (wordId: string) => void
+  onPhraseVariantChange?: (wordIds: string[], variant: FontVariant) => void
+  onSetPhraseLoading?: (wordIds: string[]) => void
+  phraseContext?: PhraseContext
+  showVettedIndicator?: boolean
 }
+
+const isDev = process.env.NODE_ENV === "development"
 
 interface VariantSnapshot {
   key: string
   variant: FontVariant
   color: string
-  scale: number
 }
 
-const CROSSFADE_TRANSITION = {
-  duration: 0.4,
-  ease: [0.4, 0, 0.2, 1] as const,
-}
+const CROSSFADE_DURATION = 0.4
 
-const BREATHING_TRANSITION = {
-  duration: 1.2,
-  ease: "easeInOut" as const,
-  repeat: Infinity,
-  repeatType: "mirror" as const,
-}
-
-export function VibeWord({ word, colorMode }: VibeWordProps) {
-  const [phase, setPhase] = useState<AnimationPhase>("unformed")
-  const [revealingFrom, setRevealingFrom] = useState<VariantSnapshot | null>(null)
-  const [targetWidth, setTargetWidth] = useState<number>(0)
-
-  const measureRef = useRef<HTMLSpanElement>(null)
+export function VibeWord({
+  word,
+  colorMode,
+  onVariantChange,
+  onSetLoading,
+  onPhraseVariantChange,
+  onSetPhraseLoading,
+  phraseContext,
+  showVettedIndicator
+}: VibeWordProps) {
+  const [visualState, setVisualState] = useState<VisualState>("unformed")
+  const [fadingOut, setFadingOut] = useState<VariantSnapshot | null>(null)
+  const [isHovered, setIsHovered] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
+  const [isRegenerating, setIsRegenerating] = useState(false)
   const currentVariantRef = useRef<VariantSnapshot | null>(null)
-  const phaseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const layoutTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const mutedColor = colorMode === "dark" ? "hsl(0, 0%, 45%)" : "hsl(0, 0%, 55%)"
+  const isPartOfPhrase = !!phraseContext
+
+  const handleSave = useCallback(async () => {
+    if (word.resolution.status !== "resolved") return
+    setIsSaving(true)
+    try {
+      if (isPartOfPhrase && phraseContext) {
+        const response = await fetch("/api/vet-phrase", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            phrase: phraseContext.phraseText,
+            variant: word.resolution.variant,
+          }),
+        })
+        if (response.ok) {
+          console.log(`[ui] Saved phrase "${phraseContext.phraseText}" to vetted styles`)
+        }
+      } else {
+        const response = await fetch("/api/vet-word", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            word: word.token.raw,
+            variant: word.resolution.variant,
+          }),
+        })
+        if (response.ok) {
+          console.log(`[ui] Saved "${word.token.raw}" to vetted styles`)
+        }
+      }
+    } catch (error) {
+      console.error("Failed to save:", error)
+    } finally {
+      setIsSaving(false)
+    }
+  }, [word, isPartOfPhrase, phraseContext])
+
+  const handleRedo = useCallback(async () => {
+    setIsRegenerating(true)
+
+    if (isPartOfPhrase && phraseContext) {
+      onSetPhraseLoading?.(phraseContext.wordIds)
+      try {
+        const response = await fetch("/api/regenerate-phrase", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ phrase: phraseContext.phraseText }),
+        })
+        if (response.ok) {
+          const { variant } = await response.json()
+          console.log(`[ui] Regenerated phrase "${phraseContext.phraseText}" → ${variant.family}`)
+          onPhraseVariantChange?.(phraseContext.wordIds, variant)
+        }
+      } catch (error) {
+        console.error("Failed to regenerate phrase:", error)
+      }
+    } else {
+      onSetLoading?.(word.token.id)
+      try {
+        const response = await fetch("/api/regenerate-word", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ word: word.token.raw }),
+        })
+        if (response.ok) {
+          const { variant } = await response.json()
+          console.log(`[ui] Regenerated "${word.token.raw}" → ${variant.family}`)
+          onVariantChange?.(word.token.id, variant)
+        }
+      } catch (error) {
+        console.error("Failed to regenerate:", error)
+      }
+    }
+
+    setIsRegenerating(false)
+  }, [word.token.raw, word.token.id, onVariantChange, onSetLoading, isPartOfPhrase, phraseContext, onPhraseVariantChange, onSetPhraseLoading])
 
   const variantKey = word.resolution.status === "resolved"
     ? `${word.resolution.variant.family}:${word.resolution.variant.weight}:${word.phraseGroupId}`
     : null
 
-  const resolvedVariant = useMemo((): VariantSnapshot | null => {
-    if (word.resolution.status !== "resolved" || !word.fontLoaded) {
-      return null
-    }
-    const { variant } = word.resolution
-    const scale = getCapHeightScale(variant.family, variant.weight, variant.style)
-    return {
-      key: variantKey!,
-      variant,
-      color: deriveColor(variant.colorIntent, colorMode),
-      scale,
-    }
-  }, [word.resolution, word.fontLoaded, variantKey, colorMode])
+  const currentVariant: VariantSnapshot | null =
+    word.resolution.status === "resolved" && word.fontLoaded
+      ? {
+          key: variantKey!,
+          variant: word.resolution.variant,
+          color: deriveColor(word.resolution.variant.colorIntent, colorMode),
+        }
+      : null
 
-  const fontStyleFor = useCallback((variant: FontVariant, scale: number = 1): React.CSSProperties => {
-    return {
-      fontFamily: `"${variant.family}", sans-serif`,
-      fontWeight: variant.weight,
-      fontStyle: variant.style,
-      fontSize: `${scale}em`,
-    }
-  }, [])
+  const fontStyle = useCallback((variant: FontVariant): React.CSSProperties => ({
+    fontFamily: `"${variant.family}", sans-serif`,
+    fontWeight: variant.weight,
+    fontStyle: variant.style,
+  }), [])
 
-  const measureStyle = useMemo((): React.CSSProperties => {
-    if (resolvedVariant) {
-      return fontStyleFor(resolvedVariant.variant, resolvedVariant.scale)
-    }
-    return {}
-  }, [resolvedVariant, fontStyleFor])
-
-  useEffect(() => {
-    let cancelled = false
-
-    const measure = () => {
-      if (cancelled || !measureRef.current) return
-      const rect = measureRef.current.getBoundingClientRect()
-      setTargetWidth(rect.width + 2)
-    }
-
-    // Double RAF ensures font is fully rendered before measuring
-    requestAnimationFrame(() => {
-      requestAnimationFrame(measure)
-    })
-
-    return () => { cancelled = true }
-  }, [measureStyle, word.token.raw])
-
+  // Track variant changes for crossfade
   useEffect(() => {
     const prev = currentVariantRef.current
-    if (resolvedVariant && resolvedVariant.key !== prev?.key) {
-      if (prev) {
-        setRevealingFrom(prev)
-      }
+    if (currentVariant && currentVariant.key !== prev?.key && prev) {
+      setFadingOut(prev)
     }
-    currentVariantRef.current = resolvedVariant
-  }, [resolvedVariant])
+    currentVariantRef.current = currentVariant
+  }, [currentVariant])
 
+  // Visual state machine
   useEffect(() => {
-    if (phaseTimerRef.current) {
-      clearTimeout(phaseTimerRef.current)
-      phaseTimerRef.current = null
-    }
-    if (layoutTimerRef.current) {
-      clearTimeout(layoutTimerRef.current)
-      layoutTimerRef.current = null
-    }
-
     const { status } = word.resolution
 
     if (status === "pending") {
-      setPhase("unformed")
+      setVisualState("unformed")
     } else if (status === "loading" || (status === "resolved" && !word.fontLoaded)) {
-      setPhase("breathing")
+      setVisualState("breathing")
     } else if (status === "resolved" && word.fontLoaded) {
-      layoutTimerRef.current = setTimeout(() => {
-        setPhase("revealing")
-        phaseTimerRef.current = setTimeout(() => {
-          setPhase("settled")
-        }, 500)
-      }, 50)
-    }
-
-    return () => {
-      if (phaseTimerRef.current) clearTimeout(phaseTimerRef.current)
-      if (layoutTimerRef.current) clearTimeout(layoutTimerRef.current)
+      setVisualState("revealed")
     }
   }, [word.resolution.status, word.fontLoaded])
 
   const handleFadeOutComplete = useCallback(() => {
-    setRevealingFrom(null)
+    setFadingOut(null)
   }, [])
 
-  const isRevealed = phase === "revealing" || phase === "settled"
-  const showDefaultLayer = !isRevealed
-  const showFinalLayer = isRevealed && resolvedVariant !== null
-  const showPreviousVariantFade = isRevealed && revealingFrom !== null
+  // Unformed or breathing state - show muted, blurry text
+  if (visualState !== "revealed" || !currentVariant) {
+    return (
+      <motion.span
+        style={{ color: mutedColor }}
+        animate={
+          visualState === "breathing"
+            ? { opacity: [0.4, 0.55], filter: ["blur(4px)", "blur(8px)"] }
+            : { opacity: 0.4, filter: "blur(4px)" }
+        }
+        transition={
+          visualState === "breathing"
+            ? { duration: 1.2, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }
+            : { duration: 0.3 }
+        }
+      >
+        {word.token.raw}
+      </motion.span>
+    )
+  }
 
+  // Revealed state - show styled text with optional crossfade ghost
   return (
     <span
-      style={{ position: "relative", display: "inline-block", verticalAlign: "baseline" }}
-      data-word-id={word.token.id}
-      data-phase={phase}
+      style={{ position: "relative" }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <AnimatePresence mode="sync">
-        {showDefaultLayer && (
+      {/* Ghost of previous variant fading out */}
+      <AnimatePresence>
+        {fadingOut && (
           <motion.span
-            key="default"
+            key={fadingOut.key}
             style={{
               position: "absolute",
               left: 0,
               top: 0,
-              display: "inline-block",
-              color: mutedColor,
-              whiteSpace: "nowrap",
-              transformOrigin: "left baseline",
-            }}
-            initial={{ opacity: 0.4, filter: "blur(4px)" }}
-            animate={
-              phase === "breathing"
-                ? { opacity: [0.4, 0.55], filter: ["blur(4px)", "blur(8px)"] }
-                : { opacity: 0.4, filter: "blur(4px)" }
-            }
-            exit={{ opacity: 0, filter: "blur(6px)" }}
-            transition={phase === "breathing" ? BREATHING_TRANSITION : CROSSFADE_TRANSITION}
-          >
-            {word.token.raw}
-          </motion.span>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence mode="sync">
-        {showPreviousVariantFade && revealingFrom && (
-          <motion.span
-            key={revealingFrom.key}
-            style={{
-              position: "absolute",
-              left: 0,
-              top: 0,
-              display: "inline-block",
-              color: revealingFrom.color,
+              color: fadingOut.color,
               whiteSpace: "nowrap",
               pointerEvents: "none",
-              ...fontStyleFor(revealingFrom.variant, revealingFrom.scale),
+              ...fontStyle(fadingOut.variant),
             }}
-            initial={{ opacity: 1, filter: "blur(0px)" }}
+            initial={{ opacity: 1 }}
             animate={{ opacity: 0, filter: "blur(4px)" }}
             exit={{ opacity: 0 }}
-            transition={CROSSFADE_TRANSITION}
+            transition={{ duration: CROSSFADE_DURATION }}
             onAnimationComplete={handleFadeOutComplete}
           >
             {word.token.raw}
@@ -203,53 +227,94 @@ export function VibeWord({ word, colorMode }: VibeWordProps) {
         )}
       </AnimatePresence>
 
-      <AnimatePresence mode="sync">
-        {showFinalLayer && resolvedVariant && (
-          <motion.span
-            key={resolvedVariant.key}
+      {/* Current variant - THIS IS THE LAYOUT ELEMENT */}
+      <motion.span
+        key={currentVariant.key}
+        style={{
+          color: currentVariant.color,
+          ...fontStyle(currentVariant.variant),
+        }}
+        initial={{ opacity: 0, filter: "blur(6px)" }}
+        animate={{ opacity: 1, filter: "blur(0px)" }}
+        transition={{ duration: CROSSFADE_DURATION }}
+      >
+        {word.token.raw}
+      </motion.span>
+
+      {/* Vetted indicator */}
+      {showVettedIndicator && word.resolution.status === "resolved" && word.resolution.source === "vetted" && (
+        <span
+          style={{
+            display: "inline-block",
+            width: "6px",
+            height: "6px",
+            borderRadius: "50%",
+            background: "#22c55e",
+            marginLeft: "3px",
+            verticalAlign: "super",
+            opacity: 0.8,
+          }}
+          title="Vetted"
+        />
+      )}
+
+      {/* Save/Redo buttons (dev only) - centered over word */}
+      {isDev && isHovered && (
+        <span
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
+            display: "flex",
+            gap: "8px",
+            zIndex: 100,
+          }}
+        >
+          <button
+            onClick={handleSave}
+            disabled={isSaving}
+            title="Save to vetted styles"
             style={{
-              position: "absolute",
-              left: 0,
-              top: 0,
-              display: "inline-block",
-              color: resolvedVariant.color,
-              whiteSpace: "nowrap",
-              ...fontStyleFor(resolvedVariant.variant, resolvedVariant.scale),
+              width: "32px",
+              height: "32px",
+              fontSize: "18px",
+              background: isSaving ? "#374151" : "rgba(34, 197, 94, 0.95)",
+              color: "white",
+              border: "2px solid white",
+              borderRadius: "8px",
+              cursor: isSaving ? "wait" : "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.4)",
             }}
-            initial={{ opacity: 0, filter: "blur(6px)" }}
-            animate={{ opacity: 1, filter: "blur(0px)" }}
-            transition={CROSSFADE_TRANSITION}
           >
-            {word.token.raw}
-          </motion.span>
-        )}
-      </AnimatePresence>
-
-      <span
-        ref={measureRef}
-        style={{
-          position: "absolute",
-          visibility: "hidden",
-          whiteSpace: "nowrap",
-          ...measureStyle,
-        }}
-        aria-hidden="true"
-      >
-        {word.token.raw}
-      </span>
-
-      <span
-        style={{
-          display: "inline-block",
-          visibility: "hidden",
-          whiteSpace: "nowrap",
-          width: targetWidth || "auto",
-          height: resolvedVariant ? `${resolvedVariant.scale}em` : "1em",
-        }}
-        aria-hidden="true"
-      >
-        {word.token.raw}
-      </span>
+            {isSaving ? "⏳" : "✓"}
+          </button>
+          <button
+            onClick={handleRedo}
+            disabled={isRegenerating}
+            title="Regenerate style"
+            style={{
+              width: "32px",
+              height: "32px",
+              fontSize: "18px",
+              background: isRegenerating ? "#374151" : "rgba(59, 130, 246, 0.95)",
+              color: "white",
+              border: "2px solid white",
+              borderRadius: "8px",
+              cursor: isRegenerating ? "wait" : "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.4)",
+            }}
+          >
+            {isRegenerating ? "⏳" : "↻"}
+          </button>
+        </span>
+      )}
     </span>
   )
 }

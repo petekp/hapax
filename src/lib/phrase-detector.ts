@@ -29,7 +29,7 @@ export interface DetectedPhrase {
 }
 
 const DETECTION_CACHE_PREFIX = "vibe:detection:";
-const DETECTION_VERSION = "claude-haiku-v5-strict";
+const DETECTION_VERSION = "claude-haiku-v8-principled";
 
 interface DetectionCacheEntry {
   phrases: DetectedPhrase[];
@@ -107,12 +107,18 @@ export async function detectPhrases(
 
   const cached = await getCachedDetection(words);
   if (cached !== null) {
+    if (cached.length > 0) {
+      console.log(`[detect] Cache HIT: found ${cached.length} phrase(s) in "${words.join(" ")}"`)
+      cached.forEach(p => console.log(`[detect]   → "${p.words.join(" ")}" (${p.reason})`))
+    }
     return cached;
   }
 
   if (!process.env.ANTHROPIC_API_KEY) {
     return [];
   }
+
+  console.log(`[detect] Analyzing: "${words.join(" ")}"`)
 
   try {
     const { object } = await generateObject({
@@ -131,11 +137,18 @@ export async function detectPhrases(
       return isValid;
     });
 
+    if (validPhrases.length > 0) {
+      console.log(`[detect] Found ${validPhrases.length} phrase(s):`)
+      validPhrases.forEach(p => console.log(`[detect]   → "${p.words.join(" ")}" (${p.reason})`))
+    } else {
+      console.log(`[detect] No phrases found in "${words.join(" ")}"`)
+    }
+
     setCachedDetection(words, validPhrases).catch(console.error);
 
     return validPhrases;
   } catch (error) {
-    console.error("Phrase detection error:", error);
+    console.error("[detect] Error:", error);
     return [];
   }
 }
@@ -143,42 +156,43 @@ export async function detectPhrases(
 function buildPhraseDetectionPrompt(words: string[]): string {
   const wordList = words.map((w, i) => `${i}: "${w}"`).join("\n");
 
-  return `Identify ONLY well-known, culturally recognized phrases. Be very strict.
+  return `Identify multi-word units that function as a single concept in the cultural consciousness.
 
 ## Words (with indices):
 ${wordList}
 
-## ONLY detect these:
+## The Core Principle
 
-**Fixed expressions that most people would recognize**:
-- Idioms: "once upon a time", "piece of cake", "break a leg"
-- Common sayings: "what's up", "long time no see", "it's that time again"
-- Greetings: "good morning", "thank you", "I love you"
+Detect word sequences where:
+1. **The whole is a recognized entity** - not just words that happen to be adjacent
+2. **People would say "that's a thing"** - it has its own identity, Wikipedia article, or cultural presence
+3. **Breaking it apart loses the meaning** - "New" and "York" separately don't convey "New York"
 
-**Proper nouns & titles**:
-- Place names: "New York", "Los Angeles", "San Francisco", "Las Vegas", "Hong Kong"
-- Band/artist names: "Nine Inch Nails", "Guns N' Roses", "Red Hot Chili Peppers"
-- Known titles: song names, movie titles, book titles people would recognize
-- Brand names, organization names
+This includes:
+- **Named entities**: people, places, organizations, events, products, titles, teams
+- **Fixed expressions**: idioms, sayings, greetings that are said exactly this way
+- **Established terms**: compound concepts that have become single units ("ice cream", "black hole")
 
-**Established compound terms** (dictionary-level):
-- "ice cream", "hot dog", "real estate", "high school"
-- NOT arbitrary adjective+noun combinations
+## The Key Test
 
-## DO NOT detect:
+Ask: "Is this a THING that EXISTS as a unit, or just a grammatical phrase?"
 
-- Grammatically connected but NOT culturally fixed: "the eternal wizard", "a beautiful sunset", "my old friend"
-- Made-up or novel combinations, even if they sound nice together
-- Generic adjective + noun pairs: "big house", "fast car", "dark night"
-- Random word sequences that happen to be next to each other
+✓ "George Washington" → a specific person
+✓ "World War II" → a specific event
+✓ "ice cream" → a specific thing
+✓ "break a leg" → a fixed idiom
+✓ "artificial intelligence" → an established field
+✓ "New York Yankees" → a specific team
 
-## Key test:
-Would most English speakers instantly recognize this exact phrase? If you have to think about it, it's NOT a phrase.
+✗ "the old man" → just article + adjective + noun
+✗ "beautiful sunset" → just adjective + noun
+✗ "running quickly" → just verb + adverb
+✗ "very important" → just intensifier + adjective
 
-"once upon a time" → YES, universally known
-"the eternal wizard" → NO, just adjective + noun
-"break a leg" → YES, common idiom
-"climb a mountain" → NO, generic verb phrase
+## Important
 
-Return ONLY phrases that pass this strict test. Empty array is fine if none qualify.`;
+- Capitalization is a hint but not definitive
+- Be generous with named entities - if consecutive capitalized words could be a name, they probably are
+- Empty array is fine if nothing qualifies
+- When in doubt about a proper noun, include it`;
 }

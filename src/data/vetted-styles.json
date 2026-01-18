@@ -1,0 +1,2327 @@
+{
+  "version": 2,
+  "words": {
+    "ancient": {
+      "family": "Cinzel",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 35,
+        "chroma": 0.12,
+        "lightness": 48
+      }
+    },
+    "coalesce": {
+      "family": "Cormorant",
+      "weight": 500,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 195,
+        "chroma": 0.28,
+        "lightness": 52
+      }
+    },
+    "exquisite": {
+      "family": "Spectral",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 215,
+        "chroma": 0.15,
+        "lightness": 75
+      }
+    },
+    "phantom": {
+      "family": "Cormorant",
+      "weight": 300,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 270,
+        "chroma": 0.15,
+        "lightness": 45
+      }
+    },
+    "squeak": {
+      "family": "Caveat",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 45,
+        "chroma": 0.18,
+        "lightness": 72
+      }
+    },
+    "suplex": {
+      "family": "Coda",
+      "weight": 800,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 15,
+        "chroma": 0.35,
+        "lightness": 50
+      }
+    },
+    "surreptitious": {
+      "family": "Playfair Display",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.28,
+        "lightness": 42
+      }
+    },
+    "surreptitiously": {
+      "family": "Cormorant",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 270,
+        "chroma": 0.18,
+        "lightness": 45
+      }
+    },
+    "syzygy": {
+      "family": "Space Mono",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 265,
+        "chroma": 0.18,
+        "lightness": 38
+      }
+    },
+    "portcullis": {
+      "family": "UnifrakturCook",
+      "weight": 700,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 25,
+        "chroma": 0.08,
+        "lightness": 38
+      }
+    },
+    "taciturn": {
+      "family": "Hahmlet",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 235,
+        "chroma": 0.08,
+        "lightness": 42
+      }
+    },
+    "sylvan": {
+      "family": "Copse",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 128,
+        "chroma": 0.22,
+        "lightness": 42
+      }
+    },
+    "liminal": {
+      "family": "Cormorant",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 280,
+        "chroma": 0.12,
+        "lightness": 58
+      }
+    },
+    "ersatz": {
+      "family": "Neuton",
+      "weight": 300,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 48,
+        "chroma": 0.12,
+        "lightness": 52
+      }
+    },
+    "noumenon": {
+      "family": "Neuton",
+      "weight": 300,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 258,
+        "chroma": 0.18,
+        "lightness": 42
+      }
+    },
+    "sidereal": {
+      "family": "Spectral SC",
+      "weight": 300,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 258,
+        "chroma": 0.18,
+        "lightness": 62
+      }
+    },
+    "nychthemeron": {
+      "family": "EB Garamond",
+      "weight": 500,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 265,
+        "chroma": 0.18,
+        "lightness": 42
+      }
+    },
+    "welkin": {
+      "family": "Sorts Mill Goudy",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 228,
+        "chroma": 0.18,
+        "lightness": 78
+      }
+    },
+    "eigengrau": {
+      "family": "Vollkorn SC",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 270,
+        "chroma": 0.04,
+        "lightness": 32
+      }
+    },
+    "dreadnaught": {
+      "family": "Turret Road",
+      "weight": 800,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 28,
+        "chroma": 0.08,
+        "lightness": 40
+      }
+    },
+    "carbuncle": {
+      "family": "Grenze",
+      "weight": 700,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 10,
+        "chroma": 0.22,
+        "lightness": 38
+      }
+    },
+    "entelechy": {
+      "family": "Cormorant Unicase",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 42,
+        "chroma": 0.22,
+        "lightness": 58
+      }
+    },
+    "hapax legomenon": {
+      "family": "IM Fell DW Pica",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.12,
+        "lightness": 52
+      }
+    },
+    "casuistry": {
+      "family": "IM Fell French Canon",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 78,
+        "chroma": 0.11,
+        "lightness": 44
+      }
+    },
+    "psychopomp": {
+      "family": "Spectral",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 275,
+        "chroma": 0.18,
+        "lightness": 42
+      }
+    },
+    "vade mecum": {
+      "family": "IM Fell DW Pica",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 45,
+        "chroma": 0.18,
+        "lightness": 52
+      }
+    },
+    "paraselene": {
+      "family": "Cormorant SC",
+      "weight": 300,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 255,
+        "chroma": 0.12,
+        "lightness": 78
+      }
+    },
+    "acronychal": {
+      "family": "Spectral",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 258,
+        "chroma": 0.18,
+        "lightness": 42
+      }
+    },
+    "alabaster": {
+      "family": "Cormorant Upright",
+      "weight": 300,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 45,
+        "chroma": 0.04,
+        "lightness": 88
+      }
+    },
+    "lithe": {
+      "family": "Cormorant Garamond",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 135,
+        "chroma": 0.12,
+        "lightness": 68
+      }
+    },
+    "truncheon": {
+      "family": "Tienne",
+      "weight": 900,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 25,
+        "chroma": 0.12,
+        "lightness": 38
+      }
+    },
+    "arabesque": {
+      "family": "Cormorant",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 35,
+        "chroma": 0.18,
+        "lightness": 52
+      }
+    },
+    "mien": {
+      "family": "Cormorant",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 265,
+        "chroma": 0.12,
+        "lightness": 52
+      }
+    },
+    "nictate": {
+      "family": "Taviraj",
+      "weight": 200,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 175,
+        "chroma": 0.12,
+        "lightness": 55
+      }
+    },
+    "caesura": {
+      "family": "Cormorant",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 278,
+        "chroma": 0.12,
+        "lightness": 55
+      }
+    },
+    "quincunx": {
+      "family": "Sorts Mill Goudy",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.12,
+        "lightness": 48
+      }
+    },
+    "enchiridion": {
+      "family": "Cinzel",
+      "weight": 500,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 42,
+        "chroma": 0.18,
+        "lightness": 52
+      }
+    },
+    "aeviternity": {
+      "family": "Cormorant",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 280,
+        "chroma": 0.18,
+        "lightness": 55
+      }
+    },
+    "vesper": {
+      "family": "Cormorant",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 268,
+        "chroma": 0.18,
+        "lightness": 45
+      }
+    },
+    "metanoia": {
+      "family": "Cormorant",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 278,
+        "chroma": 0.18,
+        "lightness": 58
+      }
+    },
+    "dwale": {
+      "family": "Zen Antique Soft",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.12,
+        "lightness": 38
+      }
+    },
+    "wrest": {
+      "family": "Skranji",
+      "weight": 700,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 15,
+        "chroma": 0.28,
+        "lightness": 38
+      }
+    },
+    "cairn": {
+      "family": "Solway",
+      "weight": 700,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 175,
+        "chroma": 0.08,
+        "lightness": 48
+      }
+    },
+    "panoply": {
+      "family": "Fraunces",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 42,
+        "chroma": 0.22,
+        "lightness": 58
+      }
+    },
+    "teratologic": {
+      "family": "Old Standard TT",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 85,
+        "chroma": 0.12,
+        "lightness": 52
+      }
+    },
+    "cachinnation": {
+      "family": "Gorditas",
+      "weight": 700,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 28,
+        "chroma": 0.3,
+        "lightness": 68
+      }
+    },
+    "cynosure": {
+      "family": "Baskervville",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 255,
+        "chroma": 0.22,
+        "lightness": 58
+      }
+    },
+    "tatterdemalion": {
+      "family": "IM Fell Great Primer",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 42,
+        "chroma": 0.11,
+        "lightness": 46
+      }
+    },
+    "ragamuffin": {
+      "family": "Crushed",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 28,
+        "chroma": 0.15,
+        "lightness": 45
+      }
+    },
+    "weltanschauung": {
+      "family": "Vollkorn",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 48,
+        "chroma": 0.12,
+        "lightness": 42
+      }
+    },
+    "malinger": {
+      "family": "IM Fell English",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 78,
+        "chroma": 0.12,
+        "lightness": 52
+      }
+    },
+    "wellaway": {
+      "family": "IM Fell Double Pica",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.12,
+        "lightness": 52
+      }
+    },
+    "vespertine": {
+      "family": "Spectral",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 268,
+        "chroma": 0.18,
+        "lightness": 42
+      }
+    },
+    "eunoia": {
+      "family": "Cormorant",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 35,
+        "chroma": 0.18,
+        "lightness": 72
+      }
+    },
+    "zugzwang": {
+      "family": "Bodoni Moda SC",
+      "weight": 700,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 240,
+        "chroma": 0.08,
+        "lightness": 42
+      }
+    },
+    "moraine": {
+      "family": "Hepta Slab",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 195,
+        "chroma": 0.08,
+        "lightness": 52
+      }
+    },
+    "psithurism": {
+      "family": "EB Garamond",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 135,
+        "chroma": 0.08,
+        "lightness": 55
+      }
+    },
+    "pettifog": {
+      "family": "IM Fell Great Primer",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 95,
+        "chroma": 0.08,
+        "lightness": 42
+      }
+    },
+    "tousle": {
+      "family": "Delius",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 345,
+        "chroma": 0.18,
+        "lightness": 62
+      }
+    },
+    "contretemps": {
+      "family": "Cormorant Garamond",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 310,
+        "chroma": 0.18,
+        "lightness": 52
+      }
+    },
+    "lineament": {
+      "family": "Cormorant",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 35,
+        "chroma": 0.08,
+        "lightness": 52
+      }
+    },
+    "cromlech": {
+      "family": "Spectral SC",
+      "weight": 700,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 135,
+        "chroma": 0.11,
+        "lightness": 42
+      }
+    },
+    "tchotchke": {
+      "family": "Oldenburg",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 35,
+        "chroma": 0.18,
+        "lightness": 62
+      }
+    },
+    "argot": {
+      "family": "IM Fell French Canon",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 315,
+        "chroma": 0.12,
+        "lightness": 42
+      }
+    },
+    "moiety": {
+      "family": "Cormorant Garamond",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 258,
+        "chroma": 0.18,
+        "lightness": 52
+      }
+    },
+    "soi-disant": {
+      "family": "Bodoni Moda",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.12,
+        "lightness": 52
+      }
+    },
+    "bête noire": {
+      "family": "Cormorant Unicase",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 12,
+        "chroma": 0.12,
+        "lightness": 35
+      }
+    },
+    "incarnadine": {
+      "family": "IM Fell DW Pica",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 12,
+        "chroma": 0.22,
+        "lightness": 42
+      }
+    },
+    "sinecure": {
+      "family": "Cormorant Upright",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 42,
+        "chroma": 0.18,
+        "lightness": 58
+      }
+    },
+    "escutcheon": {
+      "family": "Baskervville",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 45,
+        "chroma": 0.12,
+        "lightness": 48
+      }
+    },
+    "pareidolia": {
+      "family": "Spectral",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 268,
+        "chroma": 0.18,
+        "lightness": 52
+      }
+    },
+    "vellum": {
+      "family": "IM Fell French Canon",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 45,
+        "chroma": 0.08,
+        "lightness": 72
+      }
+    },
+    "lagniappe": {
+      "family": "Sorts Mill Goudy",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 45,
+        "chroma": 0.25,
+        "lightness": 68
+      }
+    },
+    "misericord": {
+      "family": "IM Fell French Canon SC",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 295,
+        "chroma": 0.12,
+        "lightness": 42
+      }
+    },
+    "revanchist": {
+      "family": "Brygada 1918",
+      "weight": 700,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 355,
+        "chroma": 0.22,
+        "lightness": 38
+      }
+    },
+    "ballyhoo": {
+      "family": "Rowdies",
+      "weight": 700,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 48,
+        "chroma": 0.32,
+        "lightness": 68
+      }
+    },
+    "truculent": {
+      "family": "Big Shoulders",
+      "weight": 900,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 18,
+        "chroma": 0.28,
+        "lightness": 42
+      }
+    },
+    "ophidian": {
+      "family": "Cormorant",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 115,
+        "chroma": 0.18,
+        "lightness": 38
+      }
+    },
+    "catachresis": {
+      "family": "Fraunces",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 288,
+        "chroma": 0.12,
+        "lightness": 42
+      }
+    },
+    "caldera": {
+      "family": "Cinzel",
+      "weight": 700,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 18,
+        "chroma": 0.28,
+        "lightness": 38
+      }
+    },
+    "malapert": {
+      "family": "EB Garamond",
+      "weight": 500,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 345,
+        "chroma": 0.22,
+        "lightness": 42
+      }
+    },
+    "upbraid": {
+      "family": "Bitter",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 18,
+        "chroma": 0.18,
+        "lightness": 38
+      }
+    },
+    "borborygmus": {
+      "family": "Rubik Beastly",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 78,
+        "chroma": 0.18,
+        "lightness": 52
+      }
+    },
+    "camphor": {
+      "family": "Fanwood Text",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 158,
+        "chroma": 0.12,
+        "lightness": 78
+      }
+    },
+    "agrodolce": {
+      "family": "Alegreya",
+      "weight": 500,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 28,
+        "chroma": 0.22,
+        "lightness": 48
+      }
+    },
+    "melismatic": {
+      "family": "Alegreya",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 18,
+        "chroma": 0.18,
+        "lightness": 58
+      }
+    },
+    "colorature": {
+      "family": "Noto Serif Display",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 320,
+        "chroma": 0.18,
+        "lightness": 68
+      }
+    },
+    "susurrous": {
+      "family": "Cormorant Garamond",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 152,
+        "chroma": 0.08,
+        "lightness": 55
+      }
+    },
+    "firmament": {
+      "family": "Inknut Antiqua",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 245,
+        "chroma": 0.18,
+        "lightness": 42
+      }
+    },
+    "grimoire": {
+      "family": "IM Fell French Canon",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 295,
+        "chroma": 0.12,
+        "lightness": 38
+      }
+    },
+    "nullifidian": {
+      "family": "GFS Didot",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.08,
+        "lightness": 52
+      }
+    },
+    "sui generis": {
+      "family": "Cinzel",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 275,
+        "chroma": 0.18,
+        "lightness": 42
+      }
+    },
+    "orrery": {
+      "family": "Old Standard TT",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 45,
+        "chroma": 0.18,
+        "lightness": 52
+      }
+    },
+    "bonhomie": {
+      "family": "Lora",
+      "weight": 500,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 42,
+        "chroma": 0.28,
+        "lightness": 62
+      }
+    },
+    "fusillade": {
+      "family": "Frank Ruhl Libre",
+      "weight": 700,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 25,
+        "chroma": 0.28,
+        "lightness": 42
+      }
+    },
+    "benthic": {
+      "family": "Zilla Slab",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 192,
+        "chroma": 0.12,
+        "lightness": 38
+      }
+    },
+    "oneiric": {
+      "family": "Cormorant",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.12,
+        "lightness": 52
+      }
+    },
+    "acephalous": {
+      "family": "Antic Didone",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.08,
+        "lightness": 48
+      }
+    },
+    "samizdat": {
+      "family": "Courier Prime",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 222,
+        "chroma": 0.08,
+        "lightness": 42
+      }
+    },
+    "mountebank": {
+      "family": "Oleo Script Swash Caps",
+      "weight": 700,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 45,
+        "chroma": 0.22,
+        "lightness": 52
+      }
+    },
+    "propinquity": {
+      "family": "Cormorant Garamond",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 345,
+        "chroma": 0.12,
+        "lightness": 55
+      }
+    },
+    "grisaille": {
+      "family": "Cormorant Garamond",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 230,
+        "chroma": 0.03,
+        "lightness": 55
+      }
+    },
+    "cryptomnesia": {
+      "family": "Cormorant Upright",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 280,
+        "chroma": 0.12,
+        "lightness": 48
+      }
+    },
+    "hemiola": {
+      "family": "Cormorant",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 45,
+        "chroma": 0.22,
+        "lightness": 58
+      }
+    },
+    "prosopopoeia": {
+      "family": "Cormorant Infant",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.18,
+        "lightness": 62
+      }
+    },
+    "abraxas": {
+      "family": "Cinzel",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.18,
+        "lightness": 48
+      }
+    },
+    "gallimaufry": {
+      "family": "Averia Libre",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 45,
+        "chroma": 0.18,
+        "lightness": 55
+      }
+    },
+    "oubliette": {
+      "family": "Texturina",
+      "weight": 500,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 268,
+        "chroma": 0.12,
+        "lightness": 38
+      }
+    },
+    "noctilucent": {
+      "family": "Crimson Pro",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 195,
+        "chroma": 0.18,
+        "lightness": 78
+      }
+    },
+    "miasma": {
+      "family": "IM Fell English",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 92,
+        "chroma": 0.13,
+        "lightness": 47
+      }
+    },
+    "cantrip": {
+      "family": "Cormorant",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.22,
+        "lightness": 68
+      }
+    },
+    "nihilartikel": {
+      "family": "Spectral",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 278,
+        "chroma": 0.08,
+        "lightness": 45
+      }
+    },
+    "monadnock": {
+      "family": "Cinzel",
+      "weight": 800,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 175,
+        "chroma": 0.08,
+        "lightness": 40
+      }
+    },
+    "kvell": {
+      "family": "Vollkorn SC",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 45,
+        "chroma": 0.28,
+        "lightness": 58
+      }
+    },
+    "atelier": {
+      "family": "Playfair Display",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 45,
+        "chroma": 0.18,
+        "lightness": 55
+      }
+    },
+    "sprezzatura": {
+      "family": "EB Garamond",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 25,
+        "chroma": 0.18,
+        "lightness": 58
+      }
+    },
+    "petrichor": {
+      "family": "Alegreya",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 135,
+        "chroma": 0.12,
+        "lightness": 52
+      }
+    },
+    "tsundere": {
+      "family": "Shizuru",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 350,
+        "chroma": 0.28,
+        "lightness": 58
+      }
+    },
+    "ygdrasil": {
+      "family": "Eczar",
+      "weight": 700,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 125,
+        "chroma": 0.18,
+        "lightness": 42
+      }
+    },
+    "languor": {
+      "family": "Cormorant",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 295,
+        "chroma": 0.12,
+        "lightness": 55
+      }
+    },
+    "quisling": {
+      "family": "Cormorant Upright",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 85,
+        "chroma": 0.12,
+        "lightness": 48
+      }
+    },
+    "celadon": {
+      "family": "Diphylleia",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 145,
+        "chroma": 0.12,
+        "lightness": 68
+      }
+    },
+    "peregrine": {
+      "family": "Cormorant Upright",
+      "weight": 500,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 225,
+        "chroma": 0.12,
+        "lightness": 52
+      }
+    },
+    "empyrean": {
+      "family": "Cormorant SC",
+      "weight": 300,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 48,
+        "chroma": 0.22,
+        "lightness": 82
+      }
+    },
+    "persiflage": {
+      "family": "Cormorant Garamond",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 315,
+        "chroma": 0.18,
+        "lightness": 68
+      }
+    },
+    "mot juste": {
+      "family": "Cormorant",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 290,
+        "chroma": 0.18,
+        "lightness": 48
+      }
+    },
+    "deracinate": {
+      "family": "Alegreya",
+      "weight": 500,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 32,
+        "chroma": 0.12,
+        "lightness": 42
+      }
+    },
+    "bathos": {
+      "family": "IM Fell Double Pica SC",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 310,
+        "chroma": 0.12,
+        "lightness": 42
+      }
+    },
+    "moribund": {
+      "family": "IM Fell DW Pica",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 325,
+        "chroma": 0.08,
+        "lightness": 38
+      }
+    },
+    "prognosticate": {
+      "family": "GFS Didot",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 265,
+        "chroma": 0.12,
+        "lightness": 42
+      }
+    },
+    "concinnity": {
+      "family": "Cormorant Unicase",
+      "weight": 500,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.12,
+        "lightness": 52
+      }
+    },
+    "coruscate": {
+      "family": "Playfair Display",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 55,
+        "chroma": 0.28,
+        "lightness": 82
+      }
+    },
+    "desuetude": {
+      "family": "IM Fell French Canon",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.12,
+        "lightness": 52
+      }
+    },
+    "effluvium": {
+      "family": "IM Fell DW Pica",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 85,
+        "chroma": 0.12,
+        "lightness": 48
+      }
+    },
+    "glissade": {
+      "family": "Cormorant Upright",
+      "weight": 300,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 255,
+        "chroma": 0.12,
+        "lightness": 72
+      }
+    },
+    "mordicant": {
+      "family": "Cormorant",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 78,
+        "chroma": 0.32,
+        "lightness": 52
+      }
+    },
+    "bete noire": {
+      "family": "Grenze",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 280,
+        "chroma": 0.12,
+        "lightness": 35
+      }
+    },
+    "antinomy": {
+      "family": "Bodoni Moda",
+      "weight": 500,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 265,
+        "chroma": 0.22,
+        "lightness": 42
+      }
+    },
+    "noetic": {
+      "family": "Cormorant Unicase",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 268,
+        "chroma": 0.18,
+        "lightness": 52
+      }
+    },
+    "glossolalia": {
+      "family": "Alegreya",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 318,
+        "chroma": 0.22,
+        "lightness": 58
+      }
+    },
+    "catafalque": {
+      "family": "Cormorant Upright",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.12,
+        "lightness": 38
+      }
+    },
+    "cacodoxy": {
+      "family": "Almendra",
+      "weight": 700,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 295,
+        "chroma": 0.12,
+        "lightness": 38
+      }
+    },
+    "chiaroscuro": {
+      "family": "Cormorant Garamond",
+      "weight": 500,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 35,
+        "chroma": 0.12,
+        "lightness": 38
+      }
+    },
+    "nescience": {
+      "family": "Sorts Mill Goudy",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 268,
+        "chroma": 0.12,
+        "lightness": 42
+      }
+    },
+    "excogitate": {
+      "family": "Cormorant Garamond",
+      "weight": 500,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 265,
+        "chroma": 0.18,
+        "lightness": 48
+      }
+    },
+    "flummox": {
+      "family": "Atma",
+      "weight": 500,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 315,
+        "chroma": 0.18,
+        "lightness": 58
+      }
+    },
+    "insouciant": {
+      "family": "Cormorant Garamond",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 268,
+        "chroma": 0.12,
+        "lightness": 62
+      }
+    },
+    "athwart": {
+      "family": "IM Fell Great Primer",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 185,
+        "chroma": 0.18,
+        "lightness": 42
+      }
+    },
+    "calescence": {
+      "family": "Lora",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 38,
+        "chroma": 0.22,
+        "lightness": 58
+      }
+    },
+    "cachinnate": {
+      "family": "Cherry Bomb One",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 28,
+        "chroma": 0.32,
+        "lightness": 68
+      }
+    },
+    "quidnunc": {
+      "family": "IM Fell French Canon",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 315,
+        "chroma": 0.18,
+        "lightness": 52
+      }
+    },
+    "chthonian": {
+      "family": "Grenze Gotisch",
+      "weight": 800,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 95,
+        "chroma": 0.08,
+        "lightness": 32
+      }
+    },
+    "vermillion": {
+      "family": "Bodoni Moda",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 22,
+        "chroma": 0.32,
+        "lightness": 55
+      }
+    },
+    "terraqueous": {
+      "family": "Alegreya",
+      "weight": 500,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 172,
+        "chroma": 0.18,
+        "lightness": 50
+      }
+    },
+    "peripeteia": {
+      "family": "Alegreya SC",
+      "weight": 500,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.18,
+        "lightness": 42
+      }
+    },
+    "crux": {
+      "family": "Cinzel",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 12,
+        "chroma": 0.18,
+        "lightness": 42
+      }
+    },
+    "fjord": {
+      "family": "Cormorant Unicase",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 195,
+        "chroma": 0.12,
+        "lightness": 42
+      }
+    },
+    "indigo": {
+      "family": "Amethysta",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 258,
+        "chroma": 0.28,
+        "lightness": 42
+      }
+    },
+    "primeval": {
+      "family": "Grenze",
+      "weight": 800,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 128,
+        "chroma": 0.18,
+        "lightness": 38
+      }
+    },
+    "rivulet": {
+      "family": "Cormorant Garamond",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 185,
+        "chroma": 0.18,
+        "lightness": 62
+      }
+    },
+    "ratiocination": {
+      "family": "Cormorant Garamond",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 195,
+        "chroma": 0.18,
+        "lightness": 42
+      }
+    },
+    "preceptor": {
+      "family": "Cormorant Upright",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 352,
+        "chroma": 0.18,
+        "lightness": 42
+      }
+    },
+    "chanticleer": {
+      "family": "Cormorant Garamond",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 38,
+        "chroma": 0.28,
+        "lightness": 52
+      }
+    },
+    "amaranth": {
+      "family": "Spectral",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 348,
+        "chroma": 0.19,
+        "lightness": 48
+      }
+    },
+    "eldritch": {
+      "family": "Grenze Gotisch",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.08,
+        "lightness": 35
+      }
+    },
+    "vouchsafe": {
+      "family": "IM Fell English",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 295,
+        "chroma": 0.18,
+        "lightness": 42
+      }
+    },
+    "sacerdotal": {
+      "family": "Inknut Antiqua",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.18,
+        "lightness": 42
+      }
+    },
+    "imbibe": {
+      "family": "Libre Bodoni",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 345,
+        "chroma": 0.22,
+        "lightness": 45
+      }
+    },
+    "interpose": {
+      "family": "Spectral",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 265,
+        "chroma": 0.18,
+        "lightness": 52
+      }
+    },
+    "alacrity": {
+      "family": "Cormorant",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 45,
+        "chroma": 0.3,
+        "lightness": 72
+      }
+    },
+    "threnody": {
+      "family": "Cormorant Upright",
+      "weight": 500,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 268,
+        "chroma": 0.12,
+        "lightness": 38
+      }
+    },
+    "coronach": {
+      "family": "Inknut Antiqua",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 278,
+        "chroma": 0.09,
+        "lightness": 38
+      }
+    },
+    "sequester": {
+      "family": "Taviraj",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 265,
+        "chroma": 0.12,
+        "lightness": 48
+      }
+    },
+    "erstwhile": {
+      "family": "IM Fell English",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 290,
+        "chroma": 0.12,
+        "lightness": 52
+      }
+    },
+    "calumny": {
+      "family": "Cormorant",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.18,
+        "lightness": 42
+      }
+    },
+    "weltschmerz": {
+      "family": "Playfair Display",
+      "weight": 600,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 265,
+        "chroma": 0.12,
+        "lightness": 42
+      }
+    },
+    "blandishment": {
+      "family": "Crimson Text",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 345,
+        "chroma": 0.18,
+        "lightness": 58
+      }
+    },
+    "ennui": {
+      "family": "Cormorant Garamond",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.08,
+        "lightness": 52
+      }
+    },
+    "ataraxia": {
+      "family": "Cormorant",
+      "weight": 300,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 145,
+        "chroma": 0.12,
+        "lightness": 78
+      }
+    },
+    "elide": {
+      "family": "Fanwood Text",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.08,
+        "lightness": 58
+      }
+    },
+    "mollify": {
+      "family": "Cormorant",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 305,
+        "chroma": 0.12,
+        "lightness": 62
+      }
+    },
+    "de rigueur": {
+      "family": "Cormorant Garamond",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 288,
+        "chroma": 0.12,
+        "lightness": 48
+      }
+    },
+    "desiccate": {
+      "family": "IM Fell English",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 42,
+        "chroma": 0.11,
+        "lightness": 52
+      }
+    },
+    "labile": {
+      "family": "Cormorant",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 265,
+        "chroma": 0.12,
+        "lightness": 68
+      }
+    },
+    "fascicle": {
+      "family": "Cormorant",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 105,
+        "chroma": 0.12,
+        "lightness": 52
+      }
+    },
+    "floccus": {
+      "family": "Fanwood Text",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 280,
+        "chroma": 0.08,
+        "lightness": 78
+      }
+    },
+    "abscind": {
+      "family": "Crimson Pro",
+      "weight": 500,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 255,
+        "chroma": 0.18,
+        "lightness": 48
+      }
+    },
+    "nostrum": {
+      "family": "IM Fell French Canon",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 42,
+        "chroma": 0.18,
+        "lightness": 48
+      }
+    },
+    "pauciloquent": {
+      "family": "Cormorant Garamond",
+      "weight": 300,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 278,
+        "chroma": 0.08,
+        "lightness": 55
+      }
+    },
+    "delectable": {
+      "family": "Cormorant",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 340,
+        "chroma": 0.22,
+        "lightness": 52
+      }
+    },
+    "oronym": {
+      "family": "Cormorant",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.18,
+        "lightness": 62
+      }
+    },
+    "oughtness": {
+      "family": "Spectral",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 260,
+        "chroma": 0.12,
+        "lightness": 42
+      }
+    },
+    "compos mentis": {
+      "family": "Bodoni Moda SC",
+      "weight": 500,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 228,
+        "chroma": 0.12,
+        "lightness": 52
+      }
+    },
+    "columnar": {
+      "family": "Stint Ultra Condensed",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 45,
+        "chroma": 0.08,
+        "lightness": 58
+      }
+    },
+    "scintilla": {
+      "family": "Cormorant Upright",
+      "weight": 300,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 50,
+        "chroma": 0.22,
+        "lightness": 78
+      }
+    },
+    "forsooth": {
+      "family": "IM Fell Double Pica",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 42,
+        "chroma": 0.18,
+        "lightness": 52
+      }
+    },
+    "mayhap": {
+      "family": "IM Fell Great Primer",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.12,
+        "lightness": 58
+      }
+    },
+    "betwixt": {
+      "family": "IM Fell DW Pica",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 268,
+        "chroma": 0.18,
+        "lightness": 52
+      }
+    },
+    "sennight": {
+      "family": "IM Fell English",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 258,
+        "chroma": 0.12,
+        "lightness": 48
+      }
+    },
+    "fortnight": {
+      "family": "EB Garamond",
+      "weight": 500,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 255,
+        "chroma": 0.18,
+        "lightness": 42
+      }
+    },
+    "besmirch": {
+      "family": "Grenze",
+      "weight": 600,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 45,
+        "chroma": 0.12,
+        "lightness": 38
+      }
+    },
+    "saudade": {
+      "family": "Cormorant Garamond",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 318,
+        "chroma": 0.11,
+        "lightness": 52
+      }
+    },
+    "hygge": {
+      "family": "Literata",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 42,
+        "chroma": 0.18,
+        "lightness": 58
+      }
+    },
+    "wabi-sabi": {
+      "family": "Kaisei HarunoUmi",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 145,
+        "chroma": 0.08,
+        "lightness": 48
+      }
+    },
+    "duende": {
+      "family": "Alegreya",
+      "weight": 500,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 350,
+        "chroma": 0.18,
+        "lightness": 38
+      }
+    },
+    "toska": {
+      "family": "Alegreya",
+      "weight": 500,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 265,
+        "chroma": 0.12,
+        "lightness": 42
+      }
+    },
+    "mamihlapinatapai": {
+      "family": "Cormorant",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 345,
+        "chroma": 0.12,
+        "lightness": 58
+      }
+    },
+    "tmesis": {
+      "family": "Alegreya SC",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 268,
+        "chroma": 0.18,
+        "lightness": 52
+      }
+    },
+    "anaphora": {
+      "family": "Cinzel",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 42,
+        "chroma": 0.22,
+        "lightness": 52
+      }
+    },
+    "chiasmus": {
+      "family": "EB Garamond",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 305,
+        "chroma": 0.18,
+        "lightness": 52
+      }
+    },
+    "litotes": {
+      "family": "Gentium Book Plus",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 135,
+        "chroma": 0.08,
+        "lightness": 52
+      }
+    },
+    "zeugma": {
+      "family": "Cinzel",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 278,
+        "chroma": 0.18,
+        "lightness": 52
+      }
+    },
+    "synecdoche": {
+      "family": "Cormorant Garamond",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.18,
+        "lightness": 52
+      }
+    },
+    "qualia": {
+      "family": "Spectral",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.18,
+        "lightness": 52
+      }
+    },
+    "apoptosis": {
+      "family": "Cormorant Garamond",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 270,
+        "chroma": 0.12,
+        "lightness": 45
+      }
+    },
+    "saccade": {
+      "family": "Space Mono",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 175,
+        "chroma": 0.22,
+        "lightness": 55
+      }
+    },
+    "proprioception": {
+      "family": "Literata",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 310,
+        "chroma": 0.12,
+        "lightness": 55
+      }
+    },
+    "crepuscular": {
+      "family": "Cormorant Garamond",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 265,
+        "chroma": 0.12,
+        "lightness": 42
+      }
+    },
+    "cordwainer": {
+      "family": "Libre Baskerville",
+      "weight": 500,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 38,
+        "chroma": 0.18,
+        "lightness": 48
+      }
+    },
+    "chandler": {
+      "family": "IM Fell English",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 42,
+        "chroma": 0.22,
+        "lightness": 52
+      }
+    },
+    "bodkin": {
+      "family": "Libre Bodoni",
+      "weight": 500,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 35,
+        "chroma": 0.12,
+        "lightness": 48
+      }
+    },
+    "fylfot": {
+      "family": "Inknut Antiqua",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 35,
+        "chroma": 0.12,
+        "lightness": 42
+      }
+    },
+    "limerence": {
+      "family": "Cormorant",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 340,
+        "chroma": 0.22,
+        "lightness": 62
+      }
+    },
+    "hiraeth": {
+      "family": "Cormorant Upright",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 252,
+        "chroma": 0.12,
+        "lightness": 45
+      }
+    },
+    "fernweh": {
+      "family": "Cormorant",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 188,
+        "chroma": 0.12,
+        "lightness": 52
+      }
+    },
+    "mono no aware": {
+      "family": "Shippori Mincho B1",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 285,
+        "chroma": 0.12,
+        "lightness": 52
+      }
+    },
+    "acedia": {
+      "family": "EB Garamond",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 310,
+        "chroma": 0.08,
+        "lightness": 42
+      }
+    },
+    "phosphorescent": {
+      "family": "Genos",
+      "weight": 200,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 148,
+        "chroma": 0.28,
+        "lightness": 78
+      }
+    },
+    "diaphanous": {
+      "family": "Cormorant Garamond",
+      "weight": 300,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 280,
+        "chroma": 0.08,
+        "lightness": 82
+      }
+    },
+    "effulgent": {
+      "family": "Baskervville",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 48,
+        "chroma": 0.28,
+        "lightness": 78
+      }
+    },
+    "tenebrous": {
+      "family": "Cormorant Garamond",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 280,
+        "chroma": 0.08,
+        "lightness": 32
+      }
+    }
+  },
+  "phrases": {
+    "agamemnon": {
+      "family": "Cormorant Garamond",
+      "weight": 700,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 30,
+        "chroma": 0.12,
+        "lightness": 45
+      }
+    }
+  }
+}

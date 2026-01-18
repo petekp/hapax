@@ -5,61 +5,61 @@ const MOCK_FONTS: Record<string, FontVariant> = {
     family: "Bebas Neue",
     weight: 700,
     style: "normal",
-    colorIntent: { hue: 15, saturation: 90 },
+    colorIntent: { hue: 15, chroma: 0.35, lightness: 55 },
   },
   ocean: {
     family: "Playfair Display",
     weight: 400,
     style: "italic",
-    colorIntent: { hue: 210, saturation: 80 },
+    colorIntent: { hue: 210, chroma: 0.25, lightness: 50 },
   },
   whisper: {
     family: "Cormorant Garamond",
     weight: 300,
     style: "italic",
-    colorIntent: { hue: 270, saturation: 20 },
+    colorIntent: { hue: 270, chroma: 0.08, lightness: 75 },
   },
   love: {
     family: "Dancing Script",
     weight: 500,
     style: "normal",
-    colorIntent: { hue: 340, saturation: 75 },
+    colorIntent: { hue: 340, chroma: 0.28, lightness: 65 },
   },
   thunder: {
     family: "Anton",
     weight: 400,
     style: "normal",
-    colorIntent: { hue: 45, saturation: 85 },
+    colorIntent: { hue: 45, chroma: 0.32, lightness: 70 },
   },
   calm: {
     family: "Lora",
     weight: 400,
     style: "normal",
-    colorIntent: { hue: 180, saturation: 30 },
+    colorIntent: { hue: 180, chroma: 0.12, lightness: 65 },
   },
   wild: {
     family: "Permanent Marker",
     weight: 400,
     style: "normal",
-    colorIntent: { hue: 120, saturation: 70 },
+    colorIntent: { hue: 120, chroma: 0.28, lightness: 60 },
   },
   elegant: {
     family: "Cinzel",
     weight: 500,
     style: "normal",
-    colorIntent: { hue: 280, saturation: 40 },
+    colorIntent: { hue: 280, chroma: 0.15, lightness: 70 },
   },
   strong: {
     family: "Oswald",
     weight: 700,
     style: "normal",
-    colorIntent: { hue: 0, saturation: 60 },
+    colorIntent: { hue: 0, chroma: 0.22, lightness: 55 },
   },
   dream: {
     family: "Sacramento",
     weight: 400,
     style: "normal",
-    colorIntent: { hue: 260, saturation: 50 },
+    colorIntent: { hue: 260, chroma: 0.18, lightness: 75 },
   },
 }
 
@@ -85,7 +85,8 @@ function generateRandomVariant(word: string): FontVariant {
     style: hash % 5 === 0 ? "italic" : "normal",
     colorIntent: {
       hue: hash % 360,
-      saturation: 40 + (hash % 50),
+      chroma: 0.15 + (hash % 20) / 100,
+      lightness: 55 + (hash % 30),
     },
   }
 }

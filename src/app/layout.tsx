@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { ServiceWorkerRegister } from "@/components/service-worker-register";
+import { PRELOAD_URLS } from "@/lib/font-preload";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -24,9 +26,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
+      <head>
+        {PRELOAD_URLS.map((url, i) => (
+          <link
+            key={i}
+            rel="preload"
+            href={url}
+            as="style"
+            crossOrigin="anonymous"
+          />
+        ))}
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <ServiceWorkerRegister />
         {children}
       </body>
     </html>
