@@ -13,23 +13,28 @@ interface ScrollingRowProps {
   speed: number
   direction: "left" | "right"
   colorMode: "light" | "dark"
+  className?: string
 }
 
-function ScrollingRow({ words, speed, direction, colorMode }: ScrollingRowProps) {
+function ScrollingRow({ words, speed, direction, colorMode, className = "" }: ScrollingRowProps) {
   const [isPaused, setIsPaused] = useState(false)
 
   if (words.length === 0) return null
 
   return (
     <div
-      className="-my-2 overflow-hidden group"
+      className={`group ${className}`}
+      style={{
+        clipPath: "inset(0 0 0 0)",
+      }}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
       <div
         className="flex items-baseline whitespace-nowrap"
         style={{
-          fontSize: "clamp(3rem, 8vw, 6rem)",
+          fontSize: "clamp(3.5rem, max(8vw, 6vh), 6rem)",
+          lineHeight: 1.4,
           animationName: direction === "left" ? "marquee-left" : "marquee-right",
           animationTimingFunction: "linear",
           animationIterationCount: "infinite",
@@ -130,6 +135,19 @@ export function AutoScrollGallery({ colorMode = "dark" }: AutoScrollGalleryProps
   const speeds = [45, 55, 40, 50, 48, 52, 38, 58]
   const directions: Array<"left" | "right"> = ["left", "right", "left", "right", "right", "left", "right", "left"]
 
+  // Responsive visibility: hide some rows on smaller screens
+  // Mobile (< md): 4 rows, Tablet (md-lg): 6 rows, Desktop (lg+): 8 rows
+  const rowVisibility = [
+    "",                      // Row 0: always visible
+    "hidden md:block",       // Row 1: hidden on mobile
+    "",                      // Row 2: always visible
+    "hidden lg:block",       // Row 3: hidden on mobile/tablet
+    "",                      // Row 4: always visible
+    "hidden md:block",       // Row 5: hidden on mobile
+    "",                      // Row 6: always visible
+    "hidden lg:block",       // Row 7: hidden on mobile/tablet
+  ]
+
   return (
     <div
       className="h-screen w-full flex flex-col justify-around py-8"
@@ -147,6 +165,7 @@ export function AutoScrollGallery({ colorMode = "dark" }: AutoScrollGalleryProps
           speed={speeds[index % speeds.length]}
           direction={directions[index % directions.length]}
           colorMode={colorMode}
+          className={rowVisibility[index] || ""}
         />
       ))}
     </div>
