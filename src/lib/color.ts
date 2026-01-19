@@ -85,6 +85,54 @@ const NEUTRAL_TINT_VARS = {
 
 export type ColorDepth = "shallow" | "deep"
 
+// Convert OKLCH to RGB for smooth Motion interpolation
+// Uses CSS color parsing via a temporary element
+function oklchToHex(l: number, c: number, h: number): string {
+  // For very low chroma or neutral colors, return grayscale
+  if (c < 0.001) {
+    const gray = Math.round(l * 2.55)
+    return `#${gray.toString(16).padStart(2, "0").repeat(3)}`
+  }
+
+  // Convert OKLCH to approximate RGB
+  // This is a simplified conversion that works well for UI colors
+  const hRad = (h * Math.PI) / 180
+
+  // OKLCH to OKLab
+  const a = c * Math.cos(hRad)
+  const b = c * Math.sin(hRad)
+
+  // OKLab to linear RGB (simplified)
+  const L = l / 100
+  const l_ = L + 0.3963377774 * a + 0.2158037573 * b
+  const m_ = L - 0.1055613458 * a - 0.0638541728 * b
+  const s_ = L - 0.0894841775 * a - 1.2914855480 * b
+
+  const l3 = l_ * l_ * l_
+  const m3 = m_ * m_ * m_
+  const s3 = s_ * s_ * s_
+
+  let r = 4.0767416621 * l3 - 3.3077115913 * m3 + 0.2309699292 * s3
+  let g = -1.2684380046 * l3 + 2.6097574011 * m3 - 0.3413193965 * s3
+  let bl = -0.0041960863 * l3 - 0.7034186147 * m3 + 1.7076147010 * s3
+
+  // Clamp and convert to sRGB
+  const toSRGB = (x: number) => {
+    x = Math.max(0, Math.min(1, x))
+    return x <= 0.0031308 ? 12.92 * x : 1.055 * Math.pow(x, 1 / 2.4) - 0.055
+  }
+
+  r = Math.round(toSRGB(r) * 255)
+  g = Math.round(toSRGB(g) * 255)
+  bl = Math.round(toSRGB(bl) * 255)
+
+  r = Math.max(0, Math.min(255, r))
+  g = Math.max(0, Math.min(255, g))
+  bl = Math.max(0, Math.min(255, bl))
+
+  return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${bl.toString(16).padStart(2, "0")}`
+}
+
 export function deriveTintVariables(intent: ColorIntent | null, depth: ColorDepth = "shallow"): Record<string, string> {
   if (!intent) {
     return NEUTRAL_TINT_VARS
@@ -99,9 +147,9 @@ export function deriveTintVariables(intent: ColorIntent | null, depth: ColorDept
   const bgChroma = depth === "deep" ? chroma * 0.6 : chroma * 0.3
 
   return {
-    "--tint-bg": `oklch(${bgLightness}% ${bgChroma.toFixed(3)} ${hue})`,
-    "--tint-text": `oklch(80% ${(chroma * 0.15).toFixed(3)} ${hue})`,
-    "--tint-muted": `oklch(55% ${(chroma * 0.1).toFixed(3)} ${hue})`,
-    "--tint-border": `oklch(25% ${(chroma * 0.15).toFixed(3)} ${hue})`,
+    "--tint-bg": oklchToHex(bgLightness, bgChroma, hue),
+    "--tint-text": oklchToHex(80, chroma * 0.15, hue),
+    "--tint-muted": oklchToHex(55, chroma * 0.1, hue),
+    "--tint-border": oklchToHex(25, chroma * 0.15, hue),
   }
 }

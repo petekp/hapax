@@ -55,20 +55,92 @@ async function fetchDefinition(word: string): Promise<DictionaryEntry | null> {
   }
 }
 
-function StyledWord({ word, variant }: { word: string; variant: FontVariant }) {
+type LetterAnimation = {
+  initial: Record<string, number | string>
+  animate: Record<string, number | string>
+  transition: Record<string, unknown>
+}
+
+const letterAnimations: LetterAnimation[] = [
+  // Fade up with slight rotation
+  {
+    initial: { opacity: 0, y: 20, rotateX: -40 },
+    animate: { opacity: 1, y: 0, rotateX: 0 },
+    transition: { type: "spring", stiffness: 100, damping: 20 },
+  },
+  // Blur fade in
+  {
+    initial: { opacity: 0, filter: "blur(12px)" },
+    animate: { opacity: 1, filter: "blur(0px)" },
+    transition: { type: "spring", stiffness: 80, damping: 25 },
+  },
+  // Scale from center
+  {
+    initial: { opacity: 0, scale: 0.6 },
+    animate: { opacity: 1, scale: 1 },
+    transition: { type: "spring", stiffness: 120, damping: 18 },
+  },
+  // Slide in from below with fade
+  {
+    initial: { opacity: 0, y: 40 },
+    animate: { opacity: 1, y: 0 },
+    transition: { type: "spring", stiffness: 90, damping: 22 },
+  },
+  // Subtle scale with blur
+  {
+    initial: { opacity: 0, scale: 0.85, filter: "blur(8px)" },
+    animate: { opacity: 1, scale: 1, filter: "blur(0px)" },
+    transition: { type: "spring", stiffness: 100, damping: 24 },
+  },
+]
+
+// Simple hash function to get deterministic animation per word
+function hashString(str: string): number {
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i)
+    hash = ((hash << 5) - hash) + char
+    hash = hash & hash
+  }
+  return Math.abs(hash)
+}
+
+function StyledWord({ word, variant, ready }: { word: string; variant: FontVariant; ready: boolean }) {
   const color = deriveColor(variant.colorIntent, "dark")
+
+  // Pick animation based on word hash (deterministic for SSR)
+  const animation = letterAnimations[hashString(word) % letterAnimations.length]
+
+  const letters = word.split("")
 
   return (
     <span
       style={{
-        color,
         fontFamily: `"${variant.family}", sans-serif`,
         fontWeight: variant.weight,
         fontStyle: variant.style,
+        perspective: "1000px",
       }}
-      className="text-6xl md:text-8xl"
+      className="text-6xl md:text-8xl inline-flex"
     >
-      {word}
+      {letters.map((letter, i) => (
+        <motion.span
+          key={i}
+          style={{
+            color,
+            display: "inline-block",
+            whiteSpace: letter === " " ? "pre" : "normal",
+          }}
+          initial={animation.initial}
+          animate={ready ? animation.animate : animation.initial}
+          transition={{
+            ...animation.transition,
+            delay: i * 0.04,
+          }}
+        >
+          {letter}
+        </motion.span>
+      ))}
     </span>
   )
 }
@@ -258,8 +330,9 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
     <ViewTransition name="page-background">
       <motion.div
         className="min-h-screen text-zinc-200"
+        style={{ willChange: "background-color" }}
         animate={{ backgroundColor: tintColors.bg }}
-        transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
+        transition={{ type: "spring", stiffness: 100, damping: 30 }}
       >
         <header className="fixed top-0 left-0 p-8 z-10">
           <Link
@@ -278,7 +351,7 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
           transition={{ duration: 0.4 }}
         >
           <div className="text-center mb-4">
-            <StyledWord word={decodedWord} variant={variant} />
+            <StyledWord word={decodedWord} variant={variant} ready={ready} />
           </div>
 
           {phonetic && (
