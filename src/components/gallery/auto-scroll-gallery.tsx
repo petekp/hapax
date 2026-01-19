@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback, useEffect } from "react"
+import { useState, useCallback, useEffect, useMemo } from "react"
 import { GalleryWord } from "./gallery-word"
 import type { GalleryWordEntry } from "@/app/api/gallery/route"
 
@@ -10,21 +10,19 @@ interface AutoScrollGalleryProps {
 
 interface ScrollingRowProps {
   words: GalleryWordEntry[]
-  duration: number
+  speed: number
   direction: "left" | "right"
   colorMode: "light" | "dark"
 }
 
-function ScrollingRow({ words, duration, direction, colorMode }: ScrollingRowProps) {
+function ScrollingRow({ words, speed, direction, colorMode }: ScrollingRowProps) {
   const [isPaused, setIsPaused] = useState(false)
 
   if (words.length === 0) return null
 
-  const animationName = direction === "left" ? "scroll-left" : "scroll-right"
-
   return (
     <div
-      className="overflow-hidden py-2"
+      className="-my-2 overflow-hidden group"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -32,12 +30,19 @@ function ScrollingRow({ words, duration, direction, colorMode }: ScrollingRowPro
         className="flex items-baseline whitespace-nowrap"
         style={{
           fontSize: "clamp(3rem, 8vw, 6rem)",
-          animation: `${animationName} ${duration}s linear infinite`,
+          animationName: direction === "left" ? "marquee-left" : "marquee-right",
+          animationTimingFunction: "linear",
+          animationIterationCount: "infinite",
+          animationDuration: `${speed}s`,
           animationPlayState: isPaused ? "paused" : "running",
         }}
       >
         {[0, 1].map((setIndex) => (
-          <div key={setIndex} className="flex items-baseline gap-[0.4em] px-[0.2em]">
+          <div
+            key={setIndex}
+            className="flex items-baseline gap-[0.4em] px-[0.2em]"
+            style={{ flexShrink: 0 }}
+          >
             {words.map((entry, index) => (
               <GalleryWord
                 key={`${entry.normalized}-${index}-${setIndex}`}
@@ -49,19 +54,20 @@ function ScrollingRow({ words, duration, direction, colorMode }: ScrollingRowPro
           </div>
         ))}
       </div>
-      <style jsx>{`
-        @keyframes scroll-left {
-          from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
-        }
-        @keyframes scroll-right {
-          from { transform: translateX(-50%); }
-          to { transform: translateX(0); }
-        }
-      `}</style>
     </div>
   )
 }
+
+const ALPHABET_RANGES = [
+  ["a", "b"],
+  ["c", "d"],
+  ["e", "f"],
+  ["g", "i"],
+  ["j", "m"],
+  ["n", "p"],
+  ["q", "s"],
+  ["t", "z"],
+] as const
 
 export function AutoScrollGallery({ colorMode = "dark" }: AutoScrollGalleryProps) {
   const [words, setWords] = useState<GalleryWordEntry[]>([])
@@ -70,7 +76,7 @@ export function AutoScrollGallery({ colorMode = "dark" }: AutoScrollGalleryProps
   const fetchAllWords = useCallback(async () => {
     setIsLoading(true)
     try {
-      const response = await fetch(`/api/gallery?limit=100`)
+      const response = await fetch(`/api/gallery?limit=500`)
       if (response.ok) {
         const data = await response.json()
         setWords(data.words)
@@ -85,6 +91,25 @@ export function AutoScrollGallery({ colorMode = "dark" }: AutoScrollGalleryProps
   useEffect(() => {
     fetchAllWords()
   }, [fetchAllWords])
+
+  const rows = useMemo(() => {
+    if (words.length === 0) return []
+
+    const result: GalleryWordEntry[][] = []
+
+    for (const [start, end] of ALPHABET_RANGES) {
+      const rangeWords = words.filter((w) => {
+        const firstChar = w.normalized.charAt(0).toLowerCase()
+        return firstChar >= start && firstChar <= end
+      })
+
+      if (rangeWords.length > 0) {
+        result.push(rangeWords)
+      }
+    }
+
+    return result
+  }, [words])
 
   if (words.length === 0 && !isLoading) {
     return (
@@ -102,36 +127,24 @@ export function AutoScrollGallery({ colorMode = "dark" }: AutoScrollGalleryProps
     )
   }
 
-  const rowCount = 4
-  const minWordsPerRow = 8
-  const rows: GalleryWordEntry[][] = []
-
-  for (let i = 0; i < rowCount; i++) {
-    const rowWords: GalleryWordEntry[] = []
-    let wordIndex = i
-    while (rowWords.length < minWordsPerRow) {
-      rowWords.push(words[wordIndex % words.length])
-      wordIndex += rowCount
-    }
-    rows.push(rowWords)
-  }
-
-  const durations = [60, 75, 55, 70]
-  const directions: Array<"left" | "right"> = ["left", "right", "left", "right"]
+  const speeds = [45, 55, 40, 50, 48, 52, 38, 58]
+  const directions: Array<"left" | "right"> = ["left", "right", "left", "right", "right", "left", "right", "left"]
 
   return (
     <div
-      className="h-full flex flex-col justify-center gap-2 overflow-hidden"
+      className="h-screen w-full flex flex-col justify-around py-8"
       style={{
-        maskImage: "linear-gradient(to right, transparent, black 5%, black 95%, transparent)",
-        WebkitMaskImage: "linear-gradient(to right, transparent, black 5%, black 95%, transparent)",
+        maskImage: "linear-gradient(to bottom, transparent, black 8%, black 92%, transparent), linear-gradient(to right, transparent, black 5%, black 95%, transparent)",
+        WebkitMaskImage: "linear-gradient(to bottom, transparent, black 8%, black 92%, transparent), linear-gradient(to right, transparent, black 5%, black 95%, transparent)",
+        maskComposite: "intersect",
+        WebkitMaskComposite: "source-in",
       }}
     >
       {rows.map((rowWords, index) => (
         <ScrollingRow
           key={index}
           words={rowWords}
-          duration={durations[index % durations.length]}
+          speed={speeds[index % speeds.length]}
           direction={directions[index % directions.length]}
           colorMode={colorMode}
         />

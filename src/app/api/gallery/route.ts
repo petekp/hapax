@@ -56,7 +56,7 @@ function loadWordsIndex(): GalleryWordEntry[] {
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const cursor = searchParams.get("cursor") || "0";
-  const limit = Math.min(parseInt(searchParams.get("limit") || "50"), 100);
+  const limit = Math.min(parseInt(searchParams.get("limit") || "50"), 500);
   const search = searchParams.get("search")?.toLowerCase();
 
   const kv = await getKV();

@@ -46,24 +46,22 @@ export function GalleryWord({ word, variant, colorMode = "dark" }: GalleryWordPr
 
   const color = deriveColor(variant.colorIntent, colorMode)
 
-  if (!fontLoaded) {
-    return <span style={{ visibility: "hidden" }}>{word}</span>
-  }
-
   return (
     <Link href={`/word/${encodeURIComponent(word.toLowerCase())}`} onClick={handleClick}>
       <motion.span
         style={{
-          color,
+          color: fontLoaded ? color : "transparent",
           fontFamily: `"${variant.family}", sans-serif`,
           fontWeight: variant.weight,
           fontStyle: variant.style,
           cursor: "pointer",
         }}
-        initial={{ opacity: 0, filter: "blur(6px)" }}
-        animate={{ opacity: 1, filter: "blur(0px)" }}
+        animate={{
+          opacity: fontLoaded ? 1 : 0,
+          filter: fontLoaded ? "blur(0px)" : "blur(6px)",
+        }}
         transition={{ duration: 0.4 }}
-        whileHover={{ scale: 1.05 }}
+        whileHover={fontLoaded ? { scale: 1.05 } : undefined}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >

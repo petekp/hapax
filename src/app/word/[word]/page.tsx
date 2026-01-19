@@ -211,7 +211,7 @@ function StyledWord({ word, variant, ready }: { word: string; variant: FontVaria
         fontStyle: variant.style,
         perspective: "1000px",
       }}
-      className="text-[5.25rem] md:text-[8.5rem] inline-flex"
+      className="text-[6.5rem] md:text-[10.5rem] inline-flex"
     >
       {letters.map((letter, i) => (
         <motion.span
@@ -450,7 +450,7 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
             </p>
           )}
 
-          <div className="max-w-[75ch] w-full" style={{ fontFamily: "var(--font-serif), Georgia, serif" }}>
+          <div className="max-w-[85ch] w-full" style={{ fontFamily: "var(--font-serif), Georgia, serif" }}>
             {hasMdxContent ? (
               <MdxContent
                 content={wordContent!.content}
