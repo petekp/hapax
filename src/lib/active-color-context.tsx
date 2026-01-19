@@ -3,35 +3,54 @@
 import { createContext, useContext, useState, useCallback, useMemo, useEffect } from "react"
 import type { ReactNode } from "react"
 import type { ColorIntent } from "./schemas"
-import { deriveTintVariables } from "./color"
+import { deriveTintVariables, type ColorDepth } from "./color"
+
+export interface TintColors {
+  bg: string
+  text: string
+  muted: string
+  border: string
+}
 
 interface ActiveColorContextValue {
   activeColor: ColorIntent | null
-  setActiveColor: (color: ColorIntent | null) => void
+  tintColors: TintColors
+  setActiveColor: (color: ColorIntent | null, depth?: ColorDepth) => void
 }
 
 const ActiveColorContext = createContext<ActiveColorContextValue | null>(null)
 
 export function ActiveColorProvider({ children }: { children: ReactNode }) {
   const [activeColor, setActiveColorState] = useState<ColorIntent | null>(null)
+  const [depth, setDepth] = useState<ColorDepth>("shallow")
 
-  const setActiveColor = useCallback((color: ColorIntent | null) => {
+  const setActiveColor = useCallback((color: ColorIntent | null, newDepth: ColorDepth = "shallow") => {
     setActiveColorState(color)
+    setDepth(newDepth)
   }, [])
 
+  const tintColors = useMemo((): TintColors => {
+    const vars = deriveTintVariables(activeColor, depth)
+    return {
+      bg: vars["--tint-bg"],
+      text: vars["--tint-text"],
+      muted: vars["--tint-muted"],
+      border: vars["--tint-border"],
+    }
+  }, [activeColor, depth])
+
   const contextValue = useMemo(
-    () => ({ activeColor, setActiveColor }),
-    [activeColor, setActiveColor]
+    () => ({ activeColor, tintColors, setActiveColor }),
+    [activeColor, tintColors, setActiveColor]
   )
 
   useEffect(() => {
-    const tintVars = deriveTintVariables(activeColor)
     const root = document.documentElement
-
-    Object.entries(tintVars).forEach(([key, value]) => {
-      root.style.setProperty(key, value)
-    })
-  }, [activeColor])
+    root.style.setProperty("--tint-bg", tintColors.bg)
+    root.style.setProperty("--tint-text", tintColors.text)
+    root.style.setProperty("--tint-muted", tintColors.muted)
+    root.style.setProperty("--tint-border", tintColors.border)
+  }, [tintColors])
 
   return (
     <ActiveColorContext.Provider value={contextValue}>

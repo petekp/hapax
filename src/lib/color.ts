@@ -83,7 +83,9 @@ const NEUTRAL_TINT_VARS = {
   "--tint-border": "#27272a",
 }
 
-export function deriveTintVariables(intent: ColorIntent | null): Record<string, string> {
+export type ColorDepth = "shallow" | "deep"
+
+export function deriveTintVariables(intent: ColorIntent | null, depth: ColorDepth = "shallow"): Record<string, string> {
   if (!intent) {
     return NEUTRAL_TINT_VARS
   }
@@ -91,8 +93,13 @@ export function deriveTintVariables(intent: ColorIntent | null): Record<string, 
   const { hue } = intent
   const chroma = "chroma" in intent ? intent.chroma : 0.2
 
+  // Shallow: subtle gallery tint (5% lightness)
+  // Deep: word page background (12% lightness, matching deriveBackgroundColor)
+  const bgLightness = depth === "deep" ? 12 : 5
+  const bgChroma = depth === "deep" ? chroma * 0.6 : chroma * 0.3
+
   return {
-    "--tint-bg": `oklch(5% ${(chroma * 0.3).toFixed(3)} ${hue})`,
+    "--tint-bg": `oklch(${bgLightness}% ${bgChroma.toFixed(3)} ${hue})`,
     "--tint-text": `oklch(80% ${(chroma * 0.15).toFixed(3)} ${hue})`,
     "--tint-muted": `oklch(55% ${(chroma * 0.1).toFixed(3)} ${hue})`,
     "--tint-border": `oklch(25% ${(chroma * 0.15).toFixed(3)} ${hue})`,

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { motion } from "motion/react"
 import type { FontVariant } from "@/lib/schemas"
 import { deriveColor } from "@/lib/color"
@@ -17,6 +17,7 @@ interface GalleryWordProps {
 export function GalleryWord({ word, variant, colorMode = "dark" }: GalleryWordProps) {
   const [fontLoaded, setFontLoaded] = useState(false)
   const { setActiveColor } = useActiveColor()
+  const isNavigatingRef = useRef(false)
 
   const handleFontLoaded = useCallback(() => {
     setFontLoaded(true)
@@ -27,8 +28,16 @@ export function GalleryWord({ word, variant, colorMode = "dark" }: GalleryWordPr
   }, [setActiveColor, variant.colorIntent])
 
   const handleMouseLeave = useCallback(() => {
-    setActiveColor(null)
+    if (!isNavigatingRef.current) {
+      setActiveColor(null)
+    }
   }, [setActiveColor])
+
+  const handleClick = useCallback(() => {
+    isNavigatingRef.current = true
+    // Set deep color immediately on click so the View Transition captures it
+    setActiveColor(variant.colorIntent, "deep")
+  }, [setActiveColor, variant.colorIntent])
 
   useEffect(() => {
     const fontLoader = getFontLoader()
@@ -42,7 +51,7 @@ export function GalleryWord({ word, variant, colorMode = "dark" }: GalleryWordPr
   }
 
   return (
-    <Link href={`/word/${encodeURIComponent(word.toLowerCase())}`}>
+    <Link href={`/word/${encodeURIComponent(word.toLowerCase())}`} onClick={handleClick}>
       <motion.span
         style={{
           color,

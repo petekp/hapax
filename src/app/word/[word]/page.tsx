@@ -1,10 +1,10 @@
 "use client"
 
-import { useEffect, useState, use, useMemo } from "react"
+import { useEffect, useState, use, useMemo, ViewTransition } from "react"
 import { motion } from "motion/react"
 import Link from "next/link"
 import type { FontVariant } from "@/lib/schemas"
-import { deriveColor, deriveBackgroundColor, deriveTintedTextColor, deriveTintedMutedColor } from "@/lib/color"
+import { deriveColor, deriveTintedTextColor, deriveTintedMutedColor } from "@/lib/color"
 import { useActiveColor } from "@/lib/active-color-context"
 import { getFontLoader } from "@/lib/font-loader"
 import type { WordResponse } from "@/app/api/word/[word]/route"
@@ -168,7 +168,7 @@ function MdxContent({ content, textColor, mutedColor }: { content: string; textC
             <p
               key={i}
               className="text-2xl leading-[1.7] font-normal transition-colors duration-700"
-              style={{ color: textColor || "#e4e4e7" }}
+              style={{ color: textColor || "var(--tint-text)" }}
             >
               {formatInlineMarkdown(section.content)}
             </p>
@@ -179,7 +179,7 @@ function MdxContent({ content, textColor, mutedColor }: { content: string; textC
             <blockquote
               key={i}
               className="text-xl leading-[1.65] pl-5 border-l border-zinc-700/50 transition-colors duration-700"
-              style={{ color: mutedColor || "#a1a1aa" }}
+              style={{ color: mutedColor || "var(--tint-muted)" }}
             >
               {formatInlineMarkdown(section.content)}
             </blockquote>
@@ -187,7 +187,7 @@ function MdxContent({ content, textColor, mutedColor }: { content: string; textC
         }
         if (section.type === "list" && section.items) {
           return (
-            <ul key={i} className="space-y-2 text-xl" style={{ color: mutedColor || "#a1a1aa" }}>
+            <ul key={i} className="space-y-2 text-xl" style={{ color: mutedColor || "var(--tint-muted)" }}>
               {section.items.map((item, j) => (
                 <li key={j} className="flex gap-2">
                   <span className="text-zinc-600">•</span>
@@ -206,7 +206,7 @@ function MdxContent({ content, textColor, mutedColor }: { content: string; textC
 export default function WordPage({ params }: { params: Promise<{ word: string }> }) {
   const { word } = use(params)
   const decodedWord = decodeURIComponent(word)
-  const { setActiveColor } = useActiveColor()
+  const { setActiveColor, tintColors } = useActiveColor()
 
   const [wordContent, setWordContent] = useState<WordContent | null>(null)
   const [definition, setDefinition] = useState<DictionaryEntry | null>(null)
@@ -215,11 +215,12 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
   const [fontLoaded, setFontLoaded] = useState(false)
 
   useEffect(() => {
-    fetchWordContent(decodedWord).then((content) => {
+    Promise.all([
+      fetchWordContent(decodedWord),
+      fetchDefinition(decodedWord)
+    ]).then(([content, entry]) => {
       setWordContent(content)
       setContentLoaded(true)
-    })
-    fetchDefinition(decodedWord).then((entry) => {
       setDefinition(entry)
       setDefinitionLoaded(true)
     })
@@ -227,7 +228,7 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
 
   useEffect(() => {
     if (wordContent) {
-      setActiveColor(wordContent.frontmatter.style.colorIntent)
+      setActiveColor(wordContent.frontmatter.style.colorIntent, "deep")
     }
     return () => setActiveColor(null)
   }, [wordContent, setActiveColor])
@@ -250,17 +251,18 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
   }, [contentLoaded, variant, decodedWord])
 
   const ready = contentLoaded && definitionLoaded && fontLoaded
-  const backgroundColor = ready ? deriveBackgroundColor(variant.colorIntent) : undefined
   const textColor = ready ? deriveTintedTextColor(variant.colorIntent) : undefined
   const mutedColor = ready ? deriveTintedMutedColor(variant.colorIntent) : undefined
 
   return (
-    <div
-      className="min-h-screen text-zinc-200 transition-colors duration-700"
-      style={{ backgroundColor: backgroundColor || "#09090b" }}
-    >
-      <header className="fixed top-0 left-0 p-8 z-10">
-        <Link
+    <ViewTransition name="page-background">
+      <motion.div
+        className="min-h-screen text-zinc-200"
+        animate={{ backgroundColor: tintColors.bg }}
+        transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
+      >
+        <header className="fixed top-0 left-0 p-8 z-10">
+          <Link
           href="/"
           className="text-zinc-600 hover:text-zinc-400 transition-colors text-sm tracking-wide uppercase"
         >
@@ -310,7 +312,7 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
                           <div className="space-y-5">
                             <p
                               className="text-2xl leading-[1.7] font-normal transition-colors duration-700"
-                              style={{ color: textColor || "#e4e4e7" }}
+                              style={{ color: textColor || "var(--tint-text)" }}
                             >
                               {def.definition}
                             </p>
@@ -318,7 +320,7 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
                             {def.example && (
                               <p
                                 className="text-xl leading-[1.65] italic pl-5 border-l border-zinc-700/50 transition-colors duration-700"
-                                style={{ color: mutedColor || "#a1a1aa" }}
+                                style={{ color: mutedColor || "var(--tint-muted)" }}
                               >
                                 "{def.example}"
                               </p>
@@ -338,6 +340,7 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
           </div>
         </motion.div>
       </main>
-    </div>
+      </motion.div>
+    </ViewTransition>
   )
 }

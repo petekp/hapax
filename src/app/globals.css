@@ -140,3 +140,28 @@
 .caret-blink {
   animation: caret-blink 1s step-end infinite;
 }
+
+/* View Transitions */
+::view-transition-old(page-background),
+::view-transition-new(page-background) {
+  animation-duration: 600ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+::view-transition-old(page-background) {
+  animation-name: fade-out;
+}
+
+::view-transition-new(page-background) {
+  animation-name: fade-in;
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
