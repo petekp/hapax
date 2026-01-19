@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-01-19T04:26:18.691Z",
+  "generatedAt": "2026-01-19T16:48:19.064Z",
   "words": {
     "abraxas": {
       "family": "Cinzel",
@@ -232,6 +232,16 @@
         "lightness": 38
       }
     },
+    "bete noire": {
+      "family": "Grenze",
+      "weight": 600,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 280,
+        "chroma": 0.12,
+        "lightness": 35
+      }
+    },
     "betwixt": {
       "family": "IM Fell DW Pica",
       "weight": 400,
@@ -290,6 +300,16 @@
         "hue": 12,
         "chroma": 0.12,
         "lightness": 35
+      }
+    },
+    "cachinnate": {
+      "family": "Cherry Bomb One",
+      "weight": 400,
+      "style": "normal",
+      "colorIntent": {
+        "hue": 28,
+        "chroma": 0.32,
+        "lightness": 68
       }
     },
     "cachinnation": {
@@ -1950,6 +1970,16 @@
         "hue": 285,
         "chroma": 0.28,
         "lightness": 42
+      }
+    },
+    "surreptitiously": {
+      "family": "Cormorant",
+      "weight": 400,
+      "style": "italic",
+      "colorIntent": {
+        "hue": 270,
+        "chroma": 0.18,
+        "lightness": 45
       }
     },
     "susurrous": {

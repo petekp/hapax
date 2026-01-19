@@ -195,6 +195,40 @@ function hashString(str: string): number {
   return Math.abs(hash)
 }
 
+function calculateFluidFontSize(wordLength: number): string {
+  // Available width: viewport minus padding (3rem on each side = 6rem total)
+  // We want the word to fit comfortably within ~90% of available width
+  // Average character width ratio: ~0.55 of font size
+
+  const charWidthRatio = 0.55
+  const maxSize = 10.5 // rem - max size for short words
+  const minSize = 3 // rem - minimum readable size
+
+  // Calculate the size that would fit the word at different viewports
+  // Mobile (20rem viewport): availableWidth = 20 - 6 = 14rem
+  // Desktop (80rem viewport): availableWidth = 80 - 6 = 74rem (but capped by maxSize)
+
+  // For a word to fit: fontSize * wordLength * charWidthRatio <= availableWidth
+  // fontSize <= availableWidth / (wordLength * charWidthRatio)
+
+  // We'll use clamp with a calculated preferred value that accounts for word length
+  const mobileAvailable = 14 // rem
+  const desktopAvailable = 60 // rem (practical max)
+
+  const mobileMax = Math.min(maxSize, mobileAvailable / (wordLength * charWidthRatio))
+  const desktopMax = Math.min(maxSize, desktopAvailable / (wordLength * charWidthRatio))
+
+  // Ensure we don't go below minimum
+  const clampedMobile = Math.max(minSize, mobileMax)
+  const clampedDesktop = Math.max(minSize, desktopMax)
+
+  // Calculate the fluid middle value (slope-based interpolation)
+  const slope = (clampedDesktop - clampedMobile) / 60 // 60rem viewport range
+  const intercept = clampedMobile - slope * 20 // starts at 20rem viewport
+
+  return `clamp(${clampedMobile.toFixed(2)}rem, ${intercept.toFixed(2)}rem + ${(slope * 100).toFixed(2)}vw, ${clampedDesktop.toFixed(2)}rem)`
+}
+
 function StyledWord({ word, variant, ready }: { word: string; variant: FontVariant; ready: boolean }) {
   const color = deriveColor(variant.colorIntent, "dark")
 
@@ -202,6 +236,7 @@ function StyledWord({ word, variant, ready }: { word: string; variant: FontVaria
   const animation = letterAnimations[hashString(word) % letterAnimations.length]
 
   const letters = word.split("")
+  const fontSize = calculateFluidFontSize(word.length)
 
   return (
     <span
@@ -210,8 +245,9 @@ function StyledWord({ word, variant, ready }: { word: string; variant: FontVaria
         fontWeight: variant.weight,
         fontStyle: variant.style,
         perspective: "1000px",
+        fontSize,
       }}
-      className="text-[6.5rem] md:text-[10.5rem] inline-flex"
+      className="inline-flex"
     >
       {letters.map((letter, i) => (
         <motion.span
@@ -329,7 +365,7 @@ function MdxContent({ content, textColor, mutedColor }: { content: string; textC
           return (
             <p
               key={i}
-              className="text-[2.1rem] leading-[1.7] font-normal transition-colors duration-700"
+              className="text-[length:var(--text-fluid-body)] leading-[1.7] font-normal transition-colors duration-700"
               style={{ color: textColor || "var(--tint-text)" }}
             >
               {formatInlineMarkdown(section.content)}
@@ -340,7 +376,7 @@ function MdxContent({ content, textColor, mutedColor }: { content: string; textC
           return (
             <blockquote
               key={i}
-              className="text-[1.75rem] leading-[1.65] pl-7 border-l border-zinc-700/50 transition-colors duration-700"
+              className="text-[length:var(--text-fluid-quote)] leading-[1.65] pl-7 border-l border-zinc-700/50 transition-colors duration-700"
               style={{ color: mutedColor || "var(--tint-muted)" }}
             >
               {formatInlineMarkdown(section.content)}
@@ -349,7 +385,7 @@ function MdxContent({ content, textColor, mutedColor }: { content: string; textC
         }
         if (section.type === "list" && section.items) {
           return (
-            <ul key={i} className="space-y-3 text-[1.75rem]" style={{ color: mutedColor || "var(--tint-muted)" }}>
+            <ul key={i} className="space-y-3 text-[length:var(--text-fluid-quote)]" style={{ color: mutedColor || "var(--tint-muted)" }}>
               {section.items.map((item, j) => (
                 <li key={j} className="flex gap-3">
                   <span className="text-zinc-600">•</span>
@@ -445,7 +481,7 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
           </div>
 
           {phonetic && (
-            <p className="text-zinc-500 text-[1.575rem] font-light tracking-wide mb-28">
+            <p className="text-zinc-500 text-[length:var(--text-fluid-caption)] font-light tracking-wide mb-28">
               {phonetic}
             </p>
           )}
@@ -474,7 +510,7 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
 
                           <div className="space-y-7">
                             <p
-                              className="text-[2.1rem] leading-[1.7] font-normal transition-colors duration-700"
+                              className="text-[length:var(--text-fluid-body)] leading-[1.7] font-normal transition-colors duration-700"
                               style={{ color: textColor || "var(--tint-text)" }}
                             >
                               {def.definition}
@@ -482,7 +518,7 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
 
                             {def.example && (
                               <p
-                                className="text-[1.75rem] leading-[1.65] italic pl-7 border-l border-zinc-700/50 transition-colors duration-700"
+                                className="text-[length:var(--text-fluid-quote)] leading-[1.65] italic pl-7 border-l border-zinc-700/50 transition-colors duration-700"
                                 style={{ color: mutedColor || "var(--tint-muted)" }}
                               >
                                 "{def.example}"
@@ -496,7 +532,7 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
                 ))}
               </div>
             ) : (
-              <p className="text-zinc-500 text-center text-[1.575rem]">
+              <p className="text-zinc-500 text-center text-[length:var(--text-fluid-caption)]">
                 No definition found.
               </p>
             )}
