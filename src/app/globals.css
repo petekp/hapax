@@ -1,6 +1,51 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* @property declarations for curved letter animation paths */
+@property --letter-x {
+  syntax: '<percentage>';
+  initial-value: 0%;
+  inherits: false;
+}
+
+@property --letter-y {
+  syntax: '<percentage>';
+  initial-value: 0%;
+  inherits: false;
+}
+
+@property --letter-rotate {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* Curved path keyframes - letters arc into position */
+@keyframes letter-arc-in {
+  0% {
+    --letter-x: -30%;
+    --letter-y: 40%;
+    --letter-rotate: -15deg;
+    opacity: 0;
+    filter: blur(8px);
+  }
+  50% {
+    --letter-y: -10%;
+  }
+  100% {
+    --letter-x: 0%;
+    --letter-y: 0%;
+    --letter-rotate: 0deg;
+    opacity: 1;
+    filter: blur(0px);
+  }
+}
+
+.letter-curved-path {
+  transform: translateX(var(--letter-x)) translateY(var(--letter-y)) rotate(var(--letter-rotate));
+  animation: letter-arc-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -199,8 +244,53 @@
   to { transform: translateX(0); }
 }
 
+/* Subtle organic easing variations for marquee rows using linear() */
+/* Creates wave-like motion across the gallery */
+.marquee-row:nth-child(odd) > div {
+  animation-timing-function: linear(
+    0, 0.02, 0.04, 0.06, 0.08, 0.1, 0.12, 0.14, 0.16, 0.18,
+    0.2, 0.22, 0.24, 0.26, 0.28, 0.3, 0.32, 0.34, 0.36, 0.38,
+    0.4, 0.42, 0.44, 0.46, 0.48, 0.5, 0.52, 0.54, 0.56, 0.58,
+    0.6, 0.62, 0.64, 0.66, 0.68, 0.7, 0.72, 0.74, 0.76, 0.78,
+    0.8, 0.82, 0.84, 0.86, 0.88, 0.9, 0.92, 0.94, 0.96, 0.98, 1
+  );
+}
+
+.marquee-row:nth-child(even) > div {
+  animation-timing-function: linear(
+    0, 0.018, 0.038, 0.058, 0.08, 0.102, 0.125, 0.148, 0.172, 0.196,
+    0.22, 0.244, 0.268, 0.292, 0.316, 0.34, 0.364, 0.388, 0.412, 0.436,
+    0.46, 0.484, 0.508, 0.532, 0.556, 0.58, 0.604, 0.628, 0.652, 0.676,
+    0.7, 0.724, 0.748, 0.772, 0.796, 0.82, 0.844, 0.868, 0.892, 0.916,
+    0.94, 0.955, 0.968, 0.978, 0.986, 0.992, 0.996, 0.998, 0.999, 1, 1
+  );
+}
+
 /* Optimize marquee row rendering - skip layout for off-screen rows */
 .marquee-row {
   content-visibility: auto;
   contain-intrinsic-size: 0 100px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  /* Disable marquee scrolling */
+  .marquee-row > div {
+    animation: none !important;
+  }
+
+  /* Disable View Transitions */
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+
+  /* Reduce all transitions to near-instant */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

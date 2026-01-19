@@ -1,12 +1,13 @@
 "use client"
 
-import { useEffect, useState, use, useMemo, ViewTransition } from "react"
-import { motion } from "motion/react"
+import { useEffect, useState, use, useMemo, useRef, ViewTransition } from "react"
+import { motion, useInView } from "motion/react"
 import Link from "next/link"
 import type { FontVariant } from "@/lib/schemas"
 import { deriveColor, deriveTintedTextColor, deriveTintedMutedColor } from "@/lib/color"
 import { useActiveColor } from "@/lib/active-color-context"
 import { getFontLoader } from "@/lib/font-loader"
+import { useReducedMotion } from "@/hooks/use-reduced-motion"
 import type { WordResponse } from "@/app/api/word/[word]/route"
 import type { WordContent } from "@/lib/words"
 
@@ -74,17 +75,17 @@ const letterAnimations: LetterAnimation[] = [
     animate: { opacity: 1, filter: "blur(0px)" },
     transition: { type: "spring", stiffness: 60, damping: 18 },
   },
-  // Scale from center
+  // Scale from center (damping raised from 14)
   {
     initial: { opacity: 0, scale: 0.7 },
     animate: { opacity: 1, scale: 1 },
-    transition: { type: "spring", stiffness: 80, damping: 14 },
+    transition: { type: "spring", stiffness: 80, damping: 16 },
   },
-  // Slide in from below with fade
+  // Slide in from below with fade (damping raised from 14)
   {
     initial: { opacity: 0, y: 28 },
     animate: { opacity: 1, y: 0 },
-    transition: { type: "spring", stiffness: 65, damping: 14 },
+    transition: { type: "spring", stiffness: 65, damping: 16 },
   },
   // Subtle scale with blur
   {
@@ -92,17 +93,17 @@ const letterAnimations: LetterAnimation[] = [
     animate: { opacity: 1, scale: 1, filter: "blur(0px)" },
     transition: { type: "spring", stiffness: 70, damping: 16 },
   },
-  // 3D flip from side
+  // 3D flip from side (damping raised from 14)
   {
     initial: { opacity: 0, rotateY: -70 },
     animate: { opacity: 1, rotateY: 0 },
-    transition: { type: "spring", stiffness: 55, damping: 14 },
+    transition: { type: "spring", stiffness: 55, damping: 16 },
   },
-  // Drop from above
+  // Drop from above (damping raised from 12)
   {
     initial: { opacity: 0, y: -24 },
     animate: { opacity: 1, y: 0 },
-    transition: { type: "spring", stiffness: 80, damping: 12 },
+    transition: { type: "spring", stiffness: 80, damping: 16 },
   },
   // Slide from left
   {
@@ -110,11 +111,11 @@ const letterAnimations: LetterAnimation[] = [
     animate: { opacity: 1, x: 0 },
     transition: { type: "spring", stiffness: 70, damping: 16 },
   },
-  // Soft fade (minimal movement, elegant)
+  // Soft fade (damping raised from 14)
   {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
-    transition: { type: "spring", stiffness: 40, damping: 14 },
+    transition: { type: "spring", stiffness: 40, damping: 16 },
   },
   // Scale down from large with blur
   {
@@ -128,17 +129,17 @@ const letterAnimations: LetterAnimation[] = [
     animate: { opacity: 1, x: 0 },
     transition: { type: "spring", stiffness: 70, damping: 16 },
   },
-  // Gentle spin
+  // Gentle spin (damping raised from 14)
   {
     initial: { opacity: 0, rotate: -90, scale: 0.7 },
     animate: { opacity: 1, rotate: 0, scale: 1 },
-    transition: { type: "spring", stiffness: 50, damping: 14 },
+    transition: { type: "spring", stiffness: 50, damping: 16 },
   },
-  // Vertical flip from top
+  // Vertical flip from top (damping raised from 14)
   {
     initial: { opacity: 0, rotateX: 60 },
     animate: { opacity: 1, rotateX: 0 },
-    transition: { type: "spring", stiffness: 60, damping: 14 },
+    transition: { type: "spring", stiffness: 60, damping: 16 },
   },
   // Rise with scale
   {
@@ -146,23 +147,23 @@ const letterAnimations: LetterAnimation[] = [
     animate: { opacity: 1, y: 0, scale: 1 },
     transition: { type: "spring", stiffness: 70, damping: 16 },
   },
-  // Soft pop
+  // Soft pop (damping raised from 14)
   {
     initial: { opacity: 0, scale: 0.5 },
     animate: { opacity: 1, scale: 1 },
-    transition: { type: "spring", stiffness: 100, damping: 14 },
+    transition: { type: "spring", stiffness: 100, damping: 16 },
   },
-  // Slide up with blur
+  // Slide up with blur (damping raised from 14)
   {
     initial: { opacity: 0, y: 20, filter: "blur(5px)" },
     animate: { opacity: 1, y: 0, filter: "blur(0px)" },
-    transition: { type: "spring", stiffness: 60, damping: 14 },
+    transition: { type: "spring", stiffness: 60, damping: 16 },
   },
-  // Gentle drift diagonal
+  // Gentle drift diagonal (damping raised from 14)
   {
     initial: { opacity: 0, x: -12, y: 12 },
     animate: { opacity: 1, x: 0, y: 0 },
-    transition: { type: "spring", stiffness: 55, damping: 14 },
+    transition: { type: "spring", stiffness: 55, damping: 16 },
   },
   // Zoom blur
   {
@@ -170,17 +171,64 @@ const letterAnimations: LetterAnimation[] = [
     animate: { opacity: 1, scale: 1, filter: "blur(0px)" },
     transition: { type: "spring", stiffness: 50, damping: 16 },
   },
-  // Squeeze horizontal
+  // Squeeze horizontal (damping raised from 14)
   {
     initial: { opacity: 0, scaleX: 0.5, scaleY: 1.1 },
     animate: { opacity: 1, scaleX: 1, scaleY: 1 },
-    transition: { type: "spring", stiffness: 80, damping: 14 },
+    transition: { type: "spring", stiffness: 80, damping: 16 },
   },
-  // Float up ethereal
+  // Float up ethereal (damping raised from 12)
   {
     initial: { opacity: 0, y: 35, filter: "blur(3px)" },
     animate: { opacity: 1, y: 0, filter: "blur(0px)" },
-    transition: { type: "spring", stiffness: 40, damping: 12 },
+    transition: { type: "spring", stiffness: 40, damping: 16 },
+  },
+  // Curved arc from bottom-left (using asymmetric springs for curved path feel)
+  {
+    initial: { opacity: 0, x: -20, y: 30, rotate: -10, filter: "blur(6px)" },
+    animate: { opacity: 1, x: 0, y: 0, rotate: 0, filter: "blur(0px)" },
+    transition: {
+      type: "spring",
+      stiffness: 50,
+      damping: 16,
+      x: { type: "spring", stiffness: 70, damping: 16 },
+      y: { type: "spring", stiffness: 40, damping: 14 },
+    },
+  },
+  // Curved arc from top-right
+  {
+    initial: { opacity: 0, x: 20, y: -25, rotate: 8, filter: "blur(5px)" },
+    animate: { opacity: 1, x: 0, y: 0, rotate: 0, filter: "blur(0px)" },
+    transition: {
+      type: "spring",
+      stiffness: 50,
+      damping: 16,
+      x: { type: "spring", stiffness: 45, damping: 16 },
+      y: { type: "spring", stiffness: 65, damping: 14 },
+    },
+  },
+  // Swooping arc from below
+  {
+    initial: { opacity: 0, x: -15, y: 40, scale: 0.8, filter: "blur(8px)" },
+    animate: { opacity: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)" },
+    transition: {
+      type: "spring",
+      stiffness: 55,
+      damping: 16,
+      y: { type: "spring", stiffness: 35, damping: 12 },
+      scale: { type: "spring", stiffness: 80, damping: 16 },
+    },
+  },
+  // Spiral entry
+  {
+    initial: { opacity: 0, x: 25, y: 25, rotate: 45, scale: 0.6, filter: "blur(10px)" },
+    animate: { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1, filter: "blur(0px)" },
+    transition: {
+      type: "spring",
+      stiffness: 45,
+      damping: 16,
+      rotate: { type: "spring", stiffness: 60, damping: 18 },
+    },
   },
 ]
 
@@ -229,7 +277,7 @@ function calculateFluidFontSize(wordLength: number): string {
   return `clamp(${clampedMobile.toFixed(2)}rem, ${intercept.toFixed(2)}rem + ${(slope * 100).toFixed(2)}vw, ${clampedDesktop.toFixed(2)}rem)`
 }
 
-function StyledWord({ word, variant, ready }: { word: string; variant: FontVariant; ready: boolean }) {
+function StyledWord({ word, variant, ready, reducedMotion }: { word: string; variant: FontVariant; ready: boolean; reducedMotion: boolean }) {
   const color = deriveColor(variant.colorIntent, "dark")
 
   // Pick animation based on word hash (deterministic for SSR)
@@ -237,6 +285,29 @@ function StyledWord({ word, variant, ready }: { word: string; variant: FontVaria
 
   const letters = word.split("")
   const fontSize = calculateFluidFontSize(word.length)
+
+  // For reduced motion, show all letters immediately
+  if (reducedMotion) {
+    return (
+      <span
+        style={{
+          fontFamily: `"${variant.family}", sans-serif`,
+          fontWeight: variant.weight,
+          fontStyle: variant.style,
+          fontSize,
+          color,
+        }}
+        className="inline-flex"
+      >
+        {word}
+      </span>
+    )
+  }
+
+  // Negative stagger: letters appear "already in motion"
+  // First letter has longest delay, last letter starts immediately
+  const totalStaggerTime = letters.length * 0.04
+  const baseDelay = 0.1 // Small initial delay for page transition
 
   return (
     <span
@@ -261,7 +332,8 @@ function StyledWord({ word, variant, ready }: { word: string; variant: FontVaria
           animate={ready ? animation.animate : animation.initial}
           transition={{
             ...animation.transition,
-            delay: i * 0.04,
+            // Negative stagger: last letters animate first, creating wave effect
+            delay: baseDelay + (totalStaggerTime - (i * 0.04)),
           }}
         >
           {letter}
@@ -348,51 +420,79 @@ function formatInlineMarkdown(text: string): React.ReactNode {
   return parts.length === 1 && typeof parts[0] === "string" ? parts[0] : parts
 }
 
-function MdxContent({ content, textColor, mutedColor }: { content: string; textColor?: string; mutedColor?: string }) {
+function ScrollRevealSection({ children, reducedMotion, delay = 0 }: { children: React.ReactNode; reducedMotion: boolean; delay?: number }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const isInView = useInView(ref, { once: true, margin: "-50px" })
+
+  if (reducedMotion) {
+    return <div>{children}</div>
+  }
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}
+      animate={isInView ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 12, filter: "blur(4px)" }}
+      transition={{ type: "spring", stiffness: 60, damping: 16, delay }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+function MdxContent({ content, textColor, mutedColor, reducedMotion }: { content: string; textColor?: string; mutedColor?: string; reducedMotion: boolean }) {
   const sections = useMemo(() => parseMarkdown(content), [content])
 
   return (
     <div className="space-y-11">
       {sections.map((section, i) => {
+        const delay = i * 0.05
+
         if (section.type === "heading" && section.level === 2) {
           return (
-            <h2 key={i} className="font-sans text-zinc-500 text-[15px] uppercase tracking-wider mt-20 mb-11 pb-4 border-b border-zinc-800/60 first:mt-0">
-              {section.content}
-            </h2>
+            <ScrollRevealSection key={i} reducedMotion={reducedMotion} delay={delay}>
+              <h2 className="font-sans text-zinc-500 text-[15px] uppercase tracking-wider mt-20 mb-11 pb-4 border-b border-zinc-800/60 first:mt-0">
+                {section.content}
+              </h2>
+            </ScrollRevealSection>
           )
         }
         if (section.type === "paragraph") {
           return (
-            <p
-              key={i}
-              className="text-[length:var(--text-fluid-body)] leading-[1.7] font-normal transition-colors duration-700"
-              style={{ color: textColor || "var(--tint-text)" }}
-            >
-              {formatInlineMarkdown(section.content)}
-            </p>
+            <ScrollRevealSection key={i} reducedMotion={reducedMotion} delay={delay}>
+              <p
+                className="text-[length:var(--text-fluid-body)] leading-[1.7] font-normal transition-colors duration-700"
+                style={{ color: textColor || "var(--tint-text)" }}
+              >
+                {formatInlineMarkdown(section.content)}
+              </p>
+            </ScrollRevealSection>
           )
         }
         if (section.type === "blockquote") {
           return (
-            <blockquote
-              key={i}
-              className="text-[length:var(--text-fluid-quote)] leading-[1.65] pl-7 border-l border-zinc-700/50 transition-colors duration-700"
-              style={{ color: mutedColor || "var(--tint-muted)" }}
-            >
-              {formatInlineMarkdown(section.content)}
-            </blockquote>
+            <ScrollRevealSection key={i} reducedMotion={reducedMotion} delay={delay}>
+              <blockquote
+                className="text-[length:var(--text-fluid-quote)] leading-[1.65] pl-7 border-l border-zinc-700/50 transition-colors duration-700"
+                style={{ color: mutedColor || "var(--tint-muted)" }}
+              >
+                {formatInlineMarkdown(section.content)}
+              </blockquote>
+            </ScrollRevealSection>
           )
         }
         if (section.type === "list" && section.items) {
           return (
-            <ul key={i} className="space-y-3 text-[length:var(--text-fluid-quote)]" style={{ color: mutedColor || "var(--tint-muted)" }}>
-              {section.items.map((item, j) => (
-                <li key={j} className="flex gap-3">
-                  <span className="text-zinc-600">•</span>
-                  <span>{formatInlineMarkdown(item)}</span>
-                </li>
-              ))}
-            </ul>
+            <ScrollRevealSection key={i} reducedMotion={reducedMotion} delay={delay}>
+              <ul className="space-y-3 text-[length:var(--text-fluid-quote)]" style={{ color: mutedColor || "var(--tint-muted)" }}>
+                {section.items.map((item, j) => (
+                  <li key={j} className="flex gap-3">
+                    <span className="text-zinc-600">•</span>
+                    <span>{formatInlineMarkdown(item)}</span>
+                  </li>
+                ))}
+              </ul>
+            </ScrollRevealSection>
           )
         }
         return null
@@ -405,6 +505,7 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
   const { word } = use(params)
   const decodedWord = decodeURIComponent(word)
   const { setActiveColor, tintColors } = useActiveColor()
+  const prefersReducedMotion = useReducedMotion()
 
   const [wordContent, setWordContent] = useState<WordContent | null>(null)
   const [definition, setDefinition] = useState<DictionaryEntry | null>(null)
@@ -462,12 +563,12 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
       >
         <header className="fixed top-0 left-0 p-8 z-10">
           <Link
-          href="/"
-          className="text-zinc-600 hover:text-zinc-400 transition-colors text-sm tracking-wide uppercase"
-        >
-          Back
-        </Link>
-      </header>
+            href="/"
+            className="text-zinc-600 hover:text-zinc-400 transition-colors text-sm tracking-wide uppercase"
+          >
+            Back
+          </Link>
+        </header>
 
       <main className="flex flex-col items-center px-6 pt-32 pb-24">
         <motion.div
@@ -477,7 +578,7 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
           transition={{ duration: 0.4 }}
         >
           <div className="text-center mb-4">
-            <StyledWord word={decodedWord} variant={variant} ready={ready} />
+            <StyledWord word={decodedWord} variant={variant} ready={ready} reducedMotion={prefersReducedMotion} />
           </div>
 
           {phonetic && (
@@ -492,43 +593,46 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
                 content={wordContent!.content}
                 textColor={textColor}
                 mutedColor={mutedColor}
+                reducedMotion={prefersReducedMotion}
               />
             ) : definition ? (
               <div className="space-y-20">
                 {definition.meanings.map((meaning, i) => (
-                  <section key={i}>
-                    <h2 className="font-sans text-zinc-500 text-[15px] uppercase tracking-wider mb-11 pb-4 border-b border-zinc-800/60">
-                      {meaning.partOfSpeech}
-                    </h2>
+                  <ScrollRevealSection key={i} reducedMotion={prefersReducedMotion} delay={i * 0.1}>
+                    <section>
+                      <h2 className="font-sans text-zinc-500 text-[15px] uppercase tracking-wider mb-11 pb-4 border-b border-zinc-800/60">
+                        {meaning.partOfSpeech}
+                      </h2>
 
-                    <ol className="space-y-10">
-                      {meaning.definitions.slice(0, 3).map((def, j) => (
-                        <li key={j} className="flex gap-7">
-                          <span className="font-sans text-zinc-600 text-[1.4rem] tabular-nums flex-shrink-0 pt-1 select-none">
-                            {j + 1}.
-                          </span>
+                      <ol className="space-y-10">
+                        {meaning.definitions.slice(0, 3).map((def, j) => (
+                          <li key={j} className="flex gap-7">
+                            <span className="font-sans text-zinc-600 text-[1.4rem] tabular-nums flex-shrink-0 pt-1 select-none">
+                              {j + 1}.
+                            </span>
 
-                          <div className="space-y-7">
-                            <p
-                              className="text-[length:var(--text-fluid-body)] leading-[1.7] font-normal transition-colors duration-700"
-                              style={{ color: textColor || "var(--tint-text)" }}
-                            >
-                              {def.definition}
-                            </p>
-
-                            {def.example && (
+                            <div className="space-y-7">
                               <p
-                                className="text-[length:var(--text-fluid-quote)] leading-[1.65] italic pl-7 border-l border-zinc-700/50 transition-colors duration-700"
-                                style={{ color: mutedColor || "var(--tint-muted)" }}
+                                className="text-[length:var(--text-fluid-body)] leading-[1.7] font-normal transition-colors duration-700"
+                                style={{ color: textColor || "var(--tint-text)" }}
                               >
-                                "{def.example}"
+                                {def.definition}
                               </p>
-                            )}
-                          </div>
-                        </li>
-                      ))}
-                    </ol>
-                  </section>
+
+                              {def.example && (
+                                <p
+                                  className="text-[length:var(--text-fluid-quote)] leading-[1.65] italic pl-7 border-l border-zinc-700/50 transition-colors duration-700"
+                                  style={{ color: mutedColor || "var(--tint-muted)" }}
+                                >
+                                  &ldquo;{def.example}&rdquo;
+                                </p>
+                              )}
+                            </div>
+                          </li>
+                        ))}
+                      </ol>
+                    </section>
+                  </ScrollRevealSection>
                 ))}
               </div>
             ) : (

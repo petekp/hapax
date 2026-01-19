@@ -7,6 +7,7 @@ import type { FontVariant } from "@/lib/schemas"
 import { deriveColor } from "@/lib/color"
 import { getFontLoader } from "@/lib/font-loader"
 import { useActiveColor } from "@/lib/active-color-context"
+import { useReducedMotion } from "@/hooks/use-reduced-motion"
 import Link from "next/link"
 
 interface GalleryWordProps {
@@ -20,6 +21,7 @@ export function GalleryWord({ word, variant, colorMode = "dark" }: GalleryWordPr
   const { setActiveColor } = useActiveColor()
   const isNavigatingRef = useRef(false)
   const router = useRouter()
+  const prefersReducedMotion = useReducedMotion()
   const wordUrl = `/word/${encodeURIComponent(word.toLowerCase())}`
 
   const handleFontLoaded = useCallback(() => {
@@ -64,8 +66,9 @@ export function GalleryWord({ word, variant, colorMode = "dark" }: GalleryWordPr
           opacity: fontLoaded ? 1 : 0,
           filter: fontLoaded ? "blur(0px)" : "blur(6px)",
         }}
-        transition={{ duration: 0.4 }}
-        whileHover={fontLoaded ? { scale: 1.05 } : undefined}
+        transition={{ duration: prefersReducedMotion ? 0 : 0.4 }}
+        whileHover={fontLoaded && !prefersReducedMotion ? { scale: 1.02 } : undefined}
+        whileTap={fontLoaded && !prefersReducedMotion ? { scale: 0.98 } : undefined}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
