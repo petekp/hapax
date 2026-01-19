@@ -12,7 +12,8 @@
     "seed-test": "tsx scripts/seed-test.ts",
     "migrate-styles": "tsx scripts/migrate-styles.ts",
     "build-words-index": "tsx scripts/build-words-index.ts",
-    "generate-definitions": "tsx scripts/generate-definitions.ts"
+    "generate-definitions": "tsx scripts/generate-definitions.ts",
+    "merge-definitions": "tsx scripts/merge-definitions.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.2",

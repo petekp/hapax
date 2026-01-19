@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, use } from "react"
+import { useEffect, useState, use, useMemo } from "react"
 import { motion } from "motion/react"
 import Link from "next/link"
 import type { FontVariant } from "@/lib/schemas"
@@ -9,6 +9,13 @@ import { useActiveColor } from "@/lib/active-color-context"
 import { getFontLoader } from "@/lib/font-loader"
 import type { WordResponse } from "@/app/api/word/[word]/route"
 import type { WordContent } from "@/lib/words"
+
+interface ParsedSection {
+  type: "heading" | "paragraph" | "blockquote" | "list"
+  level?: number
+  content: string
+  items?: string[]
+}
 
 interface Definition {
   partOfSpeech: string
@@ -63,6 +70,136 @@ function StyledWord({ word, variant }: { word: string; variant: FontVariant }) {
     >
       {word}
     </span>
+  )
+}
+
+function parseMarkdown(content: string): ParsedSection[] {
+  const lines = content.split("\n")
+  const sections: ParsedSection[] = []
+  let i = 0
+
+  while (i < lines.length) {
+    const line = lines[i]
+
+    if (line.startsWith("## ")) {
+      sections.push({ type: "heading", level: 2, content: line.slice(3) })
+      i++
+    } else if (line.startsWith("> ")) {
+      let quote = line.slice(2)
+      i++
+      while (i < lines.length && lines[i].startsWith("> ")) {
+        quote += "\n" + lines[i].slice(2)
+        i++
+      }
+      sections.push({ type: "blockquote", content: quote })
+    } else if (line.startsWith("- ")) {
+      const items: string[] = []
+      while (i < lines.length && lines[i].startsWith("- ")) {
+        items.push(lines[i].slice(2))
+        i++
+      }
+      sections.push({ type: "list", content: "", items })
+    } else if (line.trim()) {
+      let para = line
+      i++
+      while (i < lines.length && lines[i].trim() && !lines[i].startsWith("#") && !lines[i].startsWith(">") && !lines[i].startsWith("- ")) {
+        para += " " + lines[i]
+        i++
+      }
+      sections.push({ type: "paragraph", content: para })
+    } else {
+      i++
+    }
+  }
+
+  return sections
+}
+
+function formatInlineMarkdown(text: string): React.ReactNode {
+  const parts: React.ReactNode[] = []
+  let remaining = text
+  let key = 0
+
+  while (remaining.length > 0) {
+    const boldMatch = remaining.match(/\*\*(.+?)\*\*/)
+    const italicMatch = remaining.match(/\*(.+?)\*/)
+
+    const boldIndex = boldMatch?.index ?? Infinity
+    const italicIndex = italicMatch?.index ?? Infinity
+
+    if (boldIndex === Infinity && italicIndex === Infinity) {
+      parts.push(remaining)
+      break
+    }
+
+    if (boldIndex <= italicIndex && boldMatch) {
+      if (boldIndex > 0) {
+        parts.push(remaining.slice(0, boldIndex))
+      }
+      parts.push(<strong key={key++}>{boldMatch[1]}</strong>)
+      remaining = remaining.slice(boldIndex + boldMatch[0].length)
+    } else if (italicMatch) {
+      if (italicIndex > 0) {
+        parts.push(remaining.slice(0, italicIndex))
+      }
+      parts.push(<em key={key++}>{italicMatch[1]}</em>)
+      remaining = remaining.slice(italicIndex + italicMatch[0].length)
+    }
+  }
+
+  return parts.length === 1 && typeof parts[0] === "string" ? parts[0] : parts
+}
+
+function MdxContent({ content, textColor, mutedColor }: { content: string; textColor?: string; mutedColor?: string }) {
+  const sections = useMemo(() => parseMarkdown(content), [content])
+
+  return (
+    <div className="space-y-8">
+      {sections.map((section, i) => {
+        if (section.type === "heading" && section.level === 2) {
+          return (
+            <h2 key={i} className="font-sans text-zinc-500 text-[11px] uppercase tracking-wider mt-14 mb-8 pb-3 border-b border-zinc-800/60 first:mt-0">
+              {section.content}
+            </h2>
+          )
+        }
+        if (section.type === "paragraph") {
+          return (
+            <p
+              key={i}
+              className="text-2xl leading-[1.7] font-normal transition-colors duration-700"
+              style={{ color: textColor || "#e4e4e7" }}
+            >
+              {formatInlineMarkdown(section.content)}
+            </p>
+          )
+        }
+        if (section.type === "blockquote") {
+          return (
+            <blockquote
+              key={i}
+              className="text-xl leading-[1.65] pl-5 border-l border-zinc-700/50 transition-colors duration-700"
+              style={{ color: mutedColor || "#a1a1aa" }}
+            >
+              {formatInlineMarkdown(section.content)}
+            </blockquote>
+          )
+        }
+        if (section.type === "list" && section.items) {
+          return (
+            <ul key={i} className="space-y-2 text-xl" style={{ color: mutedColor || "#a1a1aa" }}>
+              {section.items.map((item, j) => (
+                <li key={j} className="flex gap-2">
+                  <span className="text-zinc-600">•</span>
+                  <span>{formatInlineMarkdown(item)}</span>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+        return null
+      })}
+    </div>
   )
 }
 
@@ -149,7 +286,13 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
           )}
 
           <div className="max-w-prose w-full" style={{ fontFamily: "var(--font-serif), Georgia, serif" }}>
-            {definition ? (
+            {hasMdxContent ? (
+              <MdxContent
+                content={wordContent!.content}
+                textColor={textColor}
+                mutedColor={mutedColor}
+              />
+            ) : definition ? (
               <div className="space-y-14">
                 {definition.meanings.map((meaning, i) => (
                   <section key={i}>
