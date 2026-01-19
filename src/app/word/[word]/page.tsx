@@ -64,33 +64,123 @@ type LetterAnimation = {
 const letterAnimations: LetterAnimation[] = [
   // Fade up with slight rotation
   {
-    initial: { opacity: 0, y: 20, rotateX: -40 },
+    initial: { opacity: 0, y: 16, rotateX: -30 },
     animate: { opacity: 1, y: 0, rotateX: 0 },
-    transition: { type: "spring", stiffness: 100, damping: 20 },
+    transition: { type: "spring", stiffness: 70, damping: 16 },
   },
   // Blur fade in
   {
-    initial: { opacity: 0, filter: "blur(12px)" },
+    initial: { opacity: 0, filter: "blur(10px)" },
     animate: { opacity: 1, filter: "blur(0px)" },
-    transition: { type: "spring", stiffness: 80, damping: 25 },
+    transition: { type: "spring", stiffness: 60, damping: 18 },
   },
   // Scale from center
   {
-    initial: { opacity: 0, scale: 0.6 },
+    initial: { opacity: 0, scale: 0.7 },
     animate: { opacity: 1, scale: 1 },
-    transition: { type: "spring", stiffness: 120, damping: 18 },
+    transition: { type: "spring", stiffness: 80, damping: 14 },
   },
   // Slide in from below with fade
   {
-    initial: { opacity: 0, y: 40 },
+    initial: { opacity: 0, y: 28 },
     animate: { opacity: 1, y: 0 },
-    transition: { type: "spring", stiffness: 90, damping: 22 },
+    transition: { type: "spring", stiffness: 65, damping: 14 },
   },
   // Subtle scale with blur
   {
-    initial: { opacity: 0, scale: 0.85, filter: "blur(8px)" },
+    initial: { opacity: 0, scale: 0.9, filter: "blur(6px)" },
     animate: { opacity: 1, scale: 1, filter: "blur(0px)" },
-    transition: { type: "spring", stiffness: 100, damping: 24 },
+    transition: { type: "spring", stiffness: 70, damping: 16 },
+  },
+  // 3D flip from side
+  {
+    initial: { opacity: 0, rotateY: -70 },
+    animate: { opacity: 1, rotateY: 0 },
+    transition: { type: "spring", stiffness: 55, damping: 14 },
+  },
+  // Drop from above
+  {
+    initial: { opacity: 0, y: -24 },
+    animate: { opacity: 1, y: 0 },
+    transition: { type: "spring", stiffness: 80, damping: 12 },
+  },
+  // Slide from left
+  {
+    initial: { opacity: 0, x: -16 },
+    animate: { opacity: 1, x: 0 },
+    transition: { type: "spring", stiffness: 70, damping: 16 },
+  },
+  // Soft fade (minimal movement, elegant)
+  {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    transition: { type: "spring", stiffness: 40, damping: 14 },
+  },
+  // Scale down from large with blur
+  {
+    initial: { opacity: 0, scale: 1.3, filter: "blur(8px)" },
+    animate: { opacity: 1, scale: 1, filter: "blur(0px)" },
+    transition: { type: "spring", stiffness: 60, damping: 16 },
+  },
+  // Slide from right
+  {
+    initial: { opacity: 0, x: 16 },
+    animate: { opacity: 1, x: 0 },
+    transition: { type: "spring", stiffness: 70, damping: 16 },
+  },
+  // Gentle spin
+  {
+    initial: { opacity: 0, rotate: -90, scale: 0.7 },
+    animate: { opacity: 1, rotate: 0, scale: 1 },
+    transition: { type: "spring", stiffness: 50, damping: 14 },
+  },
+  // Vertical flip from top
+  {
+    initial: { opacity: 0, rotateX: 60 },
+    animate: { opacity: 1, rotateX: 0 },
+    transition: { type: "spring", stiffness: 60, damping: 14 },
+  },
+  // Rise with scale
+  {
+    initial: { opacity: 0, y: 24, scale: 0.85 },
+    animate: { opacity: 1, y: 0, scale: 1 },
+    transition: { type: "spring", stiffness: 70, damping: 16 },
+  },
+  // Soft pop
+  {
+    initial: { opacity: 0, scale: 0.5 },
+    animate: { opacity: 1, scale: 1 },
+    transition: { type: "spring", stiffness: 100, damping: 14 },
+  },
+  // Slide up with blur
+  {
+    initial: { opacity: 0, y: 20, filter: "blur(5px)" },
+    animate: { opacity: 1, y: 0, filter: "blur(0px)" },
+    transition: { type: "spring", stiffness: 60, damping: 14 },
+  },
+  // Gentle drift diagonal
+  {
+    initial: { opacity: 0, x: -12, y: 12 },
+    animate: { opacity: 1, x: 0, y: 0 },
+    transition: { type: "spring", stiffness: 55, damping: 14 },
+  },
+  // Zoom blur
+  {
+    initial: { opacity: 0, scale: 1.6, filter: "blur(12px)" },
+    animate: { opacity: 1, scale: 1, filter: "blur(0px)" },
+    transition: { type: "spring", stiffness: 50, damping: 16 },
+  },
+  // Squeeze horizontal
+  {
+    initial: { opacity: 0, scaleX: 0.5, scaleY: 1.1 },
+    animate: { opacity: 1, scaleX: 1, scaleY: 1 },
+    transition: { type: "spring", stiffness: 80, damping: 14 },
+  },
+  // Float up ethereal
+  {
+    initial: { opacity: 0, y: 35, filter: "blur(3px)" },
+    animate: { opacity: 1, y: 0, filter: "blur(0px)" },
+    transition: { type: "spring", stiffness: 40, damping: 12 },
   },
 ]
 
@@ -121,7 +211,7 @@ function StyledWord({ word, variant, ready }: { word: string; variant: FontVaria
         fontStyle: variant.style,
         perspective: "1000px",
       }}
-      className="text-6xl md:text-8xl inline-flex"
+      className="text-[5.25rem] md:text-[8.5rem] inline-flex"
     >
       {letters.map((letter, i) => (
         <motion.span
@@ -226,11 +316,11 @@ function MdxContent({ content, textColor, mutedColor }: { content: string; textC
   const sections = useMemo(() => parseMarkdown(content), [content])
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-11">
       {sections.map((section, i) => {
         if (section.type === "heading" && section.level === 2) {
           return (
-            <h2 key={i} className="font-sans text-zinc-500 text-[11px] uppercase tracking-wider mt-14 mb-8 pb-3 border-b border-zinc-800/60 first:mt-0">
+            <h2 key={i} className="font-sans text-zinc-500 text-[15px] uppercase tracking-wider mt-20 mb-11 pb-4 border-b border-zinc-800/60 first:mt-0">
               {section.content}
             </h2>
           )
@@ -239,7 +329,7 @@ function MdxContent({ content, textColor, mutedColor }: { content: string; textC
           return (
             <p
               key={i}
-              className="text-2xl leading-[1.7] font-normal transition-colors duration-700"
+              className="text-[2.1rem] leading-[1.7] font-normal transition-colors duration-700"
               style={{ color: textColor || "var(--tint-text)" }}
             >
               {formatInlineMarkdown(section.content)}
@@ -250,7 +340,7 @@ function MdxContent({ content, textColor, mutedColor }: { content: string; textC
           return (
             <blockquote
               key={i}
-              className="text-xl leading-[1.65] pl-5 border-l border-zinc-700/50 transition-colors duration-700"
+              className="text-[1.75rem] leading-[1.65] pl-7 border-l border-zinc-700/50 transition-colors duration-700"
               style={{ color: mutedColor || "var(--tint-muted)" }}
             >
               {formatInlineMarkdown(section.content)}
@@ -259,9 +349,9 @@ function MdxContent({ content, textColor, mutedColor }: { content: string; textC
         }
         if (section.type === "list" && section.items) {
           return (
-            <ul key={i} className="space-y-2 text-xl" style={{ color: mutedColor || "var(--tint-muted)" }}>
+            <ul key={i} className="space-y-3 text-[1.75rem]" style={{ color: mutedColor || "var(--tint-muted)" }}>
               {section.items.map((item, j) => (
-                <li key={j} className="flex gap-2">
+                <li key={j} className="flex gap-3">
                   <span className="text-zinc-600">•</span>
                   <span>{formatInlineMarkdown(item)}</span>
                 </li>
@@ -355,12 +445,12 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
           </div>
 
           {phonetic && (
-            <p className="text-zinc-500 text-lg font-light tracking-wide mb-20">
+            <p className="text-zinc-500 text-[1.575rem] font-light tracking-wide mb-28">
               {phonetic}
             </p>
           )}
 
-          <div className="max-w-prose w-full" style={{ fontFamily: "var(--font-serif), Georgia, serif" }}>
+          <div className="max-w-[75ch] w-full" style={{ fontFamily: "var(--font-serif), Georgia, serif" }}>
             {hasMdxContent ? (
               <MdxContent
                 content={wordContent!.content}
@@ -368,23 +458,23 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
                 mutedColor={mutedColor}
               />
             ) : definition ? (
-              <div className="space-y-14">
+              <div className="space-y-20">
                 {definition.meanings.map((meaning, i) => (
                   <section key={i}>
-                    <h2 className="font-sans text-zinc-500 text-[11px] uppercase tracking-wider mb-8 pb-3 border-b border-zinc-800/60">
+                    <h2 className="font-sans text-zinc-500 text-[15px] uppercase tracking-wider mb-11 pb-4 border-b border-zinc-800/60">
                       {meaning.partOfSpeech}
                     </h2>
 
-                    <ol className="space-y-7">
+                    <ol className="space-y-10">
                       {meaning.definitions.slice(0, 3).map((def, j) => (
-                        <li key={j} className="flex gap-5">
-                          <span className="font-sans text-zinc-600 text-base tabular-nums flex-shrink-0 pt-1 select-none">
+                        <li key={j} className="flex gap-7">
+                          <span className="font-sans text-zinc-600 text-[1.4rem] tabular-nums flex-shrink-0 pt-1 select-none">
                             {j + 1}.
                           </span>
 
-                          <div className="space-y-5">
+                          <div className="space-y-7">
                             <p
-                              className="text-2xl leading-[1.7] font-normal transition-colors duration-700"
+                              className="text-[2.1rem] leading-[1.7] font-normal transition-colors duration-700"
                               style={{ color: textColor || "var(--tint-text)" }}
                             >
                               {def.definition}
@@ -392,7 +482,7 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
 
                             {def.example && (
                               <p
-                                className="text-xl leading-[1.65] italic pl-5 border-l border-zinc-700/50 transition-colors duration-700"
+                                className="text-[1.75rem] leading-[1.65] italic pl-7 border-l border-zinc-700/50 transition-colors duration-700"
                                 style={{ color: mutedColor || "var(--tint-muted)" }}
                               >
                                 "{def.example}"
@@ -406,7 +496,7 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
                 ))}
               </div>
             ) : (
-              <p className="text-zinc-500 text-center text-lg">
+              <p className="text-zinc-500 text-center text-[1.575rem]">
                 No definition found.
               </p>
             )}
