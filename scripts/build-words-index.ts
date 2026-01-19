@@ -42,12 +42,6 @@ function buildIndex() {
     const content = fs.readFileSync(filepath, "utf-8")
     const { data } = matter(content)
 
-    const status = data.status as string
-    if (status === "draft") {
-      skipped++
-      continue
-    }
-
     const word = data.word as string
     const style = data.style as StyleEntry
 
