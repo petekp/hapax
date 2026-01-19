@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
+import { useRouter } from "next/navigation"
 import { motion } from "motion/react"
 import type { FontVariant } from "@/lib/schemas"
 import { deriveColor } from "@/lib/color"
@@ -18,6 +19,8 @@ export function GalleryWord({ word, variant, colorMode = "dark" }: GalleryWordPr
   const [fontLoaded, setFontLoaded] = useState(false)
   const { setActiveColor } = useActiveColor()
   const isNavigatingRef = useRef(false)
+  const router = useRouter()
+  const wordUrl = `/word/${encodeURIComponent(word.toLowerCase())}`
 
   const handleFontLoaded = useCallback(() => {
     setFontLoaded(true)
@@ -25,7 +28,8 @@ export function GalleryWord({ word, variant, colorMode = "dark" }: GalleryWordPr
 
   const handleMouseEnter = useCallback(() => {
     setActiveColor(variant.colorIntent)
-  }, [setActiveColor, variant.colorIntent])
+    router.prefetch(wordUrl)
+  }, [setActiveColor, variant.colorIntent, router, wordUrl])
 
   const handleMouseLeave = useCallback(() => {
     if (!isNavigatingRef.current) {
@@ -47,7 +51,7 @@ export function GalleryWord({ word, variant, colorMode = "dark" }: GalleryWordPr
   const color = deriveColor(variant.colorIntent, colorMode)
 
   return (
-    <Link href={`/word/${encodeURIComponent(word.toLowerCase())}`} onClick={handleClick}>
+    <Link href={wordUrl} onClick={handleClick}>
       <motion.span
         style={{
           color: fontLoaded ? color : "transparent",

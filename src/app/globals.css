@@ -198,3 +198,9 @@
   from { transform: translateX(-50%); }
   to { transform: translateX(0); }
 }
+
+/* Optimize marquee row rendering - skip layout for off-screen rows */
+.marquee-row {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 100px;
+}

@@ -23,7 +23,7 @@ function ScrollingRow({ words, speed, direction, colorMode, className = "" }: Sc
 
   return (
     <div
-      className={`group ${className}`}
+      className={`group marquee-row ${className}`}
       style={{
         clipPath: "inset(0 0 0 0)",
       }}
