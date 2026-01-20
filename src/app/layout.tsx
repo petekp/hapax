@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Cormorant_Garamond } from "next/font/google";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import { ActiveColorProvider } from "@/lib/active-color-context";
+import { Footer } from "@/components/footer";
 import { PRELOAD_URLS } from "@/lib/font-preload";
 import "./globals.css";
 
@@ -51,6 +52,7 @@ export default function RootLayout({
         <ServiceWorkerRegister />
         <ActiveColorProvider>
           {children}
+          <Footer />
         </ActiveColorProvider>
       </body>
     </html>

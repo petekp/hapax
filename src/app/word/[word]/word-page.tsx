@@ -4,7 +4,7 @@ import { useEffect, useState, use, useMemo, useRef, ViewTransition } from "react
 import { motion, useInView } from "motion/react"
 import Link from "next/link"
 import type { FontVariant } from "@/lib/schemas"
-import { deriveColor, deriveTintedTextColor, deriveTintedMutedColor, deriveHoverColorHex } from "@/lib/color"
+import { deriveColor, deriveTintedTextColor, deriveTintedMutedColor, deriveTintedMutedColorHex, deriveHoverColorHex } from "@/lib/color"
 import { useActiveColor } from "@/lib/active-color-context"
 import { getFontLoader } from "@/lib/font-loader"
 import { useReducedMotion } from "@/hooks/use-reduced-motion"
@@ -63,25 +63,19 @@ type LetterAnimation = {
 }
 
 const letterAnimations: LetterAnimation[] = [
-  // Fade up with slight rotation
-  {
-    initial: { opacity: 0, y: 16, rotateX: -30 },
-    animate: { opacity: 1, y: 0, rotateX: 0 },
-    transition: { type: "spring", stiffness: 70, damping: 16 },
-  },
   // Blur fade in
   {
     initial: { opacity: 0, filter: "blur(10px)" },
     animate: { opacity: 1, filter: "blur(0px)" },
     transition: { type: "spring", stiffness: 60, damping: 18 },
   },
-  // Scale from center (damping raised from 14)
+  // Scale from center
   {
     initial: { opacity: 0, scale: 0.7 },
     animate: { opacity: 1, scale: 1 },
     transition: { type: "spring", stiffness: 80, damping: 16 },
   },
-  // Slide in from below with fade (damping raised from 14)
+  // Slide in from below with fade
   {
     initial: { opacity: 0, y: 28 },
     animate: { opacity: 1, y: 0 },
@@ -93,13 +87,7 @@ const letterAnimations: LetterAnimation[] = [
     animate: { opacity: 1, scale: 1, filter: "blur(0px)" },
     transition: { type: "spring", stiffness: 70, damping: 16 },
   },
-  // 3D flip from side (damping raised from 14)
-  {
-    initial: { opacity: 0, rotateY: -70 },
-    animate: { opacity: 1, rotateY: 0 },
-    transition: { type: "spring", stiffness: 55, damping: 16 },
-  },
-  // Drop from above (damping raised from 12)
+  // Drop from above
   {
     initial: { opacity: 0, y: -24 },
     animate: { opacity: 1, y: 0 },
@@ -111,7 +99,7 @@ const letterAnimations: LetterAnimation[] = [
     animate: { opacity: 1, x: 0 },
     transition: { type: "spring", stiffness: 70, damping: 16 },
   },
-  // Soft fade (damping raised from 14)
+  // Soft fade
   {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
@@ -129,37 +117,25 @@ const letterAnimations: LetterAnimation[] = [
     animate: { opacity: 1, x: 0 },
     transition: { type: "spring", stiffness: 70, damping: 16 },
   },
-  // Gentle spin (damping raised from 14)
-  {
-    initial: { opacity: 0, rotate: -90, scale: 0.7 },
-    animate: { opacity: 1, rotate: 0, scale: 1 },
-    transition: { type: "spring", stiffness: 50, damping: 16 },
-  },
-  // Vertical flip from top (damping raised from 14)
-  {
-    initial: { opacity: 0, rotateX: 60 },
-    animate: { opacity: 1, rotateX: 0 },
-    transition: { type: "spring", stiffness: 60, damping: 16 },
-  },
   // Rise with scale
   {
     initial: { opacity: 0, y: 24, scale: 0.85 },
     animate: { opacity: 1, y: 0, scale: 1 },
     transition: { type: "spring", stiffness: 70, damping: 16 },
   },
-  // Soft pop (damping raised from 14)
+  // Soft pop
   {
     initial: { opacity: 0, scale: 0.5 },
     animate: { opacity: 1, scale: 1 },
     transition: { type: "spring", stiffness: 100, damping: 16 },
   },
-  // Slide up with blur (damping raised from 14)
+  // Slide up with blur
   {
     initial: { opacity: 0, y: 20, filter: "blur(5px)" },
     animate: { opacity: 1, y: 0, filter: "blur(0px)" },
     transition: { type: "spring", stiffness: 60, damping: 16 },
   },
-  // Gentle drift diagonal (damping raised from 14)
+  // Gentle drift diagonal
   {
     initial: { opacity: 0, x: -12, y: 12 },
     animate: { opacity: 1, x: 0, y: 0 },
@@ -171,41 +147,17 @@ const letterAnimations: LetterAnimation[] = [
     animate: { opacity: 1, scale: 1, filter: "blur(0px)" },
     transition: { type: "spring", stiffness: 50, damping: 16 },
   },
-  // Squeeze horizontal (damping raised from 14)
+  // Squeeze horizontal
   {
     initial: { opacity: 0, scaleX: 0.5, scaleY: 1.1 },
     animate: { opacity: 1, scaleX: 1, scaleY: 1 },
     transition: { type: "spring", stiffness: 80, damping: 16 },
   },
-  // Float up ethereal (damping raised from 12)
+  // Float up ethereal
   {
     initial: { opacity: 0, y: 35, filter: "blur(3px)" },
     animate: { opacity: 1, y: 0, filter: "blur(0px)" },
     transition: { type: "spring", stiffness: 40, damping: 16 },
-  },
-  // Curved arc from bottom-left (using asymmetric springs for curved path feel)
-  {
-    initial: { opacity: 0, x: -20, y: 30, rotate: -10, filter: "blur(6px)" },
-    animate: { opacity: 1, x: 0, y: 0, rotate: 0, filter: "blur(0px)" },
-    transition: {
-      type: "spring",
-      stiffness: 50,
-      damping: 16,
-      x: { type: "spring", stiffness: 70, damping: 16 },
-      y: { type: "spring", stiffness: 40, damping: 14 },
-    },
-  },
-  // Curved arc from top-right
-  {
-    initial: { opacity: 0, x: 20, y: -25, rotate: 8, filter: "blur(5px)" },
-    animate: { opacity: 1, x: 0, y: 0, rotate: 0, filter: "blur(0px)" },
-    transition: {
-      type: "spring",
-      stiffness: 50,
-      damping: 16,
-      x: { type: "spring", stiffness: 45, damping: 16 },
-      y: { type: "spring", stiffness: 65, damping: 14 },
-    },
   },
   // Swooping arc from below
   {
@@ -217,17 +169,6 @@ const letterAnimations: LetterAnimation[] = [
       damping: 16,
       y: { type: "spring", stiffness: 35, damping: 12 },
       scale: { type: "spring", stiffness: 80, damping: 16 },
-    },
-  },
-  // Spiral entry
-  {
-    initial: { opacity: 0, x: 25, y: 25, rotate: 45, scale: 0.6, filter: "blur(10px)" },
-    animate: { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1, filter: "blur(0px)" },
-    transition: {
-      type: "spring",
-      stiffness: 45,
-      damping: 16,
-      rotate: { type: "spring", stiffness: 60, damping: 18 },
     },
   },
 ]
@@ -440,8 +381,18 @@ function ScrollRevealSection({ children, reducedMotion, delay = 0 }: { children:
   )
 }
 
+function parseRelatedWordItem(item: string): { word: string; description: string } | null {
+  const match = item.match(/^\*\*(.+?)\*\*\s*\((.+)\)$/)
+  if (match) {
+    return { word: match[1], description: match[2] }
+  }
+  return null
+}
+
 function MdxContent({ content, textColor, mutedColor, reducedMotion }: { content: string; textColor?: string; mutedColor?: string; reducedMotion: boolean }) {
   const sections = useMemo(() => parseMarkdown(content), [content])
+
+  let isRelatedWordsSection = false
 
   return (
     <div className="space-y-8">
@@ -449,6 +400,7 @@ function MdxContent({ content, textColor, mutedColor, reducedMotion }: { content
         const delay = i * 0.05
 
         if (section.type === "heading" && section.level === 2) {
+          isRelatedWordsSection = section.content.toLowerCase() === "related words"
           return (
             <ScrollRevealSection key={i} reducedMotion={reducedMotion} delay={delay}>
               <div className="max-w-3xl mx-auto pt-16">
@@ -468,6 +420,7 @@ function MdxContent({ content, textColor, mutedColor, reducedMotion }: { content
           )
         }
         if (section.type === "paragraph") {
+          isRelatedWordsSection = false
           return (
             <ScrollRevealSection key={i} reducedMotion={reducedMotion} delay={delay}>
               <div className="max-w-3xl mx-auto">
@@ -482,6 +435,7 @@ function MdxContent({ content, textColor, mutedColor, reducedMotion }: { content
           )
         }
         if (section.type === "blockquote") {
+          isRelatedWordsSection = false
           return (
             <ScrollRevealSection key={i} reducedMotion={reducedMotion} delay={delay}>
               <blockquote
@@ -494,6 +448,39 @@ function MdxContent({ content, textColor, mutedColor, reducedMotion }: { content
           )
         }
         if (section.type === "list" && section.items) {
+          if (isRelatedWordsSection) {
+            const parsedItems = section.items.map(parseRelatedWordItem).filter(Boolean) as { word: string; description: string }[]
+            isRelatedWordsSection = false
+
+            if (parsedItems.length > 0) {
+              return (
+                <ScrollRevealSection key={i} reducedMotion={reducedMotion} delay={delay}>
+                  <div className="max-w-3xl mx-auto">
+                    <div className="grid grid-cols-2 gap-x-8 gap-y-10">
+                      {parsedItems.map((item, j) => (
+                        <div key={j} className="flex flex-col">
+                          <span
+                            className="font-medium transition-colors duration-700"
+                            style={{ color: textColor || "var(--tint-text)", fontSize: "calc(var(--text-fluid-body) * 0.9)" }}
+                          >
+                            {item.word}
+                          </span>
+                          <span
+                            className="leading-relaxed mt-1.5 transition-colors duration-700 text-pretty italic"
+                            style={{ color: textColor || "var(--tint-text)", opacity: 0.65, fontSize: "calc(var(--text-fluid-body) * 0.7)" }}
+                          >
+                            {item.description}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </ScrollRevealSection>
+              )
+            }
+          }
+
+          isRelatedWordsSection = false
           return (
             <ScrollRevealSection key={i} reducedMotion={reducedMotion} delay={delay}>
               <div className="max-w-3xl mx-auto">
@@ -568,6 +555,7 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
   const textColor = ready ? deriveTintedTextColor(variant.colorIntent) : undefined
   const mutedColor = ready ? deriveTintedMutedColor(variant.colorIntent) : undefined
   const hoverColorHex = ready ? deriveHoverColorHex(variant.colorIntent) : "#a1a1aa"
+  const backArrowColor = ready ? deriveTintedMutedColorHex(variant.colorIntent) : "#71717a"
 
   return (
     <ViewTransition name="page-background">
@@ -577,25 +565,31 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
         animate={{ backgroundColor: tintColors.bg }}
         transition={{ type: "spring", stiffness: 100, damping: 30 }}
       >
-        <header className="fixed top-0 left-0 p-8 z-10">
+        <header className="fixed top-0 left-0 p-4 z-10">
           <Link
             href="/"
-            className="text-sm tracking-wide uppercase transition-colors duration-200"
-            style={
-              {
-                color: "#52525b",
-                "--hover-color": hoverColorHex,
-                fontFamily: "var(--font-serif), Georgia, serif",
-              } as React.CSSProperties
-            }
+            className="flex items-center justify-center w-12 h-12 transition-colors duration-200"
+            style={{ color: backArrowColor }}
             onMouseEnter={(e) => (e.currentTarget.style.color = hoverColorHex)}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "#52525b")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = backArrowColor)}
+            aria-label="Back to home"
           >
-            Back
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
           </Link>
         </header>
 
-      <main className="flex flex-col items-center px-6 pt-32 pb-24">
+      <main className="flex flex-col items-center px-6 pt-32 pb-48">
         <motion.div
           className="flex flex-col items-center w-full"
           initial={{ opacity: 0 }}
