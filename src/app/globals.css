@@ -73,7 +73,7 @@
 
   /* Content-specific fluid sizes */
   --text-fluid-body: clamp(1.35rem, 1.1rem + 1.25vw, 2.1rem);
-  --text-fluid-quote: clamp(1.15rem, 0.95rem + 1vw, 1.75rem);
+  --text-fluid-quote: clamp(2.5rem, 2rem + 3vw, 4.5rem);
   --text-fluid-caption: clamp(1rem, 0.858rem + 0.708vw, 1.575rem);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -192,7 +192,22 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    font-kerning: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+}
+
+/* Enhanced typography for display text (rare words, quotes) */
+.typography-display {
+  font-feature-settings: "kern" 1, "liga" 1, "dlig" 1, "calt" 1;
+  text-rendering: optimizeLegibility;
+}
+
+/* Serif text benefits from optimizeLegibility */
+[style*="font-family"]:not([style*="sans"]) {
+  text-rendering: optimizeLegibility;
 }
 
 @keyframes caret-blink {

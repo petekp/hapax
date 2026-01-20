@@ -4,7 +4,7 @@ import { useEffect, useState, use, useMemo, useRef, ViewTransition } from "react
 import { motion, useInView } from "motion/react"
 import Link from "next/link"
 import type { FontVariant } from "@/lib/schemas"
-import { deriveColor, deriveTintedTextColor, deriveTintedMutedColor } from "@/lib/color"
+import { deriveColor, deriveTintedTextColor, deriveTintedMutedColor, deriveHoverColorHex } from "@/lib/color"
 import { useActiveColor } from "@/lib/active-color-context"
 import { getFontLoader } from "@/lib/font-loader"
 import { useReducedMotion } from "@/hooks/use-reduced-motion"
@@ -297,7 +297,7 @@ function StyledWord({ word, variant, ready, reducedMotion }: { word: string; var
           fontSize,
           color,
         }}
-        className="inline-flex"
+        className="inline-flex typography-display"
       >
         {word}
       </span>
@@ -318,7 +318,7 @@ function StyledWord({ word, variant, ready, reducedMotion }: { word: string; var
         perspective: "1000px",
         fontSize,
       }}
-      className="inline-flex"
+      className="inline-flex typography-display"
     >
       {letters.map((letter, i) => (
         <motion.span
@@ -444,28 +444,40 @@ function MdxContent({ content, textColor, mutedColor, reducedMotion }: { content
   const sections = useMemo(() => parseMarkdown(content), [content])
 
   return (
-    <div className="space-y-11">
+    <div className="space-y-8">
       {sections.map((section, i) => {
         const delay = i * 0.05
 
         if (section.type === "heading" && section.level === 2) {
           return (
             <ScrollRevealSection key={i} reducedMotion={reducedMotion} delay={delay}>
-              <h2 className="font-sans text-zinc-500 text-[15px] uppercase tracking-wider mt-20 mb-11 pb-4 border-b border-zinc-800/60 first:mt-0">
-                {section.content}
-              </h2>
+              <div className="max-w-3xl mx-auto pt-16">
+                <h2
+                  className="text-[18px] uppercase tracking-wider mb-8 pb-4 transition-colors duration-700 text-balance border-b"
+                  style={{
+                    color: mutedColor || "var(--tint-muted)",
+                    borderBottomColor: `color-mix(in oklch, ${mutedColor || "var(--tint-muted)"} 50%, transparent)`,
+                    opacity: 0.6,
+                    fontFamily: "var(--font-serif), Georgia, serif"
+                  }}
+                >
+                  {section.content}
+                </h2>
+              </div>
             </ScrollRevealSection>
           )
         }
         if (section.type === "paragraph") {
           return (
             <ScrollRevealSection key={i} reducedMotion={reducedMotion} delay={delay}>
-              <p
-                className="text-[length:var(--text-fluid-body)] leading-[1.7] font-normal transition-colors duration-700"
-                style={{ color: textColor || "var(--tint-text)" }}
-              >
-                {formatInlineMarkdown(section.content)}
-              </p>
+              <div className="max-w-3xl mx-auto">
+                <p
+                  className="text-[length:var(--text-fluid-body)] leading-[1.8] font-normal transition-colors duration-700 text-pretty"
+                  style={{ color: textColor || "var(--tint-text)" }}
+                >
+                  {formatInlineMarkdown(section.content)}
+                </p>
+              </div>
             </ScrollRevealSection>
           )
         }
@@ -473,7 +485,7 @@ function MdxContent({ content, textColor, mutedColor, reducedMotion }: { content
           return (
             <ScrollRevealSection key={i} reducedMotion={reducedMotion} delay={delay}>
               <blockquote
-                className="text-[length:var(--text-fluid-quote)] leading-[1.65] pl-7 border-l border-zinc-700/50 transition-colors duration-700"
+                className="max-w-5xl mx-auto py-12 md:py-16 lg:py-20 text-[length:var(--text-fluid-quote)] leading-[1.3] transition-colors duration-700 text-balance text-center typography-display"
                 style={{ color: mutedColor || "var(--tint-muted)" }}
               >
                 {formatInlineMarkdown(section.content)}
@@ -484,14 +496,16 @@ function MdxContent({ content, textColor, mutedColor, reducedMotion }: { content
         if (section.type === "list" && section.items) {
           return (
             <ScrollRevealSection key={i} reducedMotion={reducedMotion} delay={delay}>
-              <ul className="space-y-3 text-[length:var(--text-fluid-quote)]" style={{ color: mutedColor || "var(--tint-muted)" }}>
-                {section.items.map((item, j) => (
-                  <li key={j} className="flex gap-3">
-                    <span className="text-zinc-600">•</span>
-                    <span>{formatInlineMarkdown(item)}</span>
-                  </li>
-                ))}
-              </ul>
+              <div className="max-w-3xl mx-auto">
+                <ul className="space-y-4 text-[length:var(--text-fluid-body)]" style={{ color: mutedColor || "var(--tint-muted)" }}>
+                  {section.items.map((item, j) => (
+                    <li key={j} className="flex gap-3">
+                      <span style={{ color: mutedColor || "var(--tint-muted)", opacity: 0.5 }}>•</span>
+                      <span>{formatInlineMarkdown(item)}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </ScrollRevealSection>
           )
         }
@@ -541,6 +555,7 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
 
   const variant = wordContent?.frontmatter.style || fallbackVariant
   const phonetic = wordContent?.frontmatter.phonetic || definition?.phonetic
+  const partOfSpeech = wordContent?.frontmatter.partOfSpeech || definition?.meanings[0]?.partOfSpeech
   const hasMdxContent = wordContent && wordContent.content.length > 0
 
   useEffect(() => {
@@ -552,6 +567,7 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
   const ready = contentLoaded && definitionLoaded && fontLoaded
   const textColor = ready ? deriveTintedTextColor(variant.colorIntent) : undefined
   const mutedColor = ready ? deriveTintedMutedColor(variant.colorIntent) : undefined
+  const hoverColorHex = ready ? deriveHoverColorHex(variant.colorIntent) : "#a1a1aa"
 
   return (
     <ViewTransition name="page-background">
@@ -564,7 +580,16 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
         <header className="fixed top-0 left-0 p-8 z-10">
           <Link
             href="/"
-            className="text-zinc-600 hover:text-zinc-400 transition-colors text-sm tracking-wide uppercase"
+            className="text-sm tracking-wide uppercase transition-colors duration-200"
+            style={
+              {
+                color: "#52525b",
+                "--hover-color": hoverColorHex,
+                fontFamily: "var(--font-serif), Georgia, serif",
+              } as React.CSSProperties
+            }
+            onMouseEnter={(e) => (e.currentTarget.style.color = hoverColorHex)}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "#52525b")}
           >
             Back
           </Link>
@@ -581,13 +606,22 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
             <StyledWord word={decodedWord} variant={variant} ready={ready} reducedMotion={prefersReducedMotion} />
           </div>
 
-          {phonetic && (
-            <p className="text-zinc-500 text-[length:var(--text-fluid-caption)] font-light tracking-wide mb-28">
-              {phonetic}
+          {(partOfSpeech || phonetic) && (
+            <p
+              className="text-[length:var(--text-fluid-caption)] font-light tracking-[0.15em] mb-28 transition-colors duration-700"
+              style={{ color: mutedColor || "var(--tint-muted)", opacity: 0.8, fontFamily: "var(--font-serif), Georgia, serif" }}
+            >
+              {partOfSpeech && (
+                <span className="uppercase text-[0.85em]">{partOfSpeech}</span>
+              )}
+              {partOfSpeech && phonetic && (
+                <span className="mx-3 opacity-50">·</span>
+              )}
+              {phonetic && <span>{phonetic}</span>}
             </p>
           )}
 
-          <div className="max-w-[85ch] w-full" style={{ fontFamily: "var(--font-serif), Georgia, serif" }}>
+          <div className="w-full typography-display" style={{ fontFamily: "var(--font-serif), Georgia, serif" }}>
             {hasMdxContent ? (
               <MdxContent
                 content={wordContent!.content}
@@ -596,13 +630,17 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
                 reducedMotion={prefersReducedMotion}
               />
             ) : definition ? (
-              <div className="space-y-20">
+              <div className="max-w-3xl mx-auto">
+              <div className="space-y-16">
                 {definition.meanings.map((meaning, i) => (
                   <ScrollRevealSection key={i} reducedMotion={prefersReducedMotion} delay={i * 0.1}>
                     <section>
-                      <h2 className="font-sans text-zinc-500 text-[15px] uppercase tracking-wider mb-11 pb-4 border-b border-zinc-800/60">
-                        {meaning.partOfSpeech}
-                      </h2>
+                      {i > 0 && (
+                        <div
+                          className="mb-16 h-px transition-colors duration-700"
+                          style={{ backgroundColor: mutedColor || "var(--tint-muted)", opacity: 0.2 }}
+                        />
+                      )}
 
                       <ol className="space-y-10">
                         {meaning.definitions.slice(0, 3).map((def, j) => (
@@ -613,7 +651,7 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
 
                             <div className="space-y-7">
                               <p
-                                className="text-[length:var(--text-fluid-body)] leading-[1.7] font-normal transition-colors duration-700"
+                                className="text-[length:var(--text-fluid-body)] leading-[1.7] font-normal transition-colors duration-700 text-pretty"
                                 style={{ color: textColor || "var(--tint-text)" }}
                               >
                                 {def.definition}
@@ -621,7 +659,7 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
 
                               {def.example && (
                                 <p
-                                  className="text-[length:var(--text-fluid-quote)] leading-[1.65] italic pl-7 border-l border-zinc-700/50 transition-colors duration-700"
+                                  className="text-[length:var(--text-fluid-quote)] leading-[1.5] italic transition-colors duration-700 -mx-8 px-8 md:-mx-16 md:px-16 lg:-mx-24 lg:px-24 text-balance text-center typography-display"
                                   style={{ color: mutedColor || "var(--tint-muted)" }}
                                 >
                                   &ldquo;{def.example}&rdquo;
@@ -634,6 +672,7 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
                     </section>
                   </ScrollRevealSection>
                 ))}
+              </div>
               </div>
             ) : (
               <p className="text-zinc-500 text-center text-[length:var(--text-fluid-caption)]">

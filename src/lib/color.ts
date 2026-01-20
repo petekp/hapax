@@ -76,6 +76,20 @@ export function deriveTintedMutedColor(intent: ColorIntent): string {
   return `oklch(65% ${chroma * 0.2} ${hue})`
 }
 
+export function deriveTintedMutedColorHex(intent: ColorIntent): string {
+  const { hue } = intent
+  const chroma = "chroma" in intent ? intent.chroma : 0.2
+  // Muted tinted text for secondary content, in hex for animation
+  return oklchToHex(65, chroma * 0.2, hue)
+}
+
+export function deriveHoverColorHex(intent: ColorIntent): string {
+  const { hue } = intent
+  const chroma = "chroma" in intent ? intent.chroma : 0.2
+  // Brighter, more saturated color for hover states
+  return oklchToHex(70, Math.max(chroma * 0.5, 0.08), hue)
+}
+
 const NEUTRAL_TINT_VARS = {
   "--tint-bg": "#09090b",
   "--tint-text": "#e4e4e7",

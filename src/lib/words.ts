@@ -9,9 +9,13 @@ const CONTENT_DIR = path.join(process.cwd(), "src/content/words")
 export const WordStatus = z.enum(["style-only", "draft", "published"])
 export type WordStatus = z.infer<typeof WordStatus>
 
+export const PartOfSpeech = z.enum(["noun", "verb", "adjective", "adverb", "preposition", "conjunction", "interjection", "pronoun", "determiner", "exclamation"])
+export type PartOfSpeech = z.infer<typeof PartOfSpeech>
+
 export const WordFrontmatter = z.object({
   word: z.string(),
   phonetic: z.string().optional(),
+  partOfSpeech: PartOfSpeech.optional(),
   status: WordStatus,
   style: FontVariant,
 })
