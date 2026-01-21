@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef, memo } from "react"
 import { useRouter } from "next/navigation"
-import { motion, useMotionValue, useSpring } from "motion/react"
+import { motion } from "motion/react"
 import Link from "next/link"
 import type { FontVariant } from "@/lib/schemas"
 import { deriveColor } from "@/lib/color"
@@ -27,7 +27,7 @@ export const MasonryWord = memo(function MasonryWord({
   parallaxDepth = 1,
 }: MasonryWordProps) {
   const [fontLoaded, setFontLoaded] = useState(false)
-  const [isVisible, setIsVisible] = useState(false)
+  const isVisibleRef = useRef(false)
   const { setActiveColor } = useActiveColor()
   const isNavigatingRef = useRef(false)
   const elementRef = useRef<HTMLSpanElement>(null)
@@ -36,17 +36,12 @@ export const MasonryWord = memo(function MasonryWord({
   const wordUrl = `/word/${encodeURIComponent(word.toLowerCase())}`
   const { subscribe } = useMousePosition()
 
-  const motionX = useMotionValue(0)
-  const motionY = useMotionValue(0)
-  const springX = useSpring(motionX, { stiffness: 150, damping: 20 })
-  const springY = useSpring(motionY, { stiffness: 150, damping: 20 })
-
   useEffect(() => {
     const element = elementRef.current
     if (!element) return
 
     const observer = new IntersectionObserver(
-      ([entry]) => setIsVisible(entry.isIntersecting),
+      ([entry]) => { isVisibleRef.current = entry.isIntersecting },
       { rootMargin: "100px" }
     )
 
@@ -55,17 +50,15 @@ export const MasonryWord = memo(function MasonryWord({
   }, [])
 
   useEffect(() => {
-    if (!isVisible || prefersReducedMotion) {
-      motionX.set(0)
-      motionY.set(0)
-      return
-    }
+    if (prefersReducedMotion) return
 
     return subscribe((x, y) => {
-      motionX.set((x - 0.5) * 30 * parallaxDepth)
-      motionY.set((y - 0.5) * 30 * parallaxDepth)
+      if (!elementRef.current || !isVisibleRef.current) return
+      const offsetX = (x - 0.5) * 30 * parallaxDepth
+      const offsetY = (y - 0.5) * 30 * parallaxDepth
+      elementRef.current.style.transform = `translate(${offsetX}px, ${offsetY}px)`
     })
-  }, [isVisible, prefersReducedMotion, parallaxDepth, subscribe, motionX, motionY])
+  }, [prefersReducedMotion, parallaxDepth, subscribe])
 
   const handleFontLoaded = useCallback(() => {
     setFontLoaded(true)
@@ -111,8 +104,8 @@ export const MasonryWord = memo(function MasonryWord({
           fontSize,
           lineHeight: 1.1,
           cursor: "pointer",
-          x: springX,
-          y: springY,
+          transition: "transform 0.15s ease-out",
+          willChange: "transform",
         }}
         initial={{ opacity: 0, filter: "blur(6px)" }}
         animate={{
