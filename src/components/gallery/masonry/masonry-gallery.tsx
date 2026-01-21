@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react"
 import type { GalleryWordEntry } from "@/app/api/gallery/route"
 import { MasonryWord } from "./masonry-word"
+import { MouseProvider } from "./mouse-context"
 
 interface MasonryGalleryProps {
   colorMode?: "light" | "dark"
@@ -37,10 +38,15 @@ function getFontSize(word: string): string {
   return FONT_SIZES[index]
 }
 
+function getParallaxDepth(word: string): number {
+  const hash = hashString(word + "depth")
+  const random = seededRandom(hash)
+  return 0.5 + random * 1.5
+}
+
 export function MasonryGallery({ colorMode = "dark" }: MasonryGalleryProps) {
   const [words, setWords] = useState<GalleryWordEntry[]>([])
   const [isLoading, setIsLoading] = useState(true)
-
   const fetchAllWords = useCallback(async () => {
     setIsLoading(true)
     try {
@@ -102,24 +108,27 @@ export function MasonryGallery({ colorMode = "dark" }: MasonryGalleryProps) {
   }
 
   return (
-    <div
-      className="h-screen w-full overflow-y-auto overflow-x-hidden"
-      style={{
-        maskImage: "linear-gradient(to bottom, transparent, black 5%, black 95%, transparent)",
-        WebkitMaskImage: "linear-gradient(to bottom, transparent, black 5%, black 95%, transparent)",
-      }}
-    >
-      <div className="flex flex-wrap items-baseline gap-x-8 gap-y-4 px-8 md:px-12 lg:px-16 py-16">
-        {shuffledWords.map((entry) => (
-          <MasonryWord
-            key={entry.normalized}
-            word={entry.word}
-            variant={entry.variant}
-            fontSize={getFontSize(entry.normalized)}
-            colorMode={colorMode}
-          />
-        ))}
+    <MouseProvider>
+      <div
+        className="h-screen w-full overflow-y-auto overflow-x-hidden"
+        style={{
+          maskImage: "linear-gradient(to bottom, transparent, black 5%, black 95%, transparent)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent, black 5%, black 95%, transparent)",
+        }}
+      >
+        <div className="flex flex-wrap justify-center items-baseline gap-x-8 gap-y-4 px-8 md:px-12 lg:px-16 py-16">
+          {shuffledWords.map((entry) => (
+            <MasonryWord
+              key={entry.normalized}
+              word={entry.word}
+              variant={entry.variant}
+              fontSize={getFontSize(entry.normalized)}
+              colorMode={colorMode}
+              parallaxDepth={getParallaxDepth(entry.normalized)}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </MouseProvider>
   )
 }
