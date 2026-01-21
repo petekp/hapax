@@ -2,7 +2,7 @@
 
 import { ViewTransition } from "react"
 import { motion } from "motion/react"
-import { AutoScrollGallery } from "@/components/gallery"
+import { MasonryGallery } from "@/components/gallery"
 import { useActiveColor } from "@/lib/active-color-context"
 
 export default function Home() {
@@ -16,7 +16,7 @@ export default function Home() {
         animate={{ backgroundColor: tintColors.bg }}
         transition={{ type: "spring", stiffness: 100, damping: 30 }}
       >
-        <AutoScrollGallery colorMode="dark" />
+        <MasonryGallery colorMode="dark" />
       </motion.div>
     </ViewTransition>
   )
