@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-01-20T00:50:33.621Z",
+  "generatedAt": "2026-01-21T22:42:42.201Z",
   "words": {
     "abraxas": {
       "family": "Cinzel",
@@ -82,16 +82,6 @@
         "lightness": 88
       }
     },
-    "alacrity": {
-      "family": "Cormorant",
-      "weight": 400,
-      "style": "italic",
-      "colorIntent": {
-        "hue": 45,
-        "chroma": 0.3,
-        "lightness": 72
-      }
-    },
     "amaranth": {
       "family": "Spectral",
       "weight": 400,
@@ -110,16 +100,6 @@
         "hue": 42,
         "chroma": 0.22,
         "lightness": 52
-      }
-    },
-    "ancient": {
-      "family": "Cinzel",
-      "weight": 600,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 35,
-        "chroma": 0.12,
-        "lightness": 48
       }
     },
     "antinomy": {
@@ -172,16 +152,6 @@
         "lightness": 78
       }
     },
-    "atelier": {
-      "family": "Playfair Display",
-      "weight": 400,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 45,
-        "chroma": 0.18,
-        "lightness": 55
-      }
-    },
     "athwart": {
       "family": "IM Fell Great Primer",
       "weight": 400,
@@ -230,16 +200,6 @@
         "hue": 45,
         "chroma": 0.12,
         "lightness": 38
-      }
-    },
-    "bete noire": {
-      "family": "Grenze",
-      "weight": 600,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 280,
-        "chroma": 0.12,
-        "lightness": 35
       }
     },
     "betwixt": {
@@ -300,16 +260,6 @@
         "hue": 12,
         "chroma": 0.12,
         "lightness": 35
-      }
-    },
-    "cachinnate": {
-      "family": "Cherry Bomb One",
-      "weight": 400,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 28,
-        "chroma": 0.32,
-        "lightness": 68
       }
     },
     "cachinnation": {
@@ -502,16 +452,6 @@
         "lightness": 32
       }
     },
-    "coalesce": {
-      "family": "Cormorant",
-      "weight": 500,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 195,
-        "chroma": 0.28,
-        "lightness": 52
-      }
-    },
     "colorature": {
       "family": "Noto Serif Display",
       "weight": 300,
@@ -612,16 +552,6 @@
         "lightness": 42
       }
     },
-    "crux": {
-      "family": "Cinzel",
-      "weight": 600,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 12,
-        "chroma": 0.18,
-        "lightness": 42
-      }
-    },
     "cryptomnesia": {
       "family": "Cormorant Upright",
       "weight": 400,
@@ -650,16 +580,6 @@
         "hue": 288,
         "chroma": 0.12,
         "lightness": 48
-      }
-    },
-    "delectable": {
-      "family": "Cormorant",
-      "weight": 400,
-      "style": "italic",
-      "colorIntent": {
-        "hue": 340,
-        "chroma": 0.22,
-        "lightness": 52
       }
     },
     "deracinate": {
@@ -872,16 +792,6 @@
         "lightness": 48
       }
     },
-    "exquisite": {
-      "family": "Spectral",
-      "weight": 300,
-      "style": "italic",
-      "colorIntent": {
-        "hue": 215,
-        "chroma": 0.15,
-        "lightness": 75
-      }
-    },
     "fascicle": {
       "family": "Cormorant",
       "weight": 400,
@@ -950,16 +860,6 @@
         "hue": 42,
         "chroma": 0.18,
         "lightness": 52
-      }
-    },
-    "fortnight": {
-      "family": "EB Garamond",
-      "weight": 500,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 255,
-        "chroma": 0.18,
-        "lightness": 42
       }
     },
     "fusillade": {
@@ -1062,26 +962,6 @@
         "lightness": 45
       }
     },
-    "hygge": {
-      "family": "Literata",
-      "weight": 400,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 42,
-        "chroma": 0.18,
-        "lightness": 58
-      }
-    },
-    "imbibe": {
-      "family": "Libre Bodoni",
-      "weight": 400,
-      "style": "italic",
-      "colorIntent": {
-        "hue": 345,
-        "chroma": 0.22,
-        "lightness": 45
-      }
-    },
     "incarnadine": {
       "family": "IM Fell DW Pica",
       "weight": 400,
@@ -1089,16 +969,6 @@
       "colorIntent": {
         "hue": 12,
         "chroma": 0.22,
-        "lightness": 42
-      }
-    },
-    "indigo": {
-      "family": "Amethysta",
-      "weight": 400,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 258,
-        "chroma": 0.28,
         "lightness": 42
       }
     },
@@ -1310,16 +1180,6 @@
         "hue": 258,
         "chroma": 0.18,
         "lightness": 52
-      }
-    },
-    "mollify": {
-      "family": "Cormorant",
-      "weight": 300,
-      "style": "italic",
-      "colorIntent": {
-        "hue": 305,
-        "chroma": 0.12,
-        "lightness": 62
       }
     },
     "monadnock": {
@@ -1632,16 +1492,6 @@
         "lightness": 42
       }
     },
-    "phantom": {
-      "family": "Cormorant",
-      "weight": 300,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 270,
-        "chroma": 0.15,
-        "lightness": 45
-      }
-    },
     "phosphorescent": {
       "family": "Genos",
       "weight": 200,
@@ -1812,16 +1662,6 @@
         "lightness": 38
       }
     },
-    "rivulet": {
-      "family": "Cormorant Garamond",
-      "weight": 300,
-      "style": "italic",
-      "colorIntent": {
-        "hue": 185,
-        "chroma": 0.18,
-        "lightness": 62
-      }
-    },
     "saccade": {
       "family": "Space Mono",
       "weight": 400,
@@ -1932,16 +1772,6 @@
         "lightness": 58
       }
     },
-    "squeak": {
-      "family": "Caveat",
-      "weight": 400,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 45,
-        "chroma": 0.18,
-        "lightness": 72
-      }
-    },
     "sui generis": {
       "family": "Cinzel",
       "weight": 400,
@@ -1952,16 +1782,6 @@
         "lightness": 42
       }
     },
-    "suplex": {
-      "family": "Coda",
-      "weight": 800,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 15,
-        "chroma": 0.35,
-        "lightness": 50
-      }
-    },
     "surreptitious": {
       "family": "Playfair Display",
       "weight": 400,
@@ -1970,16 +1790,6 @@
         "hue": 285,
         "chroma": 0.28,
         "lightness": 42
-      }
-    },
-    "surreptitiously": {
-      "family": "Cormorant",
-      "weight": 400,
-      "style": "italic",
-      "colorIntent": {
-        "hue": 270,
-        "chroma": 0.18,
-        "lightness": 45
       }
     },
     "susurrous": {
@@ -2112,16 +1922,6 @@
         "lightness": 42
       }
     },
-    "tousle": {
-      "family": "Delius",
-      "weight": 400,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 345,
-        "chroma": 0.18,
-        "lightness": 62
-      }
-    },
     "truculent": {
       "family": "Big Shoulders",
       "weight": 900,
@@ -2140,16 +1940,6 @@
         "hue": 25,
         "chroma": 0.12,
         "lightness": 38
-      }
-    },
-    "tsundere": {
-      "family": "Shizuru",
-      "weight": 400,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 350,
-        "chroma": 0.28,
-        "lightness": 58
       }
     },
     "upbraid": {
@@ -2190,16 +1980,6 @@
         "hue": 22,
         "chroma": 0.32,
         "lightness": 55
-      }
-    },
-    "vesper": {
-      "family": "Cormorant",
-      "weight": 400,
-      "style": "italic",
-      "colorIntent": {
-        "hue": 268,
-        "chroma": 0.18,
-        "lightness": 45
       }
     },
     "vespertine": {
@@ -2269,26 +2049,6 @@
       "colorIntent": {
         "hue": 265,
         "chroma": 0.12,
-        "lightness": 42
-      }
-    },
-    "wrest": {
-      "family": "Skranji",
-      "weight": 700,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 15,
-        "chroma": 0.28,
-        "lightness": 38
-      }
-    },
-    "ygdrasil": {
-      "family": "Eczar",
-      "weight": 700,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 125,
-        "chroma": 0.18,
         "lightness": 42
       }
     },

@@ -4,7 +4,6 @@ import vettedStyles from "@/data/vetted-styles.json"
 interface VettedStylesData {
   version: number
   words: Record<string, FontVariant>
-  phrases: Record<string, FontVariant>
 }
 
 const data = vettedStyles as VettedStylesData

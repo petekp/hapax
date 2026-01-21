@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod/v4"
-import { detectPhrases, type DetectedPhrase } from "@/lib/phrase-detector"
+import { detectPhrases } from "@/lib/phrase-detector"
 import { getCachedPhrase, setCachedPhrase, incrementPhraseHitCount } from "@/lib/phrase-cache"
 import { resolvePhraseWithLLM } from "@/lib/phrase-resolver"
-import { getVettedPhraseStyle } from "@/lib/vetted-cache"
 import type { FontVariant } from "@/lib/schemas"
 
 const RequestSchema = z.object({
@@ -44,19 +43,6 @@ export async function POST(request: NextRequest) {
     for (const phrase of detectedPhrases) {
       const phraseWords = normalizedWords.slice(phrase.startIndex, phrase.endIndex + 1)
       const phraseText = phraseWords.join(" ")
-
-      const vetted = getVettedPhraseStyle(phraseText)
-      if (vetted) {
-        console.log(`[phrase] "${phraseText}" (vetted) → ${vetted.family} ${vetted.weight} | hue=${vetted.colorIntent.hue} chroma=${vetted.colorIntent.chroma} L=${vetted.colorIntent.lightness}`)
-        resolvedPhrases.push({
-          words: phraseWords,
-          startIndex: phrase.startIndex,
-          endIndex: phrase.endIndex,
-          variant: vetted,
-          source: "vetted",
-        })
-        continue
-      }
 
       const cached = await getCachedPhrase(phraseWords)
       if (cached) {

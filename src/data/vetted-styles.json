@@ -1,66 +1,6 @@
 {
   "version": 2,
   "words": {
-    "ancient": {
-      "family": "Cinzel",
-      "weight": 600,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 35,
-        "chroma": 0.12,
-        "lightness": 48
-      }
-    },
-    "coalesce": {
-      "family": "Cormorant",
-      "weight": 500,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 195,
-        "chroma": 0.28,
-        "lightness": 52
-      }
-    },
-    "exquisite": {
-      "family": "Spectral",
-      "weight": 300,
-      "style": "italic",
-      "colorIntent": {
-        "hue": 215,
-        "chroma": 0.15,
-        "lightness": 75
-      }
-    },
-    "phantom": {
-      "family": "Cormorant",
-      "weight": 300,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 270,
-        "chroma": 0.15,
-        "lightness": 45
-      }
-    },
-    "squeak": {
-      "family": "Caveat",
-      "weight": 400,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 45,
-        "chroma": 0.18,
-        "lightness": 72
-      }
-    },
-    "suplex": {
-      "family": "Coda",
-      "weight": 800,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 15,
-        "chroma": 0.35,
-        "lightness": 50
-      }
-    },
     "surreptitious": {
       "family": "Playfair Display",
       "weight": 400,
@@ -69,16 +9,6 @@
         "hue": 285,
         "chroma": 0.28,
         "lightness": 42
-      }
-    },
-    "surreptitiously": {
-      "family": "Cormorant",
-      "weight": 400,
-      "style": "italic",
-      "colorIntent": {
-        "hue": 270,
-        "chroma": 0.18,
-        "lightness": 45
       }
     },
     "syzygy": {
@@ -326,8 +256,8 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 265,
-        "chroma": 0.12,
+        "hue": 225,
+        "chroma": 0.1,
         "lightness": 52
       }
     },
@@ -346,7 +276,7 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 278,
+        "hue": 340,
         "chroma": 0.12,
         "lightness": 55
       }
@@ -381,16 +311,6 @@
         "lightness": 55
       }
     },
-    "vesper": {
-      "family": "Cormorant",
-      "weight": 400,
-      "style": "italic",
-      "colorIntent": {
-        "hue": 268,
-        "chroma": 0.18,
-        "lightness": 45
-      }
-    },
     "metanoia": {
       "family": "Cormorant",
       "weight": 400,
@@ -408,16 +328,6 @@
       "colorIntent": {
         "hue": 285,
         "chroma": 0.12,
-        "lightness": 38
-      }
-    },
-    "wrest": {
-      "family": "Skranji",
-      "weight": 700,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 15,
-        "chroma": 0.28,
         "lightness": 38
       }
     },
@@ -452,13 +362,13 @@
       }
     },
     "cachinnation": {
-      "family": "Gorditas",
-      "weight": 700,
+      "family": "Fraunces",
+      "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 28,
-        "chroma": 0.3,
-        "lightness": 68
+        "hue": 18,
+        "chroma": 0.22,
+        "lightness": 62
       }
     },
     "cynosure": {
@@ -546,7 +456,7 @@
       "weight": 700,
       "style": "normal",
       "colorIntent": {
-        "hue": 240,
+        "hue": 228,
         "chroma": 0.08,
         "lightness": 42
       }
@@ -579,16 +489,6 @@
         "hue": 95,
         "chroma": 0.08,
         "lightness": 42
-      }
-    },
-    "tousle": {
-      "family": "Delius",
-      "weight": 400,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 345,
-        "chroma": 0.18,
-        "lightness": 62
       }
     },
     "contretemps": {
@@ -646,8 +546,8 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 258,
-        "chroma": 0.18,
+        "hue": 228,
+        "chroma": 0.12,
         "lightness": 52
       }
     },
@@ -786,7 +686,7 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 288,
+        "hue": 46,
         "chroma": 0.12,
         "lightness": 42
       }
@@ -856,9 +756,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 18,
+        "hue": 320,
         "chroma": 0.18,
-        "lightness": 58
+        "lightness": 62
       }
     },
     "colorature": {
@@ -886,9 +786,9 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 245,
+        "hue": 225,
         "chroma": 0.18,
-        "lightness": 42
+        "lightness": 45
       }
     },
     "grimoire": {
@@ -1036,8 +936,8 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 45,
-        "chroma": 0.22,
+        "hue": 325,
+        "chroma": 0.18,
         "lightness": 58
       }
     },
@@ -1086,7 +986,7 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 195,
+        "hue": 48,
         "chroma": 0.18,
         "lightness": 78
       }
@@ -1141,23 +1041,13 @@
         "lightness": 58
       }
     },
-    "atelier": {
-      "family": "Playfair Display",
-      "weight": 400,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 45,
-        "chroma": 0.18,
-        "lightness": 55
-      }
-    },
     "sprezzatura": {
       "family": "EB Garamond",
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 25,
-        "chroma": 0.18,
+        "hue": 225,
+        "chroma": 0.12,
         "lightness": 58
       }
     },
@@ -1169,26 +1059,6 @@
         "hue": 135,
         "chroma": 0.12,
         "lightness": 52
-      }
-    },
-    "tsundere": {
-      "family": "Shizuru",
-      "weight": 400,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 350,
-        "chroma": 0.28,
-        "lightness": 58
-      }
-    },
-    "ygdrasil": {
-      "family": "Eczar",
-      "weight": 700,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 125,
-        "chroma": 0.18,
-        "lightness": 42
       }
     },
     "languor": {
@@ -1276,8 +1146,8 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 310,
-        "chroma": 0.12,
+        "hue": 270,
+        "chroma": 0.08,
         "lightness": 42
       }
     },
@@ -1286,9 +1156,9 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 325,
-        "chroma": 0.08,
-        "lightness": 38
+        "hue": 280,
+        "chroma": 0.06,
+        "lightness": 35
       }
     },
     "prognosticate": {
@@ -1296,9 +1166,9 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 265,
+        "hue": 230,
         "chroma": 0.12,
-        "lightness": 42
+        "lightness": 45
       }
     },
     "concinnity": {
@@ -1306,9 +1176,9 @@
       "weight": 500,
       "style": "normal",
       "colorIntent": {
-        "hue": 285,
+        "hue": 220,
         "chroma": 0.12,
-        "lightness": 52
+        "lightness": 55
       }
     },
     "coruscate": {
@@ -1361,23 +1231,13 @@
         "lightness": 52
       }
     },
-    "bete noire": {
-      "family": "Grenze",
-      "weight": 600,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 280,
-        "chroma": 0.12,
-        "lightness": 35
-      }
-    },
     "antinomy": {
       "family": "Bodoni Moda",
       "weight": 500,
       "style": "normal",
       "colorIntent": {
-        "hue": 265,
-        "chroma": 0.22,
+        "hue": 235,
+        "chroma": 0.18,
         "lightness": 42
       }
     },
@@ -1386,9 +1246,9 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 268,
-        "chroma": 0.18,
-        "lightness": 52
+        "hue": 228,
+        "chroma": 0.15,
+        "lightness": 55
       }
     },
     "glossolalia": {
@@ -1426,9 +1286,9 @@
       "weight": 500,
       "style": "italic",
       "colorIntent": {
-        "hue": 35,
-        "chroma": 0.12,
-        "lightness": 38
+        "hue": 45,
+        "chroma": 0.05,
+        "lightness": 50
       }
     },
     "nescience": {
@@ -1446,8 +1306,8 @@
       "weight": 500,
       "style": "normal",
       "colorIntent": {
-        "hue": 265,
-        "chroma": 0.18,
+        "hue": 232,
+        "chroma": 0.15,
         "lightness": 48
       }
     },
@@ -1489,16 +1349,6 @@
         "hue": 38,
         "chroma": 0.22,
         "lightness": 58
-      }
-    },
-    "cachinnate": {
-      "family": "Cherry Bomb One",
-      "weight": 400,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 28,
-        "chroma": 0.32,
-        "lightness": 68
       }
     },
     "quidnunc": {
@@ -1551,16 +1401,6 @@
         "lightness": 42
       }
     },
-    "crux": {
-      "family": "Cinzel",
-      "weight": 600,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 12,
-        "chroma": 0.18,
-        "lightness": 42
-      }
-    },
     "fjord": {
       "family": "Cormorant Unicase",
       "weight": 600,
@@ -1568,16 +1408,6 @@
       "colorIntent": {
         "hue": 195,
         "chroma": 0.12,
-        "lightness": 42
-      }
-    },
-    "indigo": {
-      "family": "Amethysta",
-      "weight": 400,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 258,
-        "chroma": 0.28,
         "lightness": 42
       }
     },
@@ -1591,24 +1421,14 @@
         "lightness": 38
       }
     },
-    "rivulet": {
-      "family": "Cormorant Garamond",
-      "weight": 300,
-      "style": "italic",
-      "colorIntent": {
-        "hue": 185,
-        "chroma": 0.18,
-        "lightness": 62
-      }
-    },
     "ratiocination": {
       "family": "Cormorant Garamond",
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 195,
-        "chroma": 0.18,
-        "lightness": 42
+        "hue": 235,
+        "chroma": 0.15,
+        "lightness": 48
       }
     },
     "preceptor": {
@@ -1671,34 +1491,14 @@
         "lightness": 42
       }
     },
-    "imbibe": {
-      "family": "Libre Bodoni",
-      "weight": 400,
-      "style": "italic",
-      "colorIntent": {
-        "hue": 345,
-        "chroma": 0.22,
-        "lightness": 45
-      }
-    },
     "interpose": {
       "family": "Spectral",
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 265,
-        "chroma": 0.18,
+        "hue": 222,
+        "chroma": 0.12,
         "lightness": 52
-      }
-    },
-    "alacrity": {
-      "family": "Cormorant",
-      "weight": 400,
-      "style": "italic",
-      "colorIntent": {
-        "hue": 45,
-        "chroma": 0.3,
-        "lightness": 72
       }
     },
     "threnody": {
@@ -1726,8 +1526,8 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 265,
-        "chroma": 0.12,
+        "hue": 218,
+        "chroma": 0.1,
         "lightness": 48
       }
     },
@@ -1736,7 +1536,7 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 290,
+        "hue": 38,
         "chroma": 0.12,
         "lightness": 52
       }
@@ -1801,16 +1601,6 @@
         "lightness": 58
       }
     },
-    "mollify": {
-      "family": "Cormorant",
-      "weight": 300,
-      "style": "italic",
-      "colorIntent": {
-        "hue": 305,
-        "chroma": 0.12,
-        "lightness": 62
-      }
-    },
     "de rigueur": {
       "family": "Cormorant Garamond",
       "weight": 400,
@@ -1866,8 +1656,8 @@
       "weight": 500,
       "style": "normal",
       "colorIntent": {
-        "hue": 255,
-        "chroma": 0.18,
+        "hue": 218,
+        "chroma": 0.12,
         "lightness": 48
       }
     },
@@ -1891,16 +1681,6 @@
         "lightness": 55
       }
     },
-    "delectable": {
-      "family": "Cormorant",
-      "weight": 400,
-      "style": "italic",
-      "colorIntent": {
-        "hue": 340,
-        "chroma": 0.22,
-        "lightness": 52
-      }
-    },
     "oronym": {
       "family": "Cormorant",
       "weight": 400,
@@ -1916,9 +1696,9 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 260,
-        "chroma": 0.12,
-        "lightness": 42
+        "hue": 225,
+        "chroma": 0.1,
+        "lightness": 45
       }
     },
     "compos mentis": {
@@ -1966,7 +1746,7 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 285,
+        "hue": 45,
         "chroma": 0.12,
         "lightness": 58
       }
@@ -1976,8 +1756,8 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 268,
-        "chroma": 0.18,
+        "hue": 40,
+        "chroma": 0.15,
         "lightness": 52
       }
     },
@@ -1986,19 +1766,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 258,
+        "hue": 42,
         "chroma": 0.12,
         "lightness": 48
-      }
-    },
-    "fortnight": {
-      "family": "EB Garamond",
-      "weight": 500,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 255,
-        "chroma": 0.18,
-        "lightness": 42
       }
     },
     "besmirch": {
@@ -2016,19 +1786,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 318,
+        "hue": 290,
         "chroma": 0.11,
         "lightness": 52
-      }
-    },
-    "hygge": {
-      "family": "Literata",
-      "weight": 400,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 42,
-        "chroma": 0.18,
-        "lightness": 58
       }
     },
     "wabi-sabi": {
@@ -2056,7 +1816,7 @@
       "weight": 500,
       "style": "italic",
       "colorIntent": {
-        "hue": 265,
+        "hue": 288,
         "chroma": 0.12,
         "lightness": 42
       }
@@ -2076,7 +1836,7 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 268,
+        "hue": 40,
         "chroma": 0.18,
         "lightness": 52
       }
@@ -2096,7 +1856,7 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 305,
+        "hue": 48,
         "chroma": 0.18,
         "lightness": 52
       }
@@ -2106,8 +1866,8 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 135,
-        "chroma": 0.08,
+        "hue": 42,
+        "chroma": 0.15,
         "lightness": 52
       }
     },
@@ -2116,7 +1876,7 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 278,
+        "hue": 45,
         "chroma": 0.18,
         "lightness": 52
       }
@@ -2126,7 +1886,7 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 285,
+        "hue": 44,
         "chroma": 0.18,
         "lightness": 52
       }
@@ -2156,9 +1916,9 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 175,
-        "chroma": 0.22,
-        "lightness": 55
+        "hue": 230,
+        "chroma": 0.08,
+        "lightness": 52
       }
     },
     "proprioception": {
@@ -2236,7 +1996,7 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 252,
+        "hue": 285,
         "chroma": 0.12,
         "lightness": 45
       }
@@ -2246,7 +2006,7 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 188,
+        "hue": 280,
         "chroma": 0.12,
         "lightness": 52
       }
@@ -2266,9 +2026,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 310,
-        "chroma": 0.08,
-        "lightness": 42
+        "hue": 260,
+        "chroma": 0.04,
+        "lightness": 45
       }
     },
     "phosphorescent": {
@@ -2276,7 +2036,7 @@
       "weight": 200,
       "style": "normal",
       "colorIntent": {
-        "hue": 148,
+        "hue": 52,
         "chroma": 0.28,
         "lightness": 78
       }
@@ -2309,18 +2069,6 @@
         "hue": 280,
         "chroma": 0.08,
         "lightness": 32
-      }
-    }
-  },
-  "phrases": {
-    "agamemnon": {
-      "family": "Cormorant Garamond",
-      "weight": 700,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 30,
-        "chroma": 0.12,
-        "lightness": 45
       }
     }
   }

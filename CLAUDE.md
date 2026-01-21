@@ -32,6 +32,12 @@ Users browse a gallery of beautifully styled rare words. Clicking a word reveals
 - `src/hooks/` — React hooks for font loading and input state
 - `src/data/vetted-styles.json` — The curated collection of word-to-style mappings
 
+## Data Sources
+
+Word styling lives in two places that must stay in sync:
+- `src/data/vetted-styles.json` — Gallery display, font preloading
+- `src/content/words/*.mdx` frontmatter — Word detail pages
+
 ## Key Concepts
 
 **"Vibe":** A word's visual treatment—its font pairing and color palette.
