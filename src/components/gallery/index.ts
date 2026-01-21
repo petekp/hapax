@@ -1,6 +1,5 @@
 export { GalleryWord } from "./gallery-word"
 export { LazyGalleryWord } from "./lazy-gallery-word"
 export { AutoScrollGallery } from "./auto-scroll-gallery"
-export { InfiniteCanvasGallery } from "./infinite-canvas"
 export { MasonryGallery } from "./masonry"
 export { SearchBar } from "./search-bar"
