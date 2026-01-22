@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useMemo, useRef } from "react"
 import type { GalleryWordEntry } from "@/app/api/gallery/route"
 import { MasonryWord } from "./masonry-word"
 import { MouseProvider } from "./mouse-context"
-import { useTuning, tuningDefaults } from "./tuning-context"
+import { useTuning } from "./tuning-context"
 
 interface MasonryGalleryProps {
   colorMode?: "light" | "dark"
@@ -178,7 +178,9 @@ function MasonryGalleryInner({ colorMode = "dark" }: MasonryGalleryProps) {
           WebkitMaskImage: maskImage,
         }}
       >
-        <div
+        <main
+          role="main"
+          aria-label="Gallery of rare words"
           className="flex flex-wrap justify-center items-baseline"
           style={{
             gap: `${tuning.gapY}px ${tuning.gapX}px`,
@@ -199,7 +201,7 @@ function MasonryGalleryInner({ colorMode = "dark" }: MasonryGalleryProps) {
               isReturningWord={visitedWord === entry.word.toLowerCase()}
             />
           ))}
-        </div>
+        </main>
       </div>
     </MouseProvider>
   )

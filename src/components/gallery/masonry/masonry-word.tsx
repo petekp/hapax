@@ -144,7 +144,8 @@ export const MasonryWord = memo(function MasonryWord({
       <Link
         href={wordUrl}
         onClick={handleClick}
-        className="block"
+        className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 rounded"
+        aria-label={`View definition of ${word}`}
       >
         <motion.span
           ref={elementRef}

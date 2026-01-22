@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Cormorant_Garamond } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import { ActiveColorProvider } from "@/lib/active-color-context";
 import { DevToolsProvider } from "@/components/dev-tools-provider";
@@ -25,6 +26,7 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://hapax.app"),
   title: "Hapax",
   description: "A cabinet of rare words",
 };
@@ -37,6 +39,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <head>
+        <meta name="theme-color" content="#09090b" />
         {PRELOAD_URLS.map((url, i) => (
           <link
             key={i}
@@ -57,6 +60,7 @@ export default function RootLayout({
             <Footer />
           </ActiveColorProvider>
         </DevToolsProvider>
+        <Analytics />
       </body>
     </html>
   );

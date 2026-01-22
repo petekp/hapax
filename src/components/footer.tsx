@@ -2,8 +2,8 @@
 
 import Link from "next/link"
 
-const GITHUB_URL = "https://github.com/your-username/hapax"
-const X_URL = "https://x.com/your-handle"
+const GITHUB_URL = "https://github.com/petekp/hapax"
+const X_URL = "https://x.com/petekp"
 
 export function Footer() {
   return (
