@@ -121,7 +121,7 @@
 
 :root {
   --radius: 0.625rem;
-  --tint-bg: #09090b;
+  --tint-bg: #000000;
   --tint-text: #e4e4e7;
   --tint-muted: #71717a;
   --tint-border: #27272a;
@@ -232,7 +232,7 @@
 /* View Transitions */
 ::view-transition-old(page-background),
 ::view-transition-new(page-background) {
-  animation-duration: 600ms;
+  animation-duration: 250ms;
   animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -291,6 +291,19 @@
 .marquee-row {
   content-visibility: auto;
   contain-intrinsic-size: 0 100px;
+}
+
+/* Scroll-driven parallax animation */
+@keyframes scrollParallax {
+  0% {
+    transform: translateY(calc(var(--parallax-offset, 60px) * 0.5));
+  }
+  50% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(calc(var(--parallax-offset, 60px) * -0.5));
+  }
 }
 
 /* Reduced motion support */

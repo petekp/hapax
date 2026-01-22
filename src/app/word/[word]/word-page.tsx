@@ -237,6 +237,7 @@ function StyledWord({ word, variant, ready, reducedMotion }: { word: string; var
           fontStyle: variant.style,
           fontSize,
           color,
+          viewTransitionName: `word-${word.toLowerCase().replace(/\s+/g, "-")}`,
         }}
         className="inline-flex typography-display"
       >

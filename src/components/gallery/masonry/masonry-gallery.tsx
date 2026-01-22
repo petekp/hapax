@@ -1,9 +1,10 @@
 "use client"
 
-import { useState, useEffect, useCallback, useMemo } from "react"
+import { useState, useEffect, useCallback, useMemo, useRef } from "react"
 import type { GalleryWordEntry } from "@/app/api/gallery/route"
 import { MasonryWord } from "./masonry-word"
 import { MouseProvider } from "./mouse-context"
+import { TuningProvider, useTuning, tuningDefaults } from "./tuning-context"
 
 interface MasonryGalleryProps {
   colorMode?: "light" | "dark"
@@ -38,15 +39,73 @@ function getFontSize(word: string): string {
   return FONT_SIZES[index]
 }
 
-function getParallaxDepth(word: string): number {
+function getParallaxDepth(word: string, min: number, max: number): number {
   const hash = hashString(word + "depth")
   const random = seededRandom(hash)
-  return 0.5 + random * 1.5
+  return min + random * (max - min)
 }
 
-export function MasonryGallery({ colorMode = "dark" }: MasonryGalleryProps) {
+const SCROLL_KEY = "gallery-scroll-position"
+
+function MasonryGalleryInner({ colorMode = "dark" }: MasonryGalleryProps) {
   const [words, setWords] = useState<GalleryWordEntry[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const tuning = useTuning()
+  const [{ skipEntrance, visitedWord }] = useState(() => {
+    if (typeof window === "undefined") return { skipEntrance: false, visitedWord: null as string | null }
+    const wasOnWordPage = sessionStorage.getItem("navigated-to-word") === "true"
+    const visited = sessionStorage.getItem("visited-word")
+    sessionStorage.removeItem("navigated-to-word")
+    sessionStorage.removeItem("visited-word")
+    return { skipEntrance: wasOnWordPage, visitedWord: wasOnWordPage ? visited : null }
+  })
+
+  useEffect(() => {
+    if (isLoading || words.length === 0) return
+
+    const savedPosition = sessionStorage.getItem(SCROLL_KEY)
+    if (!savedPosition || !scrollRef.current) return
+
+    const targetScroll = parseInt(savedPosition, 10)
+    if (targetScroll === 0) return
+
+    let attempts = 0
+    const maxAttempts = 20
+
+    const tryRestore = () => {
+      const container = scrollRef.current
+      if (!container) return
+
+      if (container.scrollHeight > container.clientHeight && container.scrollHeight >= targetScroll) {
+        container.scrollTop = targetScroll
+        return
+      }
+
+      attempts++
+      if (attempts < maxAttempts) {
+        requestAnimationFrame(tryRestore)
+      }
+    }
+
+    requestAnimationFrame(tryRestore)
+  }, [isLoading, words.length])
+
+  useEffect(() => {
+    const container = scrollRef.current
+    if (!container || isLoading) return
+
+    const handleScroll = () => {
+      const scrollTop = container.scrollTop
+      if (scrollTop > 0) {
+        sessionStorage.setItem(SCROLL_KEY, String(scrollTop))
+      }
+    }
+
+    container.addEventListener("scroll", handleScroll, { passive: true })
+    return () => container.removeEventListener("scroll", handleScroll)
+  }, [isLoading])
+
   const fetchAllWords = useCallback(async () => {
     setIsLoading(true)
     try {
@@ -107,28 +166,53 @@ export function MasonryGallery({ colorMode = "dark" }: MasonryGalleryProps) {
     )
   }
 
+  const maskImage = `linear-gradient(to bottom, transparent, black ${tuning.maskFadeStart}%, black ${tuning.maskFadeEnd}%, transparent)`
+
   return (
     <MouseProvider>
       <div
+        ref={scrollRef}
         className="h-screen w-full overflow-y-auto overflow-x-hidden"
         style={{
-          maskImage: "linear-gradient(to bottom, transparent, black 5%, black 95%, transparent)",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent, black 5%, black 95%, transparent)",
+          maskImage,
+          WebkitMaskImage: maskImage,
         }}
       >
-        <div className="flex flex-wrap justify-center items-baseline gap-x-8 gap-y-4 px-8 md:px-12 lg:px-16 py-16">
-          {shuffledWords.map((entry) => (
+        <div
+          className="flex flex-wrap justify-center items-baseline"
+          style={{
+            gap: `${tuning.gapY}px ${tuning.gapX}px`,
+            padding: `${tuning.paddingY}px ${tuning.paddingX}px`,
+          }}
+        >
+          {shuffledWords.map((entry, index) => (
             <MasonryWord
               key={entry.normalized}
               word={entry.word}
               variant={entry.variant}
               fontSize={getFontSize(entry.normalized)}
               colorMode={colorMode}
-              parallaxDepth={getParallaxDepth(entry.normalized)}
+              parallaxDepth={getParallaxDepth(entry.normalized, tuning.parallaxDepthMin, tuning.parallaxDepthMax)}
+              tuning={tuning}
+              index={index}
+              skipEntrance={skipEntrance}
+              isReturningWord={visitedWord === entry.word.toLowerCase()}
             />
           ))}
         </div>
       </div>
     </MouseProvider>
+  )
+}
+
+export function MasonryGallery({ colorMode = "dark" }: MasonryGalleryProps) {
+  if (process.env.NODE_ENV !== "development") {
+    return <MasonryGalleryInner colorMode={colorMode} />
+  }
+
+  return (
+    <TuningProvider>
+      <MasonryGalleryInner colorMode={colorMode} />
+    </TuningProvider>
   )
 }

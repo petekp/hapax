@@ -1,7 +1,6 @@
 "use client"
 
 import { ViewTransition } from "react"
-import { motion } from "motion/react"
 import { MasonryGallery } from "@/components/gallery"
 import { useActiveColor } from "@/lib/active-color-context"
 
@@ -10,14 +9,12 @@ export default function Home() {
 
   return (
     <ViewTransition name="page-background">
-      <motion.div
-        className="fixed inset-0"
-        style={{ willChange: "background-color" }}
-        animate={{ backgroundColor: tintColors.bg }}
-        transition={{ type: "spring", stiffness: 100, damping: 30 }}
+      <div
+        className="fixed inset-0 transition-colors duration-200 ease-out"
+        style={{ backgroundColor: tintColors.bg }}
       >
         <MasonryGallery colorMode="dark" />
-      </motion.div>
+      </div>
     </ViewTransition>
   )
 }

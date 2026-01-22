@@ -91,7 +91,7 @@ export function deriveHoverColorHex(intent: ColorIntent): string {
 }
 
 const NEUTRAL_TINT_VARS = {
-  "--tint-bg": "#09090b",
+  "--tint-bg": "#000000",
   "--tint-text": "#e4e4e7",
   "--tint-muted": "#71717a",
   "--tint-border": "#27272a",
