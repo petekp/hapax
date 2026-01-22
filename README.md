@@ -19,7 +19,7 @@ pnpm dev
 
 ## Stack
 
-Next.js 16 · React 19 · Tailwind CSS 4 · Framer Motion
+Next.js 16 · React 19 · Tailwind CSS 4 · Motion
 
 ## License
 
