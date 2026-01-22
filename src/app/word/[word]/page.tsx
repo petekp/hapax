@@ -13,23 +13,26 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const decodedWord = decodeURIComponent(word).toLowerCase()
   const content = getWordContent(decodedWord)
 
+  const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
+
   if (!content) {
     return {
-      title: `${decodedWord} - Hapax`,
+      title: `${capitalize(decodedWord)} - Hapax`,
     }
   }
 
   const { frontmatter, content: definition } = content
+  const displayWord = capitalize(frontmatter.word)
   const firstSentence = definition.split(/[.!?]/)[0]?.trim() || ""
   const description = firstSentence.length > 160
     ? firstSentence.slice(0, 157) + "..."
     : firstSentence
 
   return {
-    title: `${frontmatter.word} - Hapax`,
-    description: description || `Discover the rare word "${frontmatter.word}"`,
+    title: `${displayWord} - Hapax`,
+    description: description || `Discover the rare word "${displayWord}"`,
     openGraph: {
-      title: frontmatter.word,
+      title: displayWord,
       description,
       type: "article",
     },
