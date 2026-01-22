@@ -1,6 +1,6 @@
 # Hapax
 
-A curated visual collection of rare words—each styled with a unique font and color palette.
+A gallery of rare words, each with its own font and color.
 
 ## Development
 
