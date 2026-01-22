@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-01-21T22:42:42.201Z",
+  "generatedAt": "2026-01-22T16:48:22.184Z",
   "words": {
     "abraxas": {
       "family": "Cinzel",
@@ -263,13 +263,13 @@
       }
     },
     "cachinnation": {
-      "family": "Gorditas",
-      "weight": 700,
+      "family": "Fraunces",
+      "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 28,
-        "chroma": 0.3,
-        "lightness": 68
+        "hue": 18,
+        "chroma": 0.22,
+        "lightness": 62
       }
     },
     "cacodoxy": {

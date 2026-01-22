@@ -64,14 +64,14 @@ export const MasonryWord = memo(function MasonryWord({
       if (isReturningWord) {
         setEntranceDelay(0)
       } else {
-        const delay = 0.4 + distanceFromCenter * 0.001
+        const delay = tuning.returnStaggerBase + distanceFromCenter * tuning.returnStaggerPerPx
         setEntranceDelay(Math.min(delay, 1.5))
       }
       setEntranceReady(true)
     }, 50)
 
     return () => clearTimeout(timer)
-  }, [skipEntrance, isReturningWord, entranceReady])
+  }, [skipEntrance, isReturningWord, entranceReady, tuning.returnStaggerBase, tuning.returnStaggerPerPx])
 
   useEffect(() => {
     const element = elementRef.current
@@ -162,7 +162,7 @@ export const MasonryWord = memo(function MasonryWord({
           }}
           initial={{
             opacity: 0,
-            scale: skipEntrance && isReturningWord ? 1.4 : 1,
+            scale: skipEntrance && isReturningWord ? tuning.returnWordScale : 1,
           }}
           animate={{
             opacity: entranceReady && fontLoaded ? depthOpacity : 0,
@@ -170,10 +170,10 @@ export const MasonryWord = memo(function MasonryWord({
             scale: 1,
           }}
           transition={skipEntrance ? {
-            opacity: { duration: isReturningWord ? 1 : 0.8, delay: entranceDelay },
-            filter: { duration: isReturningWord ? 1 : 0.8, delay: entranceDelay },
+            opacity: { duration: isReturningWord ? tuning.returnWordDuration : tuning.returnOtherDuration, delay: entranceDelay },
+            filter: { duration: isReturningWord ? tuning.returnWordDuration : tuning.returnOtherDuration, delay: entranceDelay },
             scale: isReturningWord
-              ? { type: "spring", stiffness: 50, damping: 18, mass: 1.2, delay: entranceDelay }
+              ? { type: "spring", stiffness: tuning.returnWordSpringStiffness, damping: tuning.returnWordSpringDamping, mass: tuning.returnWordSpringMass, delay: entranceDelay }
               : { duration: 0 },
           } : {
             duration: prefersReducedMotion ? 0 : tuning.fadeInDuration,

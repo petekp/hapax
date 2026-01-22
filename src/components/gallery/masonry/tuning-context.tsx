@@ -1,7 +1,7 @@
 "use client"
 
-import { createContext, useContext, type ReactNode } from "react"
-import { useControls, folder, button } from "leva"
+import { createContext, useContext, useMemo, type ReactNode } from "react"
+import { useControls, folder, button, Leva } from "leva"
 
 export interface TuningValues {
   // Mouse Parallax
@@ -46,6 +46,19 @@ export interface TuningValues {
 
   // Intersection Observer
   visibilityMargin: number
+
+  // Page Transitions
+  viewTransitionDuration: number
+  bgColorFadeDuration: number
+  bgColorHoldDuration: number
+  returnWordScale: number
+  returnWordDuration: number
+  returnWordSpringStiffness: number
+  returnWordSpringDamping: number
+  returnWordSpringMass: number
+  returnStaggerBase: number
+  returnStaggerPerPx: number
+  returnOtherDuration: number
 }
 
 const defaults: TuningValues = {
@@ -78,7 +91,7 @@ const defaults: TuningValues = {
   gapX: 32,
   gapY: 16,
   paddingX: 32,
-  paddingY: 400,
+  paddingY: 128,
 
   // Fade Mask
   maskFadeStart: 24,
@@ -91,6 +104,19 @@ const defaults: TuningValues = {
 
   // Intersection Observer
   visibilityMargin: 100,
+
+  // Page Transitions
+  viewTransitionDuration: 250,
+  bgColorFadeDuration: 200,
+  bgColorHoldDuration: 1500,
+  returnWordScale: 1.4,
+  returnWordDuration: 1,
+  returnWordSpringStiffness: 50,
+  returnWordSpringDamping: 18,
+  returnWordSpringMass: 1.2,
+  returnStaggerBase: 0.4,
+  returnStaggerPerPx: 0.001,
+  returnOtherDuration: 0.8,
 }
 
 const TuningContext = createContext<TuningValues | null>(null)
@@ -148,6 +174,20 @@ export function TuningProvider({ children }: { children: ReactNode }) {
       visibilityMargin: { value: defaults.visibilityMargin, min: 0, max: 500, step: 25, label: "Margin (px)" },
     }),
 
+    "Page Transitions": folder({
+      viewTransitionDuration: { value: defaults.viewTransitionDuration, min: 100, max: 1000, step: 25, label: "View Transition (ms)" },
+      bgColorFadeDuration: { value: defaults.bgColorFadeDuration, min: 50, max: 1000, step: 25, label: "BG Fade (ms)" },
+      bgColorHoldDuration: { value: defaults.bgColorHoldDuration, min: 0, max: 5000, step: 100, label: "BG Hold (ms)" },
+      returnWordScale: { value: defaults.returnWordScale, min: 1, max: 2, step: 0.05, label: "Return Word Scale" },
+      returnWordDuration: { value: defaults.returnWordDuration, min: 0.2, max: 3, step: 0.1, label: "Return Word Duration (s)" },
+      returnWordSpringStiffness: { value: defaults.returnWordSpringStiffness, min: 20, max: 200, step: 5, label: "Spring Stiffness" },
+      returnWordSpringDamping: { value: defaults.returnWordSpringDamping, min: 5, max: 40, step: 1, label: "Spring Damping" },
+      returnWordSpringMass: { value: defaults.returnWordSpringMass, min: 0.5, max: 3, step: 0.1, label: "Spring Mass" },
+      returnStaggerBase: { value: defaults.returnStaggerBase, min: 0, max: 2, step: 0.05, label: "Stagger Base (s)" },
+      returnStaggerPerPx: { value: defaults.returnStaggerPerPx, min: 0, max: 0.005, step: 0.0001, label: "Stagger per Pixel" },
+      returnOtherDuration: { value: defaults.returnOtherDuration, min: 0.2, max: 2, step: 0.05, label: "Other Words Duration (s)" },
+    }),
+
     "Export for LLM": button(() => {
       const changed = Object.entries(values)
         .filter(([key, val]) => {
@@ -186,8 +226,77 @@ ${Object.entries(values)
     }),
   })
 
+  const tuningValues = useMemo((): TuningValues => ({
+    mouseParallaxEnabled: values.mouseParallaxEnabled,
+    mouseParallaxMultiplier: values.mouseParallaxMultiplier,
+    mouseTransitionDuration: values.mouseTransitionDuration,
+    mouseEasingX1: values.mouseEasingX1,
+    mouseEasingY1: values.mouseEasingY1,
+    mouseEasingX2: values.mouseEasingX2,
+    mouseEasingY2: values.mouseEasingY2,
+    scrollParallaxEnabled: values.scrollParallaxEnabled,
+    scrollParallaxMultiplier: values.scrollParallaxMultiplier,
+    scrollRangeStart: values.scrollRangeStart,
+    scrollRangeEnd: values.scrollRangeEnd,
+    parallaxDepthMin: values.parallaxDepthMin,
+    parallaxDepthMax: values.parallaxDepthMax,
+    depthOpacityNear: values.depthOpacityNear,
+    depthOpacityFar: values.depthOpacityFar,
+    hoverScale: values.hoverScale,
+    tapScale: values.tapScale,
+    gapX: values.gapX,
+    gapY: values.gapY,
+    paddingX: values.paddingX,
+    paddingY: values.paddingY,
+    maskFadeStart: values.maskFadeStart,
+    maskFadeEnd: values.maskFadeEnd,
+    fadeInDuration: values.fadeInDuration,
+    initialBlur: values.initialBlur,
+    staggerDelay: values.staggerDelay,
+    visibilityMargin: values.visibilityMargin,
+    viewTransitionDuration: values.viewTransitionDuration,
+    bgColorFadeDuration: values.bgColorFadeDuration,
+    bgColorHoldDuration: values.bgColorHoldDuration,
+    returnWordScale: values.returnWordScale,
+    returnWordDuration: values.returnWordDuration,
+    returnWordSpringStiffness: values.returnWordSpringStiffness,
+    returnWordSpringDamping: values.returnWordSpringDamping,
+    returnWordSpringMass: values.returnWordSpringMass,
+    returnStaggerBase: values.returnStaggerBase,
+    returnStaggerPerPx: values.returnStaggerPerPx,
+    returnOtherDuration: values.returnOtherDuration,
+  }), [
+    values.mouseParallaxEnabled, values.mouseParallaxMultiplier, values.mouseTransitionDuration,
+    values.mouseEasingX1, values.mouseEasingY1, values.mouseEasingX2, values.mouseEasingY2,
+    values.scrollParallaxEnabled, values.scrollParallaxMultiplier, values.scrollRangeStart, values.scrollRangeEnd,
+    values.parallaxDepthMin, values.parallaxDepthMax, values.depthOpacityNear, values.depthOpacityFar,
+    values.hoverScale, values.tapScale,
+    values.gapX, values.gapY, values.paddingX, values.paddingY,
+    values.maskFadeStart, values.maskFadeEnd,
+    values.fadeInDuration, values.initialBlur, values.staggerDelay,
+    values.visibilityMargin,
+    values.viewTransitionDuration, values.bgColorFadeDuration, values.bgColorHoldDuration,
+    values.returnWordScale, values.returnWordDuration,
+    values.returnWordSpringStiffness, values.returnWordSpringDamping, values.returnWordSpringMass,
+    values.returnStaggerBase, values.returnStaggerPerPx, values.returnOtherDuration,
+  ])
+
   return (
-    <TuningContext.Provider value={values as TuningValues}>
+    <TuningContext.Provider value={tuningValues}>
+      <Leva
+        flat
+        oneLineLabels
+        titleBar={{ title: "Tuning", drag: true, filter: true }}
+        theme={{
+          sizes: {
+            rootWidth: "320px",
+            numberInputMinWidth: "56px",
+          },
+          fontSizes: {
+            root: "12px",
+          },
+        }}
+      />
       {children}
     </TuningContext.Provider>
   )

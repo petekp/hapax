@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Cormorant_Garamond } from "next/font/google";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import { ActiveColorProvider } from "@/lib/active-color-context";
+import { DevToolsProvider } from "@/components/dev-tools-provider";
 import { Footer } from "@/components/footer";
 import { PRELOAD_URLS } from "@/lib/font-preload";
 import "./globals.css";
@@ -50,10 +51,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${cormorant.variable} antialiased`}
       >
         <ServiceWorkerRegister />
-        <ActiveColorProvider>
-          {children}
-          <Footer />
-        </ActiveColorProvider>
+        <DevToolsProvider>
+          <ActiveColorProvider>
+            {children}
+            <Footer />
+          </ActiveColorProvider>
+        </DevToolsProvider>
       </body>
     </html>
   );

@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useMemo, useRef } from "react"
 import type { GalleryWordEntry } from "@/app/api/gallery/route"
 import { MasonryWord } from "./masonry-word"
 import { MouseProvider } from "./mouse-context"
-import { TuningProvider, useTuning, tuningDefaults } from "./tuning-context"
+import { useTuning, tuningDefaults } from "./tuning-context"
 
 interface MasonryGalleryProps {
   colorMode?: "light" | "dark"
@@ -206,13 +206,5 @@ function MasonryGalleryInner({ colorMode = "dark" }: MasonryGalleryProps) {
 }
 
 export function MasonryGallery({ colorMode = "dark" }: MasonryGalleryProps) {
-  if (process.env.NODE_ENV !== "development") {
-    return <MasonryGalleryInner colorMode={colorMode} />
-  }
-
-  return (
-    <TuningProvider>
-      <MasonryGalleryInner colorMode={colorMode} />
-    </TuningProvider>
-  )
+  return <MasonryGalleryInner colorMode={colorMode} />
 }
