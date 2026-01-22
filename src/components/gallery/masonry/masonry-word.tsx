@@ -64,7 +64,7 @@ export const MasonryWord = memo(function MasonryWord({
       if (isReturningWord) {
         setEntranceDelay(0)
       } else {
-        const delay = 0.05 + distanceFromCenter * 0.001
+        const delay = 0.4 + distanceFromCenter * 0.001
         setEntranceDelay(Math.min(delay, 1.5))
       }
       setEntranceReady(true)
@@ -116,7 +116,8 @@ export const MasonryWord = memo(function MasonryWord({
     isNavigatingRef.current = true
     sessionStorage.setItem("navigated-to-word", "true")
     sessionStorage.setItem("visited-word", word.toLowerCase())
-  }, [word])
+    sessionStorage.setItem("visited-word-color", JSON.stringify(variant.colorIntent))
+  }, [word, variant.colorIntent])
 
   useEffect(() => {
     const fontLoader = getFontLoader()
@@ -159,14 +160,21 @@ export const MasonryWord = memo(function MasonryWord({
             transition: `translate ${tuning.mouseTransitionDuration}s ${mouseTransitionEasing}`,
             willChange: "translate",
           }}
-          initial={{ opacity: 0 }}
+          initial={{
+            opacity: 0,
+            scale: skipEntrance && isReturningWord ? 1.4 : 1,
+          }}
           animate={{
             opacity: entranceReady && fontLoaded ? depthOpacity : 0,
             filter: fontLoaded ? "blur(0px)" : `blur(${tuning.initialBlur}px)`,
+            scale: 1,
           }}
           transition={skipEntrance ? {
-            duration: isReturningWord ? 1 : 0.8,
-            delay: entranceDelay,
+            opacity: { duration: isReturningWord ? 1 : 0.8, delay: entranceDelay },
+            filter: { duration: isReturningWord ? 1 : 0.8, delay: entranceDelay },
+            scale: isReturningWord
+              ? { type: "spring", stiffness: 50, damping: 18, mass: 1.2, delay: entranceDelay }
+              : { duration: 0 },
           } : {
             duration: prefersReducedMotion ? 0 : tuning.fadeInDuration,
             delay: prefersReducedMotion ? 0 : index * tuning.staggerDelay,
