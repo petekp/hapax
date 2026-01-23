@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   experimental: {
-    viewTransition: true,
+    viewTransition: false,
     optimizePackageImports: [
       "lucide-react",
       "@radix-ui/react-dialog",

@@ -97,7 +97,11 @@ export async function GET(request: Request) {
           total: filteredKeys.length,
           hasMore,
           cursor: nextCursor,
-        } as GalleryResponse);
+        } as GalleryResponse, {
+          headers: {
+            "Cache-Control": "s-maxage=60, stale-while-revalidate=600",
+          },
+        });
       }
     } catch (error) {
       console.error("KV fetch error, falling back to vetted styles:", error);
@@ -124,5 +128,9 @@ export async function GET(request: Request) {
     total: filteredEntries.length,
     hasMore,
     cursor: nextCursor,
-  } as GalleryResponse);
+  } as GalleryResponse, {
+    headers: {
+      "Cache-Control": "s-maxage=60, stale-while-revalidate=600",
+    },
+  });
 }

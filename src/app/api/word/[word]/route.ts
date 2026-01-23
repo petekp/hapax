@@ -7,7 +7,7 @@ export interface WordResponse {
 }
 
 export async function GET(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ word: string }> }
 ) {
   const { word } = await params
@@ -18,5 +18,9 @@ export async function GET(
   return NextResponse.json({
     found: content !== null,
     content,
-  } as WordResponse)
+  } as WordResponse, {
+    headers: {
+      "Cache-Control": "s-maxage=3600, stale-while-revalidate=86400",
+    },
+  })
 }

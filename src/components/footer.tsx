@@ -7,7 +7,10 @@ const X_URL = "https://x.com/petekp"
 
 export function Footer() {
   return (
-    <footer className="fixed bottom-0 left-0 right-0 z-20 pointer-events-none">
+    <footer
+      className="fixed bottom-0 left-0 right-0 z-[60] pointer-events-none"
+      style={{ viewTransitionName: "none" }}
+    >
       <div className="flex justify-center items-center gap-6 py-6 pointer-events-auto">
         <Link
           href="/about"

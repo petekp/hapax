@@ -1,14 +1,14 @@
 "use client"
 
-import { useEffect, useState, use, useMemo, useRef, ViewTransition } from "react"
+import { useEffect, useState, useMemo, useRef, forwardRef, useCallback } from "react"
 import { motion, useInView } from "motion/react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import type { FontVariant } from "@/lib/schemas"
 import { deriveColor, deriveTintedTextColor, deriveTintedMutedColor, deriveTintedMutedColorHex, deriveHoverColorHex } from "@/lib/color"
 import { useActiveColor } from "@/lib/active-color-context"
 import { getFontLoader } from "@/lib/font-loader"
 import { useReducedMotion } from "@/hooks/use-reduced-motion"
-import type { WordResponse } from "@/app/api/word/[word]/route"
 import type { WordContent } from "@/lib/words"
 
 interface ParsedSection {
@@ -30,17 +30,6 @@ interface DictionaryEntry {
   word: string
   phonetic?: string
   meanings: Definition[]
-}
-
-async function fetchWordContent(word: string): Promise<WordContent | null> {
-  try {
-    const response = await fetch(`/api/word/${encodeURIComponent(word)}`)
-    if (!response.ok) return null
-    const data: WordResponse = await response.json()
-    return data.content
-  } catch {
-    return null
-  }
 }
 
 async function fetchDefinition(word: string): Promise<DictionaryEntry | null> {
@@ -218,72 +207,82 @@ function calculateFluidFontSize(wordLength: number): string {
   return `clamp(${clampedMobile.toFixed(2)}rem, ${intercept.toFixed(2)}rem + ${(slope * 100).toFixed(2)}vw, ${clampedDesktop.toFixed(2)}rem)`
 }
 
-function StyledWord({ word, variant, ready, reducedMotion }: { word: string; variant: FontVariant; ready: boolean; reducedMotion: boolean }) {
-  const color = deriveColor(variant.colorIntent, "dark")
+interface StyledWordProps {
+  word: string
+  variant: FontVariant
+  ready: boolean
+  reducedMotion: boolean
+}
 
-  // Pick animation based on word hash (deterministic for SSR)
-  const animation = letterAnimations[hashString(word) % letterAnimations.length]
+const StyledWord = forwardRef<HTMLSpanElement, StyledWordProps>(
+  function StyledWord({ word, variant, ready, reducedMotion }, ref) {
+    const color = deriveColor(variant.colorIntent, "dark")
 
-  const letters = word.split("")
-  const fontSize = calculateFluidFontSize(word.length)
+    // Pick animation based on word hash (deterministic for SSR)
+    const animation = letterAnimations[hashString(word) % letterAnimations.length]
 
-  // For reduced motion, show all letters immediately
-  if (reducedMotion) {
+    const letters = word.split("")
+    const fontSize = calculateFluidFontSize(word.length)
+
+    // For reduced motion, show all letters immediately
+    if (reducedMotion) {
+      return (
+        <span
+          ref={ref}
+          style={{
+            fontFamily: `"${variant.family}", sans-serif`,
+            fontWeight: variant.weight,
+            fontStyle: variant.style,
+            fontSize,
+            color,
+          }}
+          className="inline-flex typography-display"
+        >
+          {word}
+        </span>
+      )
+    }
+
+    // Negative stagger: letters appear "already in motion"
+    // First letter has longest delay, last letter starts immediately
+    const totalStaggerTime = letters.length * 0.04
+    const baseDelay = 0.1 // Small initial delay for page transition
+
     return (
       <span
+        ref={ref}
         style={{
           fontFamily: `"${variant.family}", sans-serif`,
           fontWeight: variant.weight,
           fontStyle: variant.style,
+          perspective: "1000px",
           fontSize,
-          color,
-          viewTransitionName: `word-${word.toLowerCase().replace(/\s+/g, "-")}`,
         }}
         className="inline-flex typography-display"
       >
-        {word}
+        {letters.map((letter, i) => (
+          <motion.span
+            key={i}
+            style={{
+              color,
+              display: "inline-block",
+              whiteSpace: letter === " " ? "pre" : "normal",
+            }}
+            initial={animation.initial}
+            animate={ready ? animation.animate : animation.initial}
+            transition={{
+              ...animation.transition,
+              // Negative stagger: last letters animate first, creating wave effect
+              delay: baseDelay + (totalStaggerTime - (i * 0.04)),
+            }}
+          >
+            {letter}
+          </motion.span>
+        ))}
       </span>
     )
   }
-
-  // Negative stagger: letters appear "already in motion"
-  // First letter has longest delay, last letter starts immediately
-  const totalStaggerTime = letters.length * 0.04
-  const baseDelay = 0.1 // Small initial delay for page transition
-
-  return (
-    <span
-      style={{
-        fontFamily: `"${variant.family}", sans-serif`,
-        fontWeight: variant.weight,
-        fontStyle: variant.style,
-        perspective: "1000px",
-        fontSize,
-      }}
-      className="inline-flex typography-display"
-    >
-      {letters.map((letter, i) => (
-        <motion.span
-          key={i}
-          style={{
-            color,
-            display: "inline-block",
-            whiteSpace: letter === " " ? "pre" : "normal",
-          }}
-          initial={animation.initial}
-          animate={ready ? animation.animate : animation.initial}
-          transition={{
-            ...animation.transition,
-            // Negative stagger: last letters animate first, creating wave effect
-            delay: baseDelay + (totalStaggerTime - (i * 0.04)),
-          }}
-        >
-          {letter}
-        </motion.span>
-      ))}
-    </span>
-  )
-}
+)
 
 function parseMarkdown(content: string): ParsedSection[] {
   const lines = content.split("\n")
@@ -503,36 +502,60 @@ function MdxContent({ content, textColor, mutedColor, reducedMotion }: { content
   )
 }
 
-export default function WordPage({ params }: { params: Promise<{ word: string }> }) {
-  const { word } = use(params)
-  const decodedWord = decodeURIComponent(word)
+interface WordPageProps {
+  word: string
+  initialContent: WordContent | null
+}
+
+export default function WordPage({ word, initialContent }: WordPageProps) {
   const { setActiveColor, tintColors } = useActiveColor()
   const prefersReducedMotion = useReducedMotion()
+  const wordRef = useRef<HTMLSpanElement>(null)
+  const router = useRouter()
 
-  const [wordContent, setWordContent] = useState<WordContent | null>(null)
   const [definition, setDefinition] = useState<DictionaryEntry | null>(null)
-  const [contentLoaded, setContentLoaded] = useState(false)
   const [definitionLoaded, setDefinitionLoaded] = useState(false)
   const [fontLoaded, setFontLoaded] = useState(false)
+  const [isExiting, setIsExiting] = useState(false)
+
+  const handleBackClick = useCallback((e: React.MouseEvent) => {
+    e.preventDefault()
+
+    if (!wordRef.current) {
+      router.push("/")
+      return
+    }
+
+    // Store measurements
+    const rect = wordRef.current.getBoundingClientRect()
+    sessionStorage.setItem("returning-word-rect", JSON.stringify({
+      top: rect.top,
+      left: rect.left,
+      width: rect.width,
+      height: rect.height,
+    }))
+
+    // Start exit animation
+    setIsExiting(true)
+
+    // Navigate after animation
+    setTimeout(() => {
+      router.push("/")
+    }, 200)
+  }, [router])
 
   useEffect(() => {
-    Promise.all([
-      fetchWordContent(decodedWord),
-      fetchDefinition(decodedWord)
-    ]).then(([content, entry]) => {
-      setWordContent(content)
-      setContentLoaded(true)
+    fetchDefinition(word).then((entry) => {
       setDefinition(entry)
       setDefinitionLoaded(true)
     })
-  }, [decodedWord])
+  }, [word])
 
   useEffect(() => {
-    if (wordContent) {
-      setActiveColor(wordContent.frontmatter.style.colorIntent, "deep")
+    if (initialContent) {
+      setActiveColor(initialContent.frontmatter.style.colorIntent, "deep")
     }
-    return () => setActiveColor(null)
-  }, [wordContent, setActiveColor])
+  }, [initialContent, setActiveColor])
 
   const fallbackVariant: FontVariant = {
     family: "Inter",
@@ -541,25 +564,23 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
     colorIntent: { hue: 220, chroma: 0.15, lightness: 70 },
   }
 
-  const variant = wordContent?.frontmatter.style || fallbackVariant
-  const phonetic = wordContent?.frontmatter.phonetic || definition?.phonetic
-  const partOfSpeech = wordContent?.frontmatter.partOfSpeech || definition?.meanings[0]?.partOfSpeech
-  const hasMdxContent = wordContent && wordContent.content.length > 0
+  const variant = initialContent?.frontmatter.style || fallbackVariant
+  const phonetic = initialContent?.frontmatter.phonetic || definition?.phonetic
+  const partOfSpeech = initialContent?.frontmatter.partOfSpeech || definition?.meanings[0]?.partOfSpeech
+  const hasMdxContent = initialContent && initialContent.content.length > 0
 
   useEffect(() => {
-    if (!contentLoaded) return
     const fontLoader = getFontLoader()
-    fontLoader.requestFont(variant, decodedWord, () => setFontLoaded(true))
-  }, [contentLoaded, variant, decodedWord])
+    fontLoader.requestFont(variant, word, () => setFontLoaded(true))
+  }, [variant, word])
 
-  const ready = contentLoaded && definitionLoaded && fontLoaded
+  const ready = definitionLoaded && fontLoaded
   const textColor = ready ? deriveTintedTextColor(variant.colorIntent) : undefined
   const mutedColor = ready ? deriveTintedMutedColor(variant.colorIntent) : undefined
   const hoverColorHex = ready ? deriveHoverColorHex(variant.colorIntent) : "#a1a1aa"
   const backArrowColor = ready ? deriveTintedMutedColorHex(variant.colorIntent) : "#71717a"
 
   return (
-    <ViewTransition name="page-background">
       <motion.div
         className="min-h-screen text-zinc-200"
         style={{ willChange: "background-color" }}
@@ -569,8 +590,9 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
         <header className="fixed top-0 left-0 p-4 z-10">
           <Link
             href="/"
+            onClick={handleBackClick}
             className="flex items-center justify-center w-12 h-12 transition-colors duration-200"
-            style={{ color: backArrowColor }}
+            style={{ color: backArrowColor, opacity: isExiting ? 0 : 1, transition: "opacity 200ms ease-out" }}
             onMouseEnter={(e) => (e.currentTarget.style.color = hoverColorHex)}
             onMouseLeave={(e) => (e.currentTarget.style.color = backArrowColor)}
             aria-label="Back to home"
@@ -598,9 +620,14 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
           transition={{ duration: 0.4 }}
         >
           <div className="text-center mb-4">
-            <StyledWord word={decodedWord} variant={variant} ready={ready} reducedMotion={prefersReducedMotion} />
+            <StyledWord ref={wordRef} word={word} variant={variant} ready={ready} reducedMotion={prefersReducedMotion} />
           </div>
 
+          <motion.div
+            initial={{ opacity: 1 }}
+            animate={{ opacity: isExiting ? 0 : 1 }}
+            transition={{ duration: 0.15 }}
+          >
           {(partOfSpeech || phonetic) && (
             <p
               className="text-[length:var(--text-fluid-caption)] font-light tracking-[0.15em] mb-28 transition-colors duration-700"
@@ -619,7 +646,7 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
           <div className="w-full typography-display" style={{ fontFamily: "var(--font-serif), Georgia, serif" }}>
             {hasMdxContent ? (
               <MdxContent
-                content={wordContent!.content}
+                content={initialContent!.content}
                 textColor={textColor}
                 mutedColor={mutedColor}
                 reducedMotion={prefersReducedMotion}
@@ -675,9 +702,9 @@ export default function WordPage({ params }: { params: Promise<{ word: string }>
               </p>
             )}
           </div>
+          </motion.div>
         </motion.div>
       </main>
       </motion.div>
-    </ViewTransition>
   )
 }

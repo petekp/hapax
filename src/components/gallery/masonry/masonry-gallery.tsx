@@ -52,14 +52,6 @@ function MasonryGalleryInner({ colorMode = "dark" }: MasonryGalleryProps) {
   const [isLoading, setIsLoading] = useState(true)
   const scrollRef = useRef<HTMLDivElement>(null)
   const tuning = useTuning()
-  const [{ skipEntrance, visitedWord }] = useState(() => {
-    if (typeof window === "undefined") return { skipEntrance: false, visitedWord: null as string | null }
-    const wasOnWordPage = sessionStorage.getItem("navigated-to-word") === "true"
-    const visited = sessionStorage.getItem("visited-word")
-    sessionStorage.removeItem("navigated-to-word")
-    sessionStorage.removeItem("visited-word")
-    return { skipEntrance: wasOnWordPage, visitedWord: wasOnWordPage ? visited : null }
-  })
 
   useEffect(() => {
     if (isLoading || words.length === 0) return
@@ -158,14 +150,6 @@ function MasonryGalleryInner({ colorMode = "dark" }: MasonryGalleryProps) {
     )
   }
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-full text-zinc-500 animate-pulse">
-        Loading...
-      </div>
-    )
-  }
-
   const maskImage = `linear-gradient(to bottom, transparent, black ${tuning.maskFadeStart}%, black ${tuning.maskFadeEnd}%, transparent)`
 
   return (
@@ -197,8 +181,6 @@ function MasonryGalleryInner({ colorMode = "dark" }: MasonryGalleryProps) {
               parallaxDepth={getParallaxDepth(entry.normalized, tuning.parallaxDepthMin, tuning.parallaxDepthMax)}
               tuning={tuning}
               index={index}
-              skipEntrance={skipEntrance}
-              isReturningWord={visitedWord === entry.word.toLowerCase()}
             />
           ))}
         </main>
