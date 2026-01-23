@@ -1,50 +1,21 @@
-"use client"
-
-import { useEffect, useRef } from "react"
-import { ViewTransition } from "react"
-import { MasonryGallery } from "@/components/gallery"
-import { useActiveColor } from "@/lib/active-color-context"
-import { useTuning } from "@/components/gallery/masonry/tuning-context"
-import type { ColorIntent } from "@/lib/schemas"
+import { HomeClient } from "./home-client"
+import { getAllVettedWords } from "@/lib/vetted-cache"
 
 export default function Home() {
-  const { tintColors, setActiveColor } = useActiveColor()
-  const tuning = useTuning()
-  const initializedRef = useRef(false)
-
-  useEffect(() => {
-    if (initializedRef.current) return
-    initializedRef.current = true
-
-    const colorJson = sessionStorage.getItem("visited-word-color")
-    if (colorJson) {
-      try {
-        const color = JSON.parse(colorJson) as ColorIntent
-        setActiveColor(color)
-        sessionStorage.removeItem("visited-word-color")
-
-        const timer = setTimeout(() => {
-          setActiveColor(null)
-        }, tuning.bgColorHoldDuration)
-
-        return () => clearTimeout(timer)
-      } catch {
-        sessionStorage.removeItem("visited-word-color")
-      }
-    }
-  }, [setActiveColor, tuning.bgColorHoldDuration])
+  const wordCount = getAllVettedWords().length
 
   return (
-    <ViewTransition name="page-background">
-      <div
-        className="fixed inset-0 transition-colors ease-out"
-        style={{
-          backgroundColor: tintColors.bg,
-          transitionDuration: `${tuning.bgColorFadeDuration}ms`,
-        }}
-      >
-        <MasonryGallery colorMode="dark" />
-      </div>
-    </ViewTransition>
+    <>
+      <header className="sr-only">
+        <h1>Hapax — A Cabinet of Rare Words</h1>
+        <p>
+          Explore a curated collection of {wordCount} rare and unusual English words.
+          Each word is styled with its own unique font and color palette, creating a
+          visual gallery of linguistic curiosities. Discover words like liminal,
+          petrichor, saudade, and many more obscure terms from across languages and eras.
+        </p>
+      </header>
+      <HomeClient />
+    </>
   )
 }

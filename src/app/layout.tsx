@@ -27,9 +27,50 @@ const cormorant = Cormorant_Garamond({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://hapax.app"),
-  title: "Hapax",
-  description: "A cabinet of rare words",
+  title: {
+    default: "Hapax — A Cabinet of Rare Words",
+    template: "%s — Hapax",
+  },
+  description:
+    "Explore a curated gallery of rare English words. Each word styled with its own unique font and color palette. Discover words like liminal, petrichor, saudade, and more.",
+  keywords: [
+    "rare words",
+    "unusual words",
+    "vocabulary",
+    "word gallery",
+    "linguistics",
+    "etymology",
+    "beautiful words",
+    "obscure words",
+  ],
+  authors: [{ name: "Peter Petrash", url: "https://x.com/petekp" }],
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    siteName: "Hapax",
+  },
+  twitter: {
+    card: "summary_large_image",
+    creator: "@petekp",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Hapax",
+  description: "A cabinet of rare words, where each word is styled with its own unique font and color palette.",
+  url: "https://hapax.app",
+  author: {
+    "@type": "Person",
+    name: "Peter Petrash",
+    url: "https://x.com/petekp",
+  },
+}
 
 export default function RootLayout({
   children,
@@ -39,7 +80,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <head>
-        <meta name="theme-color" content="#09090b" />
+        <meta name="theme-color" content="#000000" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
         {PRELOAD_URLS.map((url, i) => (
           <link
             key={i}

@@ -8,12 +8,14 @@ interface PageProps {
   params: Promise<{ word: string }>
 }
 
+function capitalize(s: string) {
+  return s.charAt(0).toUpperCase() + s.slice(1)
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { word } = await params
   const decodedWord = decodeURIComponent(word).toLowerCase()
   const content = getWordContent(decodedWord)
-
-  const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 
   if (!content) {
     return {
@@ -39,16 +41,45 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
+function generateDefinedTermSchema(word: string, description: string, pronunciation?: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "DefinedTerm",
+    name: word,
+    description,
+    ...(pronunciation && { termCode: pronunciation }),
+    inDefinedTermSet: {
+      "@type": "DefinedTermSet",
+      name: "Hapax — A Cabinet of Rare Words",
+      url: "https://hapax.app",
+    },
+  }
+}
+
 export default async function Page({ params }: PageProps) {
   const { word } = await params
   const decodedWord = decodeURIComponent(word).toLowerCase()
 
-  // Only allow vetted words in production
   if (process.env.NODE_ENV === "production" && !hasVettedStyle(decodedWord)) {
     notFound()
   }
 
-  // In development, allow any word for testing
-  // In production, we've already verified the word is vetted
-  return <WordPage params={params} />
+  const wordContent = getWordContent(decodedWord)
+
+  const firstSentence = wordContent?.content.split(/[.!?]/)[0]?.trim() || ""
+  const description = firstSentence || `Definition of ${decodedWord}`
+  const phonetic = wordContent?.frontmatter.phonetic
+
+  const jsonLd = generateDefinedTermSchema(decodedWord, description, phonetic)
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger -- JSON-LD from trusted server-side data
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <WordPage word={decodedWord} initialContent={wordContent} />
+    </>
+  )
 }

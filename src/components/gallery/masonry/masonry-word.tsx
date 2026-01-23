@@ -1,14 +1,13 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef, memo } from "react"
-import { useRouter } from "next/navigation"
 import { motion } from "motion/react"
-import Link from "next/link"
 import type { FontVariant } from "@/lib/schemas"
 import { deriveColor } from "@/lib/color"
 import { getFontLoader } from "@/lib/font-loader"
 import { useActiveColor } from "@/lib/active-color-context"
 import { useReducedMotion } from "@/hooks/use-reduced-motion"
+import { useOverlay } from "@/components/word-overlay"
 import { useMousePosition } from "./mouse-context"
 import { type TuningValues, tuningDefaults } from "./tuning-context"
 
@@ -20,8 +19,6 @@ interface MasonryWordProps {
   parallaxDepth?: number
   tuning?: TuningValues
   index?: number
-  skipEntrance?: boolean
-  isReturningWord?: boolean
 }
 
 export const MasonryWord = memo(function MasonryWord({
@@ -32,46 +29,18 @@ export const MasonryWord = memo(function MasonryWord({
   parallaxDepth = 1,
   tuning = tuningDefaults,
   index = 0,
-  skipEntrance = false,
-  isReturningWord = false,
 }: MasonryWordProps) {
   const [fontLoaded, setFontLoaded] = useState(false)
-  const [entranceReady, setEntranceReady] = useState(!skipEntrance)
-  const [entranceDelay, setEntranceDelay] = useState(0)
   const isVisibleRef = useRef(false)
   const { setActiveColor } = useActiveColor()
-  const isNavigatingRef = useRef(false)
+  const { openWord, isOpen, isClosing, selectedWord } = useOverlay()
   const elementRef = useRef<HTMLSpanElement>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const router = useRouter()
   const prefersReducedMotion = useReducedMotion()
-  const wordUrl = `/word/${encodeURIComponent(word.toLowerCase())}`
   const { subscribe } = useMousePosition()
-
-  useEffect(() => {
-    if (!skipEntrance || entranceReady) return
-
-    // Wait for scroll restoration to complete before measuring
-    const timer = setTimeout(() => {
-      const el = wrapperRef.current
-      if (!el) return
-
-      const rect = el.getBoundingClientRect()
-      const viewportCenter = window.innerHeight / 2
-      const elementCenter = rect.top + rect.height / 2
-      const distanceFromCenter = Math.abs(elementCenter - viewportCenter)
-
-      if (isReturningWord) {
-        setEntranceDelay(0)
-      } else {
-        const delay = tuning.returnStaggerBase + distanceFromCenter * tuning.returnStaggerPerPx
-        setEntranceDelay(Math.min(delay, 1.5))
-      }
-      setEntranceReady(true)
-    }, 50)
-
-    return () => clearTimeout(timer)
-  }, [skipEntrance, isReturningWord, entranceReady, tuning.returnStaggerBase, tuning.returnStaggerPerPx])
+  const layoutId = `word-${word.toLowerCase()}`
+  const isThisWordSelected = selectedWord?.toLowerCase() === word.toLowerCase()
+  const shouldHide = isOpen && !isClosing && isThisWordSelected
 
   useEffect(() => {
     const element = elementRef.current
@@ -102,22 +71,20 @@ export const MasonryWord = memo(function MasonryWord({
   }, [])
 
   const handleMouseEnter = useCallback(() => {
-    setActiveColor(variant.colorIntent)
-    router.prefetch(wordUrl)
-  }, [setActiveColor, variant.colorIntent, router, wordUrl])
+    if (!isOpen) {
+      setActiveColor(variant.colorIntent)
+    }
+  }, [setActiveColor, variant.colorIntent, isOpen])
 
   const handleMouseLeave = useCallback(() => {
-    if (!isNavigatingRef.current) {
+    if (!isOpen) {
       setActiveColor(null)
     }
-  }, [setActiveColor])
+  }, [setActiveColor, isOpen])
 
   const handleClick = useCallback(() => {
-    isNavigatingRef.current = true
-    sessionStorage.setItem("navigated-to-word", "true")
-    sessionStorage.setItem("visited-word", word.toLowerCase())
-    sessionStorage.setItem("visited-word-color", JSON.stringify(variant.colorIntent))
-  }, [word, variant.colorIntent])
+    openWord(word, variant)
+  }, [openWord, word, variant])
 
   useEffect(() => {
     const fontLoader = getFontLoader()
@@ -141,14 +108,15 @@ export const MasonryWord = memo(function MasonryWord({
 
   return (
     <div ref={wrapperRef} style={scrollParallaxStyle}>
-      <Link
-        href={wordUrl}
+      <button
         onClick={handleClick}
-        className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 rounded"
+        className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 rounded bg-transparent border-none p-0"
         aria-label={`View definition of ${word}`}
+        disabled={isOpen}
       >
         <motion.span
           ref={elementRef}
+          layoutId={layoutId}
           style={{
             display: "block",
             color: fontLoaded ? color : "transparent",
@@ -157,37 +125,35 @@ export const MasonryWord = memo(function MasonryWord({
             fontStyle: variant.style,
             fontSize,
             lineHeight: 1.1,
-            cursor: "pointer",
+            cursor: isOpen ? "default" : "pointer",
             transition: `translate ${tuning.mouseTransitionDuration}s ${mouseTransitionEasing}`,
             willChange: "translate",
+            visibility: shouldHide ? "hidden" : "visible",
           }}
-          initial={{
-            opacity: 0,
-            scale: skipEntrance && isReturningWord ? tuning.returnWordScale : 1,
-          }}
+          initial={{ opacity: 0 }}
           animate={{
-            opacity: entranceReady && fontLoaded ? depthOpacity : 0,
+            opacity: fontLoaded ? depthOpacity : 0,
             filter: fontLoaded ? "blur(0px)" : `blur(${tuning.initialBlur}px)`,
-            scale: 1,
           }}
-          transition={skipEntrance ? {
-            opacity: { duration: isReturningWord ? tuning.returnWordDuration : tuning.returnOtherDuration, delay: entranceDelay },
-            filter: { duration: isReturningWord ? tuning.returnWordDuration : tuning.returnOtherDuration, delay: entranceDelay },
-            scale: isReturningWord
-              ? { type: "spring", stiffness: tuning.returnWordSpringStiffness, damping: tuning.returnWordSpringDamping, mass: tuning.returnWordSpringMass, delay: entranceDelay }
-              : { duration: 0 },
-          } : {
+          transition={{
             duration: prefersReducedMotion ? 0 : tuning.fadeInDuration,
             delay: prefersReducedMotion ? 0 : index * tuning.staggerDelay,
+            layout: {
+              type: "spring",
+              stiffness: tuning.overlaySpringStiffness,
+              damping: tuning.overlaySpringDamping,
+              mass: tuning.overlaySpringMass,
+            },
+            opacity: { duration: 0 },
           }}
-          whileHover={fontLoaded && !prefersReducedMotion ? { scale: tuning.hoverScale } : undefined}
-          whileTap={fontLoaded && !prefersReducedMotion ? { scale: tuning.tapScale } : undefined}
+          whileHover={fontLoaded && !prefersReducedMotion && !isOpen ? { scale: tuning.hoverScale } : undefined}
+          whileTap={fontLoaded && !prefersReducedMotion && !isOpen ? { scale: tuning.tapScale } : undefined}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
           {word}
         </motion.span>
-      </Link>
+      </button>
     </div>
   )
 })

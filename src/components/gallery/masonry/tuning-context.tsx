@@ -59,6 +59,14 @@ export interface TuningValues {
   returnStaggerBase: number
   returnStaggerPerPx: number
   returnOtherDuration: number
+
+  // Overlay Animation
+  overlaySpringStiffness: number
+  overlaySpringDamping: number
+  overlaySpringMass: number
+  overlayBackdropDuration: number
+  overlayContentDelay: number
+  overlayContentFadeOut: number
 }
 
 const defaults: TuningValues = {
@@ -117,6 +125,14 @@ const defaults: TuningValues = {
   returnStaggerBase: 0.4,
   returnStaggerPerPx: 0.001,
   returnOtherDuration: 0.8,
+
+  // Overlay Animation
+  overlaySpringStiffness: 160,
+  overlaySpringDamping: 28,
+  overlaySpringMass: 1,
+  overlayBackdropDuration: 300,
+  overlayContentDelay: 200,
+  overlayContentFadeOut: 150,
 }
 
 const TuningContext = createContext<TuningValues | null>(null)
@@ -186,6 +202,15 @@ export function TuningProvider({ children }: { children: ReactNode }) {
       returnStaggerBase: { value: defaults.returnStaggerBase, min: 0, max: 2, step: 0.05, label: "Stagger Base (s)" },
       returnStaggerPerPx: { value: defaults.returnStaggerPerPx, min: 0, max: 0.005, step: 0.0001, label: "Stagger per Pixel" },
       returnOtherDuration: { value: defaults.returnOtherDuration, min: 0.2, max: 2, step: 0.05, label: "Other Words Duration (s)" },
+    }),
+
+    "Overlay Animation": folder({
+      overlaySpringStiffness: { value: defaults.overlaySpringStiffness, min: 20, max: 200, step: 5, label: "Spring Stiffness" },
+      overlaySpringDamping: { value: defaults.overlaySpringDamping, min: 5, max: 40, step: 1, label: "Spring Damping" },
+      overlaySpringMass: { value: defaults.overlaySpringMass, min: 0.5, max: 3, step: 0.1, label: "Spring Mass" },
+      overlayBackdropDuration: { value: defaults.overlayBackdropDuration, min: 100, max: 1000, step: 25, label: "Backdrop Duration (ms)" },
+      overlayContentDelay: { value: defaults.overlayContentDelay, min: 0, max: 500, step: 25, label: "Content Delay (ms)" },
+      overlayContentFadeOut: { value: defaults.overlayContentFadeOut, min: 50, max: 500, step: 25, label: "Content Fade Out (ms)" },
     }),
 
     "Export for LLM": button(() => {
@@ -265,6 +290,12 @@ ${Object.entries(values)
     returnStaggerBase: values.returnStaggerBase,
     returnStaggerPerPx: values.returnStaggerPerPx,
     returnOtherDuration: values.returnOtherDuration,
+    overlaySpringStiffness: values.overlaySpringStiffness,
+    overlaySpringDamping: values.overlaySpringDamping,
+    overlaySpringMass: values.overlaySpringMass,
+    overlayBackdropDuration: values.overlayBackdropDuration,
+    overlayContentDelay: values.overlayContentDelay,
+    overlayContentFadeOut: values.overlayContentFadeOut,
   }), [
     values.mouseParallaxEnabled, values.mouseParallaxMultiplier, values.mouseTransitionDuration,
     values.mouseEasingX1, values.mouseEasingY1, values.mouseEasingX2, values.mouseEasingY2,
@@ -279,6 +310,8 @@ ${Object.entries(values)
     values.returnWordScale, values.returnWordDuration,
     values.returnWordSpringStiffness, values.returnWordSpringDamping, values.returnWordSpringMass,
     values.returnStaggerBase, values.returnStaggerPerPx, values.returnOtherDuration,
+    values.overlaySpringStiffness, values.overlaySpringDamping, values.overlaySpringMass,
+    values.overlayBackdropDuration, values.overlayContentDelay, values.overlayContentFadeOut,
   ])
 
   return (
