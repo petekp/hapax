@@ -1,7 +1,8 @@
 "use client"
 
-import { useState, useEffect, useCallback, useMemo, useRef } from "react"
-import type { GalleryWordEntry } from "@/app/api/gallery/route"
+import { useEffect, useMemo, useRef } from "react"
+import useSWR from "swr"
+import type { GalleryWordEntry, GalleryResponse } from "@/app/api/gallery/route"
 import { MasonryWord } from "./masonry-word"
 import { MouseProvider } from "./mouse-context"
 import { useTuning } from "./tuning-context"
@@ -47,11 +48,23 @@ function getParallaxDepth(word: string, min: number, max: number): number {
 
 const SCROLL_KEY = "gallery-scroll-position"
 
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
+
 function MasonryGalleryInner({ colorMode = "dark" }: MasonryGalleryProps) {
-  const [words, setWords] = useState<GalleryWordEntry[]>([])
-  const [isLoading, setIsLoading] = useState(true)
   const scrollRef = useRef<HTMLDivElement>(null)
   const tuning = useTuning()
+
+  const { data, isLoading } = useSWR<GalleryResponse>(
+    "/api/gallery?limit=500",
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      dedupingInterval: 60000,
+    }
+  )
+
+  const words = useMemo(() => data?.words ?? [], [data?.words])
 
   useEffect(() => {
     if (isLoading || words.length === 0) return
@@ -97,25 +110,6 @@ function MasonryGalleryInner({ colorMode = "dark" }: MasonryGalleryProps) {
     container.addEventListener("scroll", handleScroll, { passive: true })
     return () => container.removeEventListener("scroll", handleScroll)
   }, [isLoading])
-
-  const fetchAllWords = useCallback(async () => {
-    setIsLoading(true)
-    try {
-      const response = await fetch(`/api/gallery?limit=500`)
-      if (response.ok) {
-        const data = await response.json()
-        setWords(data.words)
-      }
-    } catch (error) {
-      console.error("Failed to fetch gallery words:", error)
-    } finally {
-      setIsLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchAllWords()
-  }, [fetchAllWords])
 
   const shuffledWords = useMemo(() => {
     const sorted = [...words].sort((a, b) => a.normalized.localeCompare(b.normalized))

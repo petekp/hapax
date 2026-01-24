@@ -82,15 +82,14 @@ export async function GET(request: Request) {
         const hasMore = startIndex + limit < filteredKeys.length;
         const nextCursor = hasMore ? String(startIndex + limit) : null;
 
-        const entries: GalleryWordEntry[] = [];
-        for (const normalized of paginatedKeys) {
-          const entry = await kv.get<GalleryWordEntry>(
-            `${GALLERY_PREFIX}${normalized}`
-          );
-          if (entry) {
-            entries.push(entry);
-          }
-        }
+        const entryResults = await Promise.all(
+          paginatedKeys.map((normalized) =>
+            kv.get<GalleryWordEntry>(`${GALLERY_PREFIX}${normalized}`)
+          )
+        );
+        const entries = entryResults.filter(
+          (entry): entry is GalleryWordEntry => entry !== null
+        );
 
         return NextResponse.json({
           words: entries,
