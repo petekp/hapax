@@ -56,21 +56,28 @@ export const MasonryWord = memo(function MasonryWord({
       return
     }
 
-    const viewportCenterX = window.innerWidth / 2
-    const viewportCenterY = window.innerHeight / 2
-    const rect = element.getBoundingClientRect()
-    const elementCenterX = rect.left + rect.width / 2
-    const elementCenterY = rect.top + rect.height / 2
-    const distance = Math.sqrt(
-      (elementCenterX - viewportCenterX) ** 2 +
-      (elementCenterY - viewportCenterY) ** 2
-    )
+    const calculateDelay = () => {
+      const viewportCenterX = window.innerWidth / 2
+      const viewportCenterY = window.innerHeight / 2
+      const rect = element.getBoundingClientRect()
+      const elementCenterX = rect.left + rect.width / 2
+      const elementCenterY = rect.top + rect.height / 2
+      const distance = Math.sqrt(
+        (elementCenterX - viewportCenterX) ** 2 +
+        (elementCenterY - viewportCenterY) ** 2
+      )
 
-    const maxDistance = Math.sqrt(viewportCenterX ** 2 + viewportCenterY ** 2)
-    const normalizedDistance = Math.min(distance / maxDistance, 1)
-    const delay = tuning.rippleBaseDelay + normalizedDistance * tuning.rippleDelayRange
+      const maxDistance = Math.sqrt(viewportCenterX ** 2 + viewportCenterY ** 2)
+      const normalizedDistance = Math.min(distance / maxDistance, 1)
+      return tuning.rippleBaseDelay + normalizedDistance * tuning.rippleDelayRange
+    }
 
-    setRippleDelay(delay)
+    // Defer calculation to ensure scroll restoration has completed
+    const rafId = requestAnimationFrame(() => {
+      setRippleDelay(calculateDelay())
+    })
+
+    return () => cancelAnimationFrame(rafId)
   }, [tuning.rippleEnabled, tuning.rippleBaseDelay, tuning.rippleDelayRange, tuning.staggerDelay, index, prefersReducedMotion])
 
   const entranceDelay = rippleDelay ?? index * tuning.staggerDelay
