@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback, useRef, memo } from "react"
+import { useState, useEffect, useLayoutEffect, useCallback, useRef, memo } from "react"
 import { motion } from "motion/react"
 import type { FontVariant } from "@/lib/schemas"
 import { deriveColor } from "@/lib/color"
@@ -41,6 +41,39 @@ export const MasonryWord = memo(function MasonryWord({
   const layoutId = `word-${word.toLowerCase()}`
   const isThisWordSelected = selectedWord?.toLowerCase() === word.toLowerCase()
   const shouldHide = isOpen && !isClosing && isThisWordSelected
+
+  const [rippleDelay, setRippleDelay] = useState<number | null>(null)
+
+  useLayoutEffect(() => {
+    if (!tuning.rippleEnabled || prefersReducedMotion) {
+      setRippleDelay(index * tuning.staggerDelay)
+      return
+    }
+
+    const element = elementRef.current
+    if (!element) {
+      setRippleDelay(index * tuning.staggerDelay)
+      return
+    }
+
+    const viewportCenterX = window.innerWidth / 2
+    const viewportCenterY = window.innerHeight / 2
+    const rect = element.getBoundingClientRect()
+    const elementCenterX = rect.left + rect.width / 2
+    const elementCenterY = rect.top + rect.height / 2
+    const distance = Math.sqrt(
+      (elementCenterX - viewportCenterX) ** 2 +
+      (elementCenterY - viewportCenterY) ** 2
+    )
+
+    const maxDistance = Math.sqrt(viewportCenterX ** 2 + viewportCenterY ** 2)
+    const normalizedDistance = Math.min(distance / maxDistance, 1)
+    const delay = tuning.rippleBaseDelay + normalizedDistance * tuning.rippleDelayRange
+
+    setRippleDelay(delay)
+  }, [tuning.rippleEnabled, tuning.rippleBaseDelay, tuning.rippleDelayRange, tuning.staggerDelay, index, prefersReducedMotion])
+
+  const entranceDelay = rippleDelay ?? index * tuning.staggerDelay
 
   useEffect(() => {
     const element = elementRef.current
@@ -130,21 +163,36 @@ export const MasonryWord = memo(function MasonryWord({
             willChange: "translate",
             visibility: shouldHide ? "hidden" : "visible",
           }}
-          initial={{ opacity: 0 }}
+          initial={{
+            opacity: 0,
+            scale: tuning.rippleEnabled ? tuning.rippleScaleFrom : 1,
+          }}
           animate={{
             opacity: fontLoaded ? depthOpacity : 0,
+            scale: 1,
             filter: fontLoaded ? "blur(0px)" : `blur(${tuning.initialBlur}px)`,
           }}
           transition={{
-            duration: prefersReducedMotion ? 0 : tuning.fadeInDuration,
-            delay: prefersReducedMotion ? 0 : index * tuning.staggerDelay,
+            opacity: {
+              duration: prefersReducedMotion ? 0 : tuning.fadeInDuration,
+              delay: prefersReducedMotion ? 0 : entranceDelay,
+            },
+            scale: tuning.rippleEnabled && !prefersReducedMotion ? {
+              type: "spring",
+              stiffness: tuning.rippleSpringStiffness,
+              damping: tuning.rippleSpringDamping,
+              delay: entranceDelay,
+            } : { duration: 0 },
+            filter: {
+              duration: prefersReducedMotion ? 0 : tuning.fadeInDuration,
+              delay: prefersReducedMotion ? 0 : entranceDelay,
+            },
             layout: {
               type: "spring",
               stiffness: tuning.overlaySpringStiffness,
               damping: tuning.overlaySpringDamping,
               mass: tuning.overlaySpringMass,
             },
-            opacity: { duration: 0 },
           }}
           whileHover={fontLoaded && !prefersReducedMotion && !isOpen ? { scale: tuning.hoverScale } : undefined}
           whileTap={fontLoaded && !prefersReducedMotion && !isOpen ? { scale: tuning.tapScale } : undefined}

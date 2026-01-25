@@ -43,6 +43,14 @@ export interface TuningValues {
   initialBlur: number
   staggerDelay: number
 
+  // Ripple Animation
+  rippleEnabled: boolean
+  rippleBaseDelay: number
+  rippleDelayRange: number
+  rippleScaleFrom: number
+  rippleSpringStiffness: number
+  rippleSpringDamping: number
+
   // Intersection Observer
   visibilityMargin: number
 
@@ -108,6 +116,14 @@ export const tuningDefaults: TuningValues = {
   fadeInDuration: 0.4,
   initialBlur: 0,
   staggerDelay: 0.008,
+
+  // Ripple Animation
+  rippleEnabled: true,
+  rippleBaseDelay: 0,
+  rippleDelayRange: 0.5,
+  rippleScaleFrom: 0.92,
+  rippleSpringStiffness: 100,
+  rippleSpringDamping: 12,
 
   // Intersection Observer
   visibilityMargin: 100,
