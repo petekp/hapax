@@ -4,6 +4,7 @@ import { useEffect, useCallback, useRef, useState } from "react"
 import { motion, AnimatePresence } from "motion/react"
 import { useOverlay } from "./overlay-context"
 import { OverlayContent } from "./overlay-content"
+import { BackButton } from "@/components/back-button"
 import { useActiveColor } from "@/lib/active-color-context"
 import { useTuning } from "@/components/gallery/masonry/tuning-context"
 import { useReducedMotion } from "@/hooks/use-reduced-motion"
@@ -102,33 +103,14 @@ export function WordOverlay() {
             animate={{ opacity: 1, pointerEvents: "auto" as const }}
             exit={{ opacity: 0, pointerEvents: "none" as const, transition: { duration: contentFadeOutDuration } }}
           >
-            <motion.button
+            <BackButton
               onClick={handleClose}
-              className="fixed left-0 top-0 h-full z-10 flex items-center justify-start pl-4 transition-colors duration-200 cursor-pointer"
-              style={{
-                width: "max(4rem, calc(50vw - 24rem - 1.5rem))",
-                color: backArrowColor,
-              }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1, transition: { duration: backdropDuration, delay: backdropDuration * 0.5 } }}
-              exit={{ opacity: 0, transition: { duration: contentFadeOutDuration * 0.5 } }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#ffffff")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = backArrowColor)}
-              aria-label="Close"
-            >
-              <svg
-                width="28"
-                height="28"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M19 12H5M12 19l-7-7 7-7" />
-              </svg>
-            </motion.button>
+              color={backArrowColor}
+              fadeIn
+              fadeInDuration={backdropDuration}
+              fadeInDelay={backdropDuration * 0.5}
+              fadeOutDuration={contentFadeOutDuration * 0.5}
+            />
 
             <div className="flex flex-col items-center pt-32 pb-48 min-h-screen">
               <div className="text-center mb-4">

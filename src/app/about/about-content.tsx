@@ -1,7 +1,8 @@
 "use client"
 
-import Link from "next/link"
 import { motion } from "motion/react"
+import Link from "next/link"
+import { BackButtonLink } from "@/components/back-button"
 
 const HAPAX_STYLE = {
   family: "IM Fell DW Pica",
@@ -17,26 +18,7 @@ export function AboutContent() {
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica:ital@1&display=swap"
       />
-      <header className="fixed top-0 left-0 p-4 z-10">
-        <Link
-          href="/"
-          className="flex items-center justify-center w-12 h-12 transition-colors duration-200 text-zinc-500 hover:text-zinc-300"
-          aria-label="Back to home"
-        >
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M19 12H5M12 19l-7-7 7-7" />
-          </svg>
-        </Link>
-      </header>
+      <BackButtonLink />
 
       <main className="flex flex-col items-center px-6 pt-32 pb-24">
         <motion.div
