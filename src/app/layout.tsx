@@ -26,7 +26,7 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://hapax.app"),
+  metadataBase: new URL("https://hapax.ink"),
   title: {
     default: "Hapax — A Cabinet of Rare Words",
     template: "%s — Hapax",
@@ -64,7 +64,7 @@ const websiteSchema = {
   "@type": "WebSite",
   name: "Hapax",
   description: "A cabinet of rare words, where each word is styled with its own unique font and color palette.",
-  url: "https://hapax.app",
+  url: "https://hapax.ink",
   author: {
     "@type": "Person",
     name: "Peter Petrash",

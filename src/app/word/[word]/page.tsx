@@ -51,7 +51,7 @@ function generateDefinedTermSchema(word: string, description: string, pronunciat
     inDefinedTermSet: {
       "@type": "DefinedTermSet",
       name: "Hapax — A Cabinet of Rare Words",
-      url: "https://hapax.app",
+      url: "https://hapax.ink",
     },
   }
 }

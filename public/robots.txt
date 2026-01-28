@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://hapax.app/sitemap.xml
+Sitemap: https://hapax.ink/sitemap.xml

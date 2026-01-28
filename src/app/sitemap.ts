@@ -26,7 +26,7 @@ function getVettedStylesModifiedDate(): Date {
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://hapax.app"
+  const baseUrl = "https://hapax.ink"
   const words = getAllVettedWords()
   const vettedStylesModified = getVettedStylesModifiedDate()
 
