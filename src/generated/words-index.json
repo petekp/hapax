@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-01-23T16:48:19.452Z",
+  "generatedAt": "2026-01-28T03:32:55.133Z",
   "words": {
     "abraxas": {
       "family": "Cinzel",
@@ -160,16 +160,6 @@
         "hue": 185,
         "chroma": 0.18,
         "lightness": 42
-      }
-    },
-    "ballyhoo": {
-      "family": "Rowdies",
-      "weight": 700,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 48,
-        "chroma": 0.32,
-        "lightness": 68
       }
     },
     "bathos": {
@@ -460,16 +450,6 @@
         "hue": 320,
         "chroma": 0.18,
         "lightness": 68
-      }
-    },
-    "columnar": {
-      "family": "Stint Ultra Condensed",
-      "weight": 400,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 45,
-        "chroma": 0.08,
-        "lightness": 58
       }
     },
     "compos mentis": {

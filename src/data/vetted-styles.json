@@ -651,16 +651,6 @@
         "lightness": 38
       }
     },
-    "ballyhoo": {
-      "family": "Rowdies",
-      "weight": 700,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 48,
-        "chroma": 0.32,
-        "lightness": 68
-      }
-    },
     "truculent": {
       "family": "Big Shoulders",
       "weight": 900,
@@ -1709,16 +1699,6 @@
         "hue": 228,
         "chroma": 0.12,
         "lightness": 52
-      }
-    },
-    "columnar": {
-      "family": "Stint Ultra Condensed",
-      "weight": 400,
-      "style": "normal",
-      "colorIntent": {
-        "hue": 45,
-        "chroma": 0.08,
-        "lightness": 58
       }
     },
     "scintilla": {
