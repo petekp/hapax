@@ -7,7 +7,7 @@ import { OverlayContent } from "./overlay-content"
 import { useActiveColor } from "@/lib/active-color-context"
 import { useTuning } from "@/components/gallery/masonry/tuning-context"
 import { useReducedMotion } from "@/hooks/use-reduced-motion"
-import { deriveColor, deriveTintedMutedColorHex, deriveHoverColorHex } from "@/lib/color"
+import { deriveColor, deriveTintedMutedColorHex } from "@/lib/color"
 import { getFontLoader } from "@/lib/font-loader"
 
 function calculateOverlayFontSize(wordLength: number): string {
@@ -75,7 +75,6 @@ export function WordOverlay() {
   const contentFadeOutDuration = prefersReducedMotion ? 0 : tuning.overlayContentFadeOut / 1000
 
   const backArrowColor = variant ? deriveTintedMutedColorHex(variant.colorIntent) : "#71717a"
-  const hoverColorHex = variant ? deriveHoverColorHex(variant.colorIntent) : "#a1a1aa"
 
   const layoutId = selectedWord ? `word-${selectedWord.toLowerCase()}` : undefined
   const color = variant ? deriveColor(variant.colorIntent, "dark") : "transparent"
@@ -103,29 +102,33 @@ export function WordOverlay() {
             animate={{ opacity: 1, pointerEvents: "auto" as const }}
             exit={{ opacity: 0, pointerEvents: "none" as const, transition: { duration: contentFadeOutDuration } }}
           >
-            <header className="fixed top-0 left-0 p-4 z-10">
-              <button
-                onClick={handleClose}
-                className="flex items-center justify-center w-12 h-12 transition-colors duration-200"
-                style={{ color: backArrowColor }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = hoverColorHex)}
-                onMouseLeave={(e) => (e.currentTarget.style.color = backArrowColor)}
-                aria-label="Close"
+            <motion.button
+              onClick={handleClose}
+              className="fixed left-0 top-0 h-full z-10 flex items-center justify-start pl-4 transition-colors duration-200 cursor-pointer"
+              style={{
+                width: "max(4rem, calc(50vw - 24rem - 1.5rem))",
+                color: backArrowColor,
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { duration: backdropDuration, delay: backdropDuration * 0.5 } }}
+              exit={{ opacity: 0, transition: { duration: contentFadeOutDuration * 0.5 } }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "#ffffff")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = backArrowColor)}
+              aria-label="Close"
+            >
+              <svg
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
-                <svg
-                  width="28"
-                  height="28"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M19 12H5M12 19l-7-7 7-7" />
-                </svg>
-              </button>
-            </header>
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+              </svg>
+            </motion.button>
 
             <div className="flex flex-col items-center pt-32 pb-48 min-h-screen">
               <div className="text-center mb-4">

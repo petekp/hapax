@@ -5,7 +5,7 @@ import { motion, useInView } from "motion/react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import type { FontVariant } from "@/lib/schemas"
-import { deriveColor, deriveTintedTextColor, deriveTintedMutedColor, deriveTintedMutedColorHex, deriveHoverColorHex } from "@/lib/color"
+import { deriveColor, deriveTintedTextColor, deriveTintedMutedColor, deriveTintedMutedColorHex } from "@/lib/color"
 import { useActiveColor } from "@/lib/active-color-context"
 import { getFontLoader } from "@/lib/font-loader"
 import { useReducedMotion } from "@/hooks/use-reduced-motion"
@@ -577,7 +577,6 @@ export default function WordPage({ word, initialContent }: WordPageProps) {
   const ready = definitionLoaded && fontLoaded
   const textColor = ready ? deriveTintedTextColor(variant.colorIntent) : undefined
   const mutedColor = ready ? deriveTintedMutedColor(variant.colorIntent) : undefined
-  const hoverColorHex = ready ? deriveHoverColorHex(variant.colorIntent) : "#a1a1aa"
   const backArrowColor = ready ? deriveTintedMutedColorHex(variant.colorIntent) : "#71717a"
 
   return (
@@ -587,30 +586,33 @@ export default function WordPage({ word, initialContent }: WordPageProps) {
         animate={{ backgroundColor: tintColors.bg }}
         transition={{ type: "spring", stiffness: 100, damping: 30 }}
       >
-        <header className="fixed top-0 left-0 p-4 z-10">
-          <Link
-            href="/"
-            onClick={handleBackClick}
-            className="flex items-center justify-center w-12 h-12 transition-colors duration-200"
-            style={{ color: backArrowColor, opacity: isExiting ? 0 : 1, transition: "opacity 200ms ease-out" }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = hoverColorHex)}
-            onMouseLeave={(e) => (e.currentTarget.style.color = backArrowColor)}
-            aria-label="Back to home"
+        <Link
+          href="/"
+          onClick={handleBackClick}
+          className="fixed left-0 top-0 h-full z-10 flex items-center justify-start pl-4 transition-colors duration-200 cursor-pointer"
+          style={{
+            width: "max(4rem, calc(50vw - 24rem - 1.5rem))",
+            color: backArrowColor,
+            opacity: isExiting ? 0 : 1,
+            transition: "opacity 200ms ease-out, color 200ms ease-out",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "#ffffff")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = backArrowColor)}
+          aria-label="Back to home"
+        >
+          <svg
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
-            <svg
-              width="28"
-              height="28"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-          </Link>
-        </header>
+            <path d="M19 12H5M12 19l-7-7 7-7" />
+          </svg>
+        </Link>
 
       <main className="flex flex-col items-center px-6 pt-32 pb-48">
         <motion.div
@@ -630,7 +632,7 @@ export default function WordPage({ word, initialContent }: WordPageProps) {
           >
           {(partOfSpeech || phonetic) && (
             <p
-              className="text-[length:var(--text-fluid-caption)] font-light tracking-[0.15em] mb-28 transition-colors duration-700"
+              className="text-[length:var(--text-fluid-caption)] font-light tracking-[0.15em] mb-28 transition-colors duration-700 text-center"
               style={{ color: mutedColor || "var(--tint-muted)", opacity: 0.8, fontFamily: "var(--font-serif), Georgia, serif" }}
             >
               {partOfSpeech && (
