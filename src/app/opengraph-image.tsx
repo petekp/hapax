@@ -78,32 +78,39 @@ async function fetchGoogleFont(
   }
 }
 
-// Rows of words mimicking the landing page marquee layout
-// Using reliable Google Fonts that render well in Satori
+// Chromatic gradient: warm amber (left) → cool violet (right)
+// Vignette effect: words near hapax are brighter, edge words are darker
+const CHROMA = 0.12 // Rich but not overwhelming
+
+// Hue gradient: 30 (warm amber) → 280 (violet) across horizontal position
 const ROWS = [
+  // Top row - darkest (edge)
   [
-    { word: "diaphanous", family: "Cormorant", weight: 300, style: "italic" as const, hue: 190, chroma: 0.18, lightness: 65 },
-    { word: "penumbra", family: "Cormorant Garamond", weight: 400, style: "italic" as const, hue: 45, chroma: 0.24, lightness: 65 },
-    { word: "numinous", family: "EB Garamond", weight: 400, style: "italic" as const, hue: 320, chroma: 0.18, lightness: 62 },
-    { word: "lithe", family: "Cormorant", weight: 400, style: "italic" as const, hue: 130, chroma: 0.20, lightness: 55 },
+    { word: "diaphanous", family: "Cormorant", weight: 300, style: "italic" as const, lightness: 24, hue: 30 },
+    { word: "penumbra", family: "Cormorant Garamond", weight: 400, style: "italic" as const, lightness: 28, hue: 340 },
+    { word: "numinous", family: "EB Garamond", weight: 400, style: "italic" as const, lightness: 26, hue: 280 },
+    { word: "lithe", family: "Cormorant", weight: 400, style: "italic" as const, lightness: 22, hue: 250 },
   ],
+  // Row with hapax - brightest neighbors
   [
-    { word: "incunabula", family: "EB Garamond", weight: 400, style: "italic" as const, hue: 35, chroma: 0.22, lightness: 58 },
-    { word: "hapax", family: "IM Fell DW Pica", weight: 400, style: "italic" as const, hue: 285, chroma: 0.20, lightness: 58 },
-    { word: "palimpsest", family: "Cormorant", weight: 300, style: "italic" as const, hue: 270, chroma: 0.20, lightness: 55 },
-    { word: "dulcet", family: "Cormorant Garamond", weight: 400, style: "italic" as const, hue: 355, chroma: 0.22, lightness: 58 },
+    { word: "incunabula", family: "EB Garamond", weight: 400, style: "italic" as const, lightness: 35, hue: 35 },
+    { word: "hapax", family: "IM Fell DW Pica", weight: 400, style: "italic" as const, lightness: 100, hue: 0 },
+    { word: "palimpsest", family: "Cormorant", weight: 300, style: "italic" as const, lightness: 35, hue: 270 },
+    { word: "dulcet", family: "Cormorant Garamond", weight: 400, style: "italic" as const, lightness: 30, hue: 320 },
   ],
+  // Middle row - medium brightness
   [
-    { word: "aureate", family: "EB Garamond", weight: 400, style: "italic" as const, hue: 50, chroma: 0.24, lightness: 68 },
-    { word: "mellifluous", family: "Cormorant Garamond", weight: 400, style: "italic" as const, hue: 25, chroma: 0.22, lightness: 62 },
-    { word: "oneiric", family: "Cormorant", weight: 300, style: "italic" as const, hue: 200, chroma: 0.18, lightness: 62 },
-    { word: "revenant", family: "EB Garamond", weight: 400, style: "italic" as const, hue: 8, chroma: 0.24, lightness: 55 },
+    { word: "aureate", family: "EB Garamond", weight: 400, style: "italic" as const, lightness: 30, hue: 45 },
+    { word: "mellifluous", family: "Cormorant Garamond", weight: 400, style: "italic" as const, lightness: 36, hue: 25 },
+    { word: "oneiric", family: "Cormorant", weight: 300, style: "italic" as const, lightness: 32, hue: 220 },
+    { word: "revenant", family: "EB Garamond", weight: 400, style: "italic" as const, lightness: 26, hue: 350 },
   ],
+  // Bottom row - darkest (edge)
   [
-    { word: "sidereal", family: "Cormorant", weight: 400, style: "italic" as const, hue: 235, chroma: 0.20, lightness: 60 },
-    { word: "coruscate", family: "Cormorant Garamond", weight: 400, style: "italic" as const, hue: 160, chroma: 0.18, lightness: 55 },
-    { word: "susurrus", family: "EB Garamond", weight: 400, style: "italic" as const, hue: 95, chroma: 0.16, lightness: 55 },
-    { word: "eventide", family: "Cormorant", weight: 300, style: "italic" as const, hue: 280, chroma: 0.22, lightness: 55 },
+    { word: "sidereal", family: "Cormorant", weight: 400, style: "italic" as const, lightness: 22, hue: 240 },
+    { word: "coruscate", family: "Cormorant Garamond", weight: 400, style: "italic" as const, lightness: 26, hue: 160 },
+    { word: "susurrus", family: "EB Garamond", weight: 400, style: "italic" as const, lightness: 24, hue: 90 },
+    { word: "eventide", family: "Cormorant", weight: 300, style: "italic" as const, lightness: 20, hue: 280 },
   ],
 ]
 
@@ -169,7 +176,9 @@ export default async function Image() {
                 fontWeight: w.weight,
                 fontStyle: w.style,
                 fontSize: `${FONT_SIZE}px`,
-                color: oklchToHex(w.word === "hapax" ? w.lightness : w.lightness * 0.65, w.chroma, w.hue),
+                color: w.word === "hapax"
+                  ? "#ffffff"
+                  : oklchToHex(w.lightness, CHROMA, w.hue),
                 letterSpacing: "-0.01em",
                 lineHeight: 1.2,
               }}
