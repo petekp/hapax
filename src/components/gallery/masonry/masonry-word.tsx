@@ -176,23 +176,30 @@ export const MasonryWord = memo(function MasonryWord({
           }}
           animate={{
             opacity: fontLoaded ? depthOpacity : 0,
-            scale: 1,
+            scale: fontLoaded ? 1 : (tuning.rippleEnabled ? tuning.rippleScaleFrom : 1),
             filter: fontLoaded ? "blur(0px)" : `blur(${tuning.initialBlur}px)`,
           }}
           transition={{
-            opacity: {
-              duration: prefersReducedMotion ? 0 : tuning.fadeInDuration,
-              delay: prefersReducedMotion ? 0 : entranceDelay,
+            opacity: prefersReducedMotion ? { duration: 0 } : {
+              type: "spring",
+              stiffness: tuning.rippleSpringStiffness,
+              damping: tuning.rippleSpringDamping,
+              delay: entranceDelay,
+              restDelta: 0.0005,
             },
             scale: tuning.rippleEnabled && !prefersReducedMotion ? {
               type: "spring",
               stiffness: tuning.rippleSpringStiffness,
               damping: tuning.rippleSpringDamping,
               delay: entranceDelay,
+              restDelta: 0.0005,
             } : { duration: 0 },
-            filter: {
-              duration: prefersReducedMotion ? 0 : tuning.fadeInDuration,
-              delay: prefersReducedMotion ? 0 : entranceDelay,
+            filter: prefersReducedMotion ? { duration: 0 } : {
+              type: "spring",
+              stiffness: tuning.rippleSpringStiffness,
+              damping: tuning.rippleSpringDamping,
+              delay: entranceDelay,
+              restDelta: 0.0005,
             },
             layout: {
               type: "spring",

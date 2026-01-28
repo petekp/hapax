@@ -121,16 +121,16 @@ export const tuningDefaults: TuningValues = {
   rippleEnabled: true,
   rippleBaseDelay: 0,
   rippleDelayRange: 0.5,
-  rippleScaleFrom: 0.92,
-  rippleSpringStiffness: 100,
-  rippleSpringDamping: 12,
+  rippleScaleFrom: 0.96,
+  rippleSpringStiffness: 35,
+  rippleSpringDamping: 18,
 
   // Intersection Observer
   visibilityMargin: 100,
 
   // Page Transitions
   viewTransitionDuration: 250,
-  bgColorFadeDuration: 200,
+  bgColorFadeDuration: 500,
   bgColorHoldDuration: 1500,
   returnWordScale: 1.4,
   returnWordDuration: 1,

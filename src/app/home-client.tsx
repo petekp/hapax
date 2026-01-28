@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { LayoutGroup } from "motion/react"
+import { LayoutGroup, motion } from "motion/react"
 import { MasonryGallery } from "@/components/gallery"
 import { OverlayProvider, WordOverlay, useOverlay } from "@/components/word-overlay"
 import { useActiveColor } from "@/lib/active-color-context"
@@ -36,15 +36,18 @@ function HomeContent() {
 
   return (
     <LayoutGroup>
-      <div
-        className="fixed inset-0 transition-colors ease-out"
-        style={{
-          backgroundColor: tintColors.bg,
-          transitionDuration: `${tuning.bgColorFadeDuration}ms`,
+      <motion.div
+        className="fixed inset-0"
+        animate={{ backgroundColor: tintColors.bg }}
+        transition={{
+          type: "spring",
+          stiffness: tuning.rippleSpringStiffness,
+          damping: tuning.rippleSpringDamping,
+          restDelta: 0.0005,
         }}
       >
         <MasonryGallery colorMode="dark" />
-      </div>
+      </motion.div>
       <WordOverlay />
     </LayoutGroup>
   )
