@@ -54,7 +54,7 @@ export function AboutContent() {
           </h1>
 
           <div
-            className="space-y-8 text-[clamp(1.1rem,2.5vw,1.35rem)] leading-[1.8] text-zinc-400"
+            className="space-y-8 text-[length:var(--text-fluid-body)] leading-[1.8] text-zinc-400"
             style={{ fontFamily: "var(--font-serif), Georgia, serif" }}
           >
             <p>
@@ -92,7 +92,7 @@ export function AboutContent() {
               Fonts to find a typeface that fits.
             </p>
 
-            <blockquote className="text-zinc-500 italic border-l-2 border-zinc-700 pl-6 mt-12">
+            <blockquote className="text-zinc-500 italic border-l-2 border-zinc-700 pl-6 mt-12 leading-[1.5]">
               "The limits of my language mean the limits of my world."
               <footer className="mt-2 text-zinc-600 not-italic text-[0.9em]">
                 — Ludwig Wittgenstein

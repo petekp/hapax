@@ -14,7 +14,7 @@ export function Footer() {
       <div className="flex justify-center items-center gap-6 py-6 pointer-events-auto">
         <Link
           href="/about"
-          className="text-base tracking-wide transition-colors duration-300 text-zinc-500 hover:text-zinc-300"
+          className="text-[length:var(--text-fluid-sm)] tracking-wide transition-colors duration-300 text-zinc-500 hover:text-zinc-300"
           style={{ fontFamily: "var(--font-serif), Georgia, serif" }}
         >
           About
@@ -24,7 +24,7 @@ export function Footer() {
           href={GITHUB_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-base tracking-wide transition-colors duration-300 text-zinc-500 hover:text-zinc-300"
+          className="text-[length:var(--text-fluid-sm)] tracking-wide transition-colors duration-300 text-zinc-500 hover:text-zinc-300"
           style={{ fontFamily: "var(--font-serif), Georgia, serif" }}
         >
           GitHub
@@ -34,7 +34,7 @@ export function Footer() {
           href={X_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-base tracking-wide transition-colors duration-300 text-zinc-500 hover:text-zinc-300"
+          className="text-[length:var(--text-fluid-sm)] tracking-wide transition-colors duration-300 text-zinc-500 hover:text-zinc-300"
           style={{ fontFamily: "var(--font-serif), Georgia, serif" }}
         >
           X

@@ -49,7 +49,7 @@ function SectionHeading({
   return (
     <div className="max-w-3xl mx-auto pt-16">
       <h2
-        className="text-[18px] uppercase tracking-wider mb-8 pb-4 transition-colors duration-700 text-balance border-b"
+        className="text-[length:var(--text-fluid-sm)] uppercase tracking-widest mb-8 pb-4 transition-colors duration-700 text-balance border-b"
         style={{
           color: mutedColor || "var(--tint-muted)",
           borderBottomColor: `color-mix(in oklch, ${mutedColor || "var(--tint-muted)"} 50%, transparent)`,

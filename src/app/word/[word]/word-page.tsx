@@ -6,6 +6,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import type { FontVariant } from "@/lib/schemas"
 import { deriveColor, deriveTintedTextColor, deriveTintedMutedColor, deriveTintedMutedColorHex } from "@/lib/color"
+import { hashString } from "@/lib/hash"
 import { useActiveColor } from "@/lib/active-color-context"
 import { getFontLoader } from "@/lib/font-loader"
 import { useReducedMotion } from "@/hooks/use-reduced-motion"
@@ -156,17 +157,6 @@ const letterAnimations: LetterAnimation[] = [
     },
   },
 ]
-
-// Simple hash function to get deterministic animation per word
-function hashString(str: string): number {
-  let hash = 0
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i)
-    hash = ((hash << 5) - hash) + char
-    hash = hash & hash
-  }
-  return Math.abs(hash)
-}
 
 function calculateFluidFontSize(wordLength: number): string {
   // Available width: viewport minus padding (3rem on each side = 6rem total)
@@ -329,11 +319,12 @@ export default function WordPage({ word, initialContent }: WordPageProps) {
     })
   }, [word])
 
+  const colorIntent = initialContent?.frontmatter.style.colorIntent
   useEffect(() => {
-    if (initialContent) {
-      setActiveColor(initialContent.frontmatter.style.colorIntent, "deep")
+    if (colorIntent) {
+      setActiveColor(colorIntent, "deep")
     }
-  }, [initialContent, setActiveColor])
+  }, [colorIntent, setActiveColor])
 
   const fallbackVariant: FontVariant = {
     family: "Inter",
@@ -410,7 +401,7 @@ export default function WordPage({ word, initialContent }: WordPageProps) {
           >
           {(partOfSpeech || phonetic) && (
             <p
-              className="text-[length:var(--text-fluid-caption)] font-light tracking-[0.15em] mb-28 transition-colors duration-700 text-center"
+              className="text-[length:var(--text-fluid-caption)] font-light tracking-widest mb-28 transition-colors duration-700 text-center"
               style={{ color: mutedColor || "var(--tint-muted)", opacity: 0.8, fontFamily: "var(--font-serif), Georgia, serif" }}
             >
               {partOfSpeech && (
@@ -447,7 +438,7 @@ export default function WordPage({ word, initialContent }: WordPageProps) {
                       <ol className="space-y-10">
                         {meaning.definitions.slice(0, 3).map((def, j) => (
                           <li key={j} className="flex gap-7">
-                            <span className="font-sans text-zinc-600 text-[1.4rem] tabular-nums flex-shrink-0 pt-1 select-none">
+                            <span className="font-sans text-zinc-600 text-[length:var(--text-fluid-base)] tabular-nums flex-shrink-0 pt-1 select-none">
                               {j + 1}.
                             </span>
 
