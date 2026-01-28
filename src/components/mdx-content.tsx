@@ -66,14 +66,16 @@ function SectionHeading({
 function SectionParagraph({
   content,
   textColor,
+  isFirst = false,
 }: {
   content: string
   textColor?: string
+  isFirst?: boolean
 }) {
   return (
     <div className="max-w-3xl mx-auto">
       <p
-        className="text-[length:var(--text-fluid-body)] leading-[1.8] font-normal transition-colors duration-700 text-pretty"
+        className={`text-[length:var(--text-fluid-body)] leading-[1.8] font-normal transition-colors duration-700 text-pretty ${isFirst ? "drop-cap" : ""}`}
         style={{ color: textColor || "var(--tint-text)" }}
       >
         {formatInlineMarkdown(content)}
@@ -89,10 +91,15 @@ function SectionBlockquote({
   content: string
   mutedColor?: string
 }) {
+  const hasQuotes = content.startsWith('"') || content.startsWith('"') || content.startsWith("'")
+
   return (
     <blockquote
       className="max-w-5xl mx-auto py-12 md:py-16 lg:py-20 text-[length:var(--text-fluid-quote)] leading-[1.3] transition-colors duration-700 text-balance text-center typography-display"
-      style={{ color: mutedColor || "var(--tint-muted)" }}
+      style={{
+        color: mutedColor || "var(--tint-muted)",
+        textIndent: hasQuotes ? "-0.4em" : undefined,
+      }}
     >
       {formatInlineMarkdown(content)}
     </blockquote>
@@ -202,12 +209,17 @@ export function MdxContent({
     () => computeRelatedWordsIndices(sections),
     [sections]
   )
+  const firstParagraphIndex = useMemo(
+    () => sections.findIndex((s) => s.type === "paragraph"),
+    [sections]
+  )
 
   return (
     <div className="space-y-8">
       {sections.map((section, i) => {
         const delay = i * 0.05
         const isRelatedWordsList = relatedWordsIndices.has(i)
+        const isFirstParagraph = i === firstParagraphIndex
 
         if (section.type === "heading" && section.level === 2) {
           return (
@@ -220,7 +232,7 @@ export function MdxContent({
         if (section.type === "paragraph") {
           return (
             <ScrollRevealSection key={i} reducedMotion={reducedMotion} delay={delay}>
-              <SectionParagraph content={section.content} textColor={textColor} />
+              <SectionParagraph content={section.content} textColor={textColor} isFirst={isFirstParagraph} />
             </ScrollRevealSection>
           )
         }

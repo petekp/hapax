@@ -211,6 +211,29 @@
   text-rendering: optimizeLegibility;
 }
 
+/* Drop cap using modern initial-letter with float fallback */
+.drop-cap::first-letter {
+  font-family: var(--font-serif), Georgia, serif;
+  font-weight: 300;
+  font-size: 4em;
+  float: left;
+  line-height: 0.75;
+  margin-left: -0.03em;
+  margin-right: 0.1em;
+  margin-top: 0.02em;
+}
+
+/* Modern browsers: use initial-letter for perfect alignment */
+@supports (initial-letter: 2) or (-webkit-initial-letter: 2) {
+  .drop-cap::first-letter {
+    float: none;
+    margin-left: -0.03em;
+    margin-right: 0.12em;
+    -webkit-initial-letter: 2;
+    initial-letter: 2;
+  }
+}
+
 /* Serif text benefits from optimizeLegibility */
 [style*="font-family"]:not([style*="sans"]) {
   text-rendering: optimizeLegibility;
@@ -292,6 +315,7 @@
   content-visibility: auto;
   contain-intrinsic-size: 0 100px;
 }
+
 
 /* Scroll-driven parallax animation */
 @keyframes scrollParallax {

@@ -430,9 +430,12 @@ export default function WordPage({ word, initialContent }: WordPageProps) {
                     <section>
                       {i > 0 && (
                         <div
-                          className="mb-16 h-px transition-colors duration-700"
-                          style={{ backgroundColor: mutedColor || "var(--tint-muted)", opacity: 0.2 }}
-                        />
+                          className="mb-16 flex justify-center transition-colors duration-700"
+                          style={{ color: mutedColor || "var(--tint-muted)", opacity: 0.3 }}
+                          aria-hidden="true"
+                        >
+                          <span className="text-lg tracking-[0.5em]">· · ·</span>
+                        </div>
                       )}
 
                       <ol className="space-y-10">
@@ -444,7 +447,7 @@ export default function WordPage({ word, initialContent }: WordPageProps) {
 
                             <div className="space-y-7">
                               <p
-                                className="text-[length:var(--text-fluid-body)] leading-[1.7] font-normal transition-colors duration-700 text-pretty"
+                                className={`text-[length:var(--text-fluid-body)] leading-[1.7] font-normal transition-colors duration-700 text-pretty ${i === 0 && j === 0 ? "drop-cap" : ""}`}
                                 style={{ color: textColor || "var(--tint-text)" }}
                               >
                                 {def.definition}

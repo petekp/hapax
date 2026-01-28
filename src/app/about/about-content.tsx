@@ -20,7 +20,7 @@ export function AboutContent() {
       />
       <BackButtonLink />
 
-      <main className="flex flex-col items-center px-6 pt-32 pb-24">
+      <main className="flex flex-col items-center px-6 pt-32 pb-48">
         <motion.div
           className="max-w-2xl mx-auto"
           initial={{ opacity: 0, y: 12 }}
@@ -92,9 +92,12 @@ export function AboutContent() {
               Fonts to find a typeface that fits.
             </p>
 
-            <blockquote className="text-zinc-500 italic border-l-2 border-zinc-700 pl-6 mt-12 leading-[1.5]">
+            <blockquote
+              className="text-zinc-500 italic border-l-2 border-zinc-700 pl-6 mt-12 leading-[1.5] text-[0.9em]"
+              style={{ textIndent: "-0.4em" }}
+            >
               "The limits of my language mean the limits of my world."
-              <footer className="mt-2 text-zinc-600 not-italic text-[0.9em]">
+              <footer className="mt-2 text-zinc-600 not-italic text-[0.85em]" style={{ textIndent: 0 }}>
                 — Ludwig Wittgenstein
               </footer>
             </blockquote>
