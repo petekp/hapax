@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useRef } from "react"
 import useSWR from "swr"
-import type { GalleryWordEntry, GalleryResponse } from "@/app/api/gallery/route"
+import type { GalleryResponse } from "@/app/api/gallery/route"
 import { hashString, seededRandom } from "@/lib/hash"
+import { orderByComplementaryHues } from "@/lib/color-ordering"
 import { MasonryWord } from "./masonry-word"
 import { MouseProvider } from "./mouse-context"
 import { useTuning } from "./tuning-context"
@@ -107,29 +108,9 @@ function MasonryGalleryInner({ colorMode = "dark" }: MasonryGalleryProps) {
     }
   }, [isLoading])
 
-  const shuffledWords = useMemo(() => {
-    const sorted = [...words].sort((a, b) => a.normalized.localeCompare(b.normalized))
-    const shuffled: GalleryWordEntry[] = []
-    const groups: Record<string, GalleryWordEntry[]> = {}
-
-    for (const word of sorted) {
-      const letter = word.normalized.charAt(0).toLowerCase()
-      if (!groups[letter]) groups[letter] = []
-      groups[letter].push(word)
-    }
-
-    const letters = Object.keys(groups).sort()
-    const maxLen = Math.max(...Object.values(groups).map(g => g.length))
-
-    for (let i = 0; i < maxLen; i++) {
-      for (const letter of letters) {
-        if (groups[letter][i]) {
-          shuffled.push(groups[letter][i])
-        }
-      }
-    }
-
-    return shuffled
+  const orderedWords = useMemo(() => {
+    if (words.length === 0) return []
+    return orderByComplementaryHues(words)
   }, [words])
 
   if (words.length === 0 && !isLoading) {
@@ -161,7 +142,7 @@ function MasonryGalleryInner({ colorMode = "dark" }: MasonryGalleryProps) {
             padding: `${tuning.paddingY}px ${tuning.paddingX}px`,
           }}
         >
-          {shuffledWords.map((entry, index) => (
+          {orderedWords.map((entry, index) => (
             <MasonryWord
               key={entry.normalized}
               word={entry.word}
