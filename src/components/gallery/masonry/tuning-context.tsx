@@ -93,10 +93,10 @@ export const tuningDefaults: TuningValues = {
   scrollRangeEnd: 100,
 
   // Parallax Depth
-  parallaxDepthMin: 0.4,
-  parallaxDepthMax: 2.2,
-  depthOpacityNear: 0.4,
-  depthOpacityFar: 1,
+  parallaxDepthMin: 0.0,
+  parallaxDepthMax: 4.0,
+  depthOpacityNear: 0.9,
+  depthOpacityFar: 0.2,
 
   // Hover/Tap
   hoverScale: 1.02,
@@ -106,7 +106,7 @@ export const tuningDefaults: TuningValues = {
   gapX: 40,
   gapY: 24,
   paddingX: 48,
-  paddingY: 144,
+  paddingY: 128,
 
   // Fade Mask
   maskFadeStart: 24,
