@@ -13,7 +13,9 @@
     "migrate-styles": "tsx scripts/migrate-styles.ts",
     "build-words-index": "tsx scripts/build-words-index.ts",
     "generate-definitions": "tsx scripts/generate-definitions.ts",
-    "merge-definitions": "tsx scripts/merge-definitions.ts"
+    "merge-definitions": "tsx scripts/merge-definitions.ts",
+    "sync-styles": "tsx scripts/sync-styles.ts",
+    "lint-styles": "tsx scripts/lint-styles.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.2",
