@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Cormorant_Garamond } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
+import { Analytics } from "@/components/analytics";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import { ActiveColorProvider } from "@/lib/active-color-context";
 import { DevToolsProvider } from "@/components/dev-tools-provider";

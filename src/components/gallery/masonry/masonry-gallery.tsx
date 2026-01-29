@@ -3,27 +3,13 @@
 import { useEffect, useMemo, useRef } from "react"
 import useSWR from "swr"
 import type { GalleryWordEntry, GalleryResponse } from "@/app/api/gallery/route"
+import { hashString, seededRandom } from "@/lib/hash"
 import { MasonryWord } from "./masonry-word"
 import { MouseProvider } from "./mouse-context"
 import { useTuning } from "./tuning-context"
 
 interface MasonryGalleryProps {
   colorMode?: "light" | "dark"
-}
-
-function hashString(str: string): number {
-  let hash = 0
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i)
-    hash = ((hash << 5) - hash) + char
-    hash = hash & hash
-  }
-  return Math.abs(hash)
-}
-
-function seededRandom(seed: number): number {
-  const state = (seed * 1103515245 + 12345) & 0x7fffffff
-  return state / 0x7fffffff
 }
 
 const FONT_SIZES = [
@@ -100,15 +86,25 @@ function MasonryGalleryInner({ colorMode = "dark" }: MasonryGalleryProps) {
     const container = scrollRef.current
     if (!container || isLoading) return
 
+    let timeoutId: ReturnType<typeof setTimeout> | null = null
+    let lastSavedPosition = 0
+
     const handleScroll = () => {
       const scrollTop = container.scrollTop
-      if (scrollTop > 0) {
-        sessionStorage.setItem(SCROLL_KEY, String(scrollTop))
+      if (scrollTop > 0 && Math.abs(scrollTop - lastSavedPosition) > 50) {
+        if (timeoutId) clearTimeout(timeoutId)
+        timeoutId = setTimeout(() => {
+          sessionStorage.setItem(SCROLL_KEY, String(scrollTop))
+          lastSavedPosition = scrollTop
+        }, 150)
       }
     }
 
     container.addEventListener("scroll", handleScroll, { passive: true })
-    return () => container.removeEventListener("scroll", handleScroll)
+    return () => {
+      container.removeEventListener("scroll", handleScroll)
+      if (timeoutId) clearTimeout(timeoutId)
+    }
   }, [isLoading])
 
   const shuffledWords = useMemo(() => {
