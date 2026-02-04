@@ -15,7 +15,8 @@ A gallery of rare words where each word has its own font and color palette.
 - `pnpm dev` - Development server
 - `pnpm build` - Production build
 - `pnpm lint` - ESLint check
-- `pnpm seed-gallery` - Populate gallery with styled words
+- `pnpm lint-styles` - Check color distribution and JSON/MDX sync
+- `pnpm sync-styles` - Sync `vetted-styles.json` → MDX frontmatter
 
 ## Structure
 
@@ -23,7 +24,9 @@ A gallery of rare words where each word has its own font and color palette.
 - `src/components/gallery/` - Gallery display components
 - `src/components/vibe-input/` - Dev tooling (not user-facing)
 - `src/lib/` - Font resolution, color derivation, caching
-- `src/data/vetted-styles.json` - Word-to-style mappings
+- `src/content/words/` - MDX word content (definitions, frontmatter)
+- `src/data/vetted-styles.json` - Word-to-style mappings (source of truth)
+- `src/components/gallery/masonry/tuning-context.tsx` - Animation parameters
 
 ## Key Concepts
 
@@ -31,12 +34,9 @@ A gallery of rare words where each word has its own font and color palette.
 
 **Color system:** OkLCH color space with hue (0-360°), chroma (0-0.4), lightness (30-90).
 
-**Data sources must stay in sync:**
-- `src/data/vetted-styles.json` - Gallery display, font preloading
-- `src/content/words/*.mdx` frontmatter - Word detail pages
-
 ## Patterns
 
 - Zod schemas define data types: `src/lib/schemas/hapax.ts`
 - Production serves from `vetted-styles.json` only (no LLM calls)
 - Dev-only routes gated with `NODE_ENV === "production"` check
+- Edit `vetted-styles.json`, then run `pnpm sync-styles` to update MDX

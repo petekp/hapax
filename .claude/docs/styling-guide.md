@@ -30,8 +30,8 @@ OkLCH color space:
 
 ## Updating Styles
 
-When changing a word's style, update **both**:
-1. `src/data/vetted-styles.json`
-2. `src/content/words/[word].mdx` frontmatter
+1. Edit `src/data/vetted-styles.json` (source of truth)
+2. Run `pnpm sync-styles` to propagate changes to MDX frontmatter
+3. Run `pnpm lint-styles` to verify sync and check color distribution
 
-The gallery reads from JSON; word pages read from MDX.
+The gallery reads from JSON; word pages read from MDX frontmatter.
