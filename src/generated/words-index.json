@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-03-01T16:29:52.806Z",
+  "generatedAt": "2026-03-01T17:27:13.393Z",
   "words": {
     "abraxas": {
       "family": "Cinzel",
@@ -8,7 +8,7 @@
       "style": "normal",
       "colorIntent": {
         "hue": 285,
-        "chroma": 0.18,
+        "chroma": 0.2,
         "lightness": 48
       }
     },
@@ -17,9 +17,9 @@
       "weight": 500,
       "style": "normal",
       "colorIntent": {
-        "hue": 255,
-        "chroma": 0.18,
-        "lightness": 48
+        "hue": 220,
+        "chroma": 0.15,
+        "lightness": 45
       }
     },
     "acedia": {
@@ -27,9 +27,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 310,
-        "chroma": 0.08,
-        "lightness": 42
+        "hue": 270,
+        "chroma": 0.05,
+        "lightness": 45
       }
     },
     "acephalous": {
@@ -37,9 +37,9 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 285,
-        "chroma": 0.08,
-        "lightness": 48
+        "hue": 60,
+        "chroma": 0.04,
+        "lightness": 65
       }
     },
     "acronychal": {
@@ -47,9 +47,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 258,
+        "hue": 280,
         "chroma": 0.18,
-        "lightness": 42
+        "lightness": 55
       }
     },
     "aeviternity": {
@@ -57,8 +57,8 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 280,
-        "chroma": 0.18,
+        "hue": 250,
+        "chroma": 0.2,
         "lightness": 55
       }
     },
@@ -67,9 +67,9 @@
       "weight": 500,
       "style": "italic",
       "colorIntent": {
-        "hue": 28,
+        "hue": 35,
         "chroma": 0.22,
-        "lightness": 48
+        "lightness": 55
       }
     },
     "alabaster": {
@@ -87,9 +87,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 348,
-        "chroma": 0.19,
-        "lightness": 48
+        "hue": 350,
+        "chroma": 0.22,
+        "lightness": 50
       }
     },
     "anaphora": {
@@ -97,9 +97,9 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 42,
-        "chroma": 0.22,
-        "lightness": 52
+        "hue": 45,
+        "chroma": 0.2,
+        "lightness": 55
       }
     },
     "antinomy": {
@@ -108,8 +108,8 @@
       "style": "normal",
       "colorIntent": {
         "hue": 265,
-        "chroma": 0.22,
-        "lightness": 42
+        "chroma": 0.2,
+        "lightness": 48
       }
     },
     "apoptosis": {
@@ -117,9 +117,9 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 270,
+        "hue": 145,
         "chroma": 0.12,
-        "lightness": 45
+        "lightness": 50
       }
     },
     "arabesque": {
@@ -127,9 +127,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 35,
-        "chroma": 0.18,
-        "lightness": 52
+        "hue": 38,
+        "chroma": 0.22,
+        "lightness": 55
       }
     },
     "argot": {
@@ -137,8 +137,8 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 315,
-        "chroma": 0.12,
+        "hue": 160,
+        "chroma": 0.1,
         "lightness": 42
       }
     },
@@ -147,9 +147,9 @@
       "weight": 300,
       "style": "normal",
       "colorIntent": {
-        "hue": 145,
-        "chroma": 0.12,
-        "lightness": 78
+        "hue": 200,
+        "chroma": 0.15,
+        "lightness": 72
       }
     },
     "athwart": {
@@ -159,7 +159,7 @@
       "colorIntent": {
         "hue": 185,
         "chroma": 0.18,
-        "lightness": 42
+        "lightness": 48
       }
     },
     "bathos": {
@@ -167,8 +167,8 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 310,
-        "chroma": 0.12,
+        "hue": 320,
+        "chroma": 0.08,
         "lightness": 42
       }
     },
@@ -177,8 +177,8 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 192,
-        "chroma": 0.12,
+        "hue": 195,
+        "chroma": 0.15,
         "lightness": 38
       }
     },
@@ -187,8 +187,8 @@
       "weight": 600,
       "style": "italic",
       "colorIntent": {
-        "hue": 45,
-        "chroma": 0.12,
+        "hue": 75,
+        "chroma": 0.1,
         "lightness": 38
       }
     },
@@ -197,9 +197,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 268,
+        "hue": 260,
         "chroma": 0.18,
-        "lightness": 52
+        "lightness": 55
       }
     },
     "blandishment": {
@@ -207,9 +207,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 345,
-        "chroma": 0.18,
-        "lightness": 58
+        "hue": 30,
+        "chroma": 0.2,
+        "lightness": 65
       }
     },
     "bodkin": {
@@ -217,8 +217,8 @@
       "weight": 500,
       "style": "normal",
       "colorIntent": {
-        "hue": 35,
-        "chroma": 0.12,
+        "hue": 215,
+        "chroma": 0.1,
         "lightness": 48
       }
     },
@@ -228,7 +228,7 @@
       "style": "normal",
       "colorIntent": {
         "hue": 42,
-        "chroma": 0.28,
+        "chroma": 0.25,
         "lightness": 62
       }
     },
@@ -237,9 +237,9 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 78,
+        "hue": 95,
         "chroma": 0.18,
-        "lightness": 52
+        "lightness": 50
       }
     },
     "bête noire": {
@@ -247,8 +247,8 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 12,
-        "chroma": 0.12,
+        "hue": 10,
+        "chroma": 0.15,
         "lightness": 35
       }
     },
@@ -257,9 +257,9 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 28,
-        "chroma": 0.3,
-        "lightness": 68
+        "hue": 30,
+        "chroma": 0.28,
+        "lightness": 65
       }
     },
     "cacodoxy": {
@@ -267,9 +267,9 @@
       "weight": 700,
       "style": "normal",
       "colorIntent": {
-        "hue": 295,
-        "chroma": 0.12,
-        "lightness": 38
+        "hue": 85,
+        "chroma": 0.15,
+        "lightness": 42
       }
     },
     "caesura": {
@@ -277,9 +277,9 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 278,
-        "chroma": 0.12,
-        "lightness": 55
+        "hue": 220,
+        "chroma": 0.08,
+        "lightness": 60
       }
     },
     "cairn": {
@@ -287,8 +287,8 @@
       "weight": 700,
       "style": "normal",
       "colorIntent": {
-        "hue": 175,
-        "chroma": 0.08,
+        "hue": 40,
+        "chroma": 0.06,
         "lightness": 48
       }
     },
@@ -297,9 +297,9 @@
       "weight": 700,
       "style": "normal",
       "colorIntent": {
-        "hue": 18,
+        "hue": 15,
         "chroma": 0.28,
-        "lightness": 38
+        "lightness": 42
       }
     },
     "calescence": {
@@ -307,9 +307,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 38,
+        "hue": 25,
         "chroma": 0.22,
-        "lightness": 58
+        "lightness": 60
       }
     },
     "calumny": {
@@ -317,9 +317,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 285,
+        "hue": 295,
         "chroma": 0.18,
-        "lightness": 42
+        "lightness": 38
       }
     },
     "camphor": {
@@ -327,9 +327,9 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 158,
-        "chroma": 0.12,
-        "lightness": 78
+        "hue": 155,
+        "chroma": 0.15,
+        "lightness": 72
       }
     },
     "cantrip": {
@@ -337,9 +337,9 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 285,
+        "hue": 300,
         "chroma": 0.22,
-        "lightness": 68
+        "lightness": 65
       }
     },
     "carbuncle": {
@@ -347,8 +347,8 @@
       "weight": 700,
       "style": "normal",
       "colorIntent": {
-        "hue": 10,
-        "chroma": 0.22,
+        "hue": 5,
+        "chroma": 0.25,
         "lightness": 38
       }
     },
@@ -357,9 +357,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 78,
-        "chroma": 0.11,
-        "lightness": 44
+        "hue": 80,
+        "chroma": 0.1,
+        "lightness": 45
       }
     },
     "catachresis": {
@@ -367,9 +367,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 288,
-        "chroma": 0.12,
-        "lightness": 42
+        "hue": 330,
+        "chroma": 0.18,
+        "lightness": 48
       }
     },
     "catafalque": {
@@ -377,9 +377,9 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 285,
-        "chroma": 0.12,
-        "lightness": 38
+        "hue": 280,
+        "chroma": 0.08,
+        "lightness": 35
       }
     },
     "celadon": {
@@ -387,8 +387,8 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 145,
-        "chroma": 0.12,
+        "hue": 155,
+        "chroma": 0.15,
         "lightness": 68
       }
     },
@@ -399,7 +399,7 @@
       "colorIntent": {
         "hue": 42,
         "chroma": 0.22,
-        "lightness": 52
+        "lightness": 58
       }
     },
     "chanticleer": {
@@ -407,9 +407,9 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 38,
+        "hue": 25,
         "chroma": 0.28,
-        "lightness": 52
+        "lightness": 55
       }
     },
     "chiaroscuro": {
@@ -417,9 +417,9 @@
       "weight": 500,
       "style": "italic",
       "colorIntent": {
-        "hue": 35,
+        "hue": 40,
         "chroma": 0.12,
-        "lightness": 38
+        "lightness": 45
       }
     },
     "chiasmus": {
@@ -427,7 +427,7 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 305,
+        "hue": 185,
         "chroma": 0.18,
         "lightness": 52
       }
@@ -437,7 +437,7 @@
       "weight": 800,
       "style": "normal",
       "colorIntent": {
-        "hue": 95,
+        "hue": 120,
         "chroma": 0.08,
         "lightness": 32
       }
@@ -447,9 +447,9 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 320,
-        "chroma": 0.18,
-        "lightness": 68
+        "hue": 340,
+        "chroma": 0.22,
+        "lightness": 62
       }
     },
     "compos mentis": {
@@ -457,9 +457,9 @@
       "weight": 500,
       "style": "normal",
       "colorIntent": {
-        "hue": 228,
-        "chroma": 0.12,
-        "lightness": 52
+        "hue": 225,
+        "chroma": 0.15,
+        "lightness": 55
       }
     },
     "concinnity": {
@@ -467,9 +467,9 @@
       "weight": 500,
       "style": "normal",
       "colorIntent": {
-        "hue": 285,
-        "chroma": 0.12,
-        "lightness": 52
+        "hue": 48,
+        "chroma": 0.18,
+        "lightness": 58
       }
     },
     "contretemps": {
@@ -477,8 +477,8 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 310,
-        "chroma": 0.18,
+        "hue": 350,
+        "chroma": 0.15,
         "lightness": 52
       }
     },
@@ -487,9 +487,9 @@
       "weight": 500,
       "style": "normal",
       "colorIntent": {
-        "hue": 38,
+        "hue": 35,
         "chroma": 0.18,
-        "lightness": 48
+        "lightness": 45
       }
     },
     "coronach": {
@@ -497,8 +497,8 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 278,
-        "chroma": 0.09,
+        "hue": 240,
+        "chroma": 0.08,
         "lightness": 38
       }
     },
@@ -509,7 +509,7 @@
       "colorIntent": {
         "hue": 55,
         "chroma": 0.28,
-        "lightness": 82
+        "lightness": 78
       }
     },
     "crepuscular": {
@@ -519,7 +519,7 @@
       "colorIntent": {
         "hue": 265,
         "chroma": 0.12,
-        "lightness": 42
+        "lightness": 48
       }
     },
     "cromlech": {
@@ -527,8 +527,8 @@
       "weight": 700,
       "style": "normal",
       "colorIntent": {
-        "hue": 135,
-        "chroma": 0.11,
+        "hue": 140,
+        "chroma": 0.08,
         "lightness": 42
       }
     },
@@ -547,8 +547,8 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 255,
-        "chroma": 0.22,
+        "hue": 260,
+        "chroma": 0.25,
         "lightness": 58
       }
     },
@@ -557,9 +557,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 288,
+        "hue": 235,
         "chroma": 0.12,
-        "lightness": 48
+        "lightness": 45
       }
     },
     "deracinate": {
@@ -567,8 +567,8 @@
       "weight": 500,
       "style": "italic",
       "colorIntent": {
-        "hue": 32,
-        "chroma": 0.12,
+        "hue": 20,
+        "chroma": 0.18,
         "lightness": 42
       }
     },
@@ -577,9 +577,9 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 42,
-        "chroma": 0.11,
-        "lightness": 52
+        "hue": 45,
+        "chroma": 0.08,
+        "lightness": 55
       }
     },
     "desuetude": {
@@ -587,8 +587,8 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 285,
-        "chroma": 0.12,
+        "hue": 275,
+        "chroma": 0.06,
         "lightness": 52
       }
     },
@@ -598,8 +598,8 @@
       "style": "italic",
       "colorIntent": {
         "hue": 280,
-        "chroma": 0.08,
-        "lightness": 82
+        "chroma": 0.1,
+        "lightness": 80
       }
     },
     "dreadnaught": {
@@ -607,7 +607,7 @@
       "weight": 800,
       "style": "normal",
       "colorIntent": {
-        "hue": 28,
+        "hue": 210,
         "chroma": 0.08,
         "lightness": 40
       }
@@ -617,8 +617,8 @@
       "weight": 500,
       "style": "italic",
       "colorIntent": {
-        "hue": 350,
-        "chroma": 0.18,
+        "hue": 355,
+        "chroma": 0.22,
         "lightness": 38
       }
     },
@@ -627,9 +627,9 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 285,
-        "chroma": 0.12,
-        "lightness": 38
+        "hue": 290,
+        "chroma": 0.18,
+        "lightness": 35
       }
     },
     "effluvium": {
@@ -637,9 +637,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 85,
+        "hue": 90,
         "chroma": 0.12,
-        "lightness": 48
+        "lightness": 52
       }
     },
     "effulgent": {
@@ -649,7 +649,7 @@
       "colorIntent": {
         "hue": 48,
         "chroma": 0.28,
-        "lightness": 78
+        "lightness": 75
       }
     },
     "eigengrau": {
@@ -657,8 +657,8 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 270,
-        "chroma": 0.04,
+        "hue": 260,
+        "chroma": 0.03,
         "lightness": 32
       }
     },
@@ -667,9 +667,9 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 285,
-        "chroma": 0.08,
-        "lightness": 35
+        "hue": 135,
+        "chroma": 0.1,
+        "lightness": 38
       }
     },
     "elide": {
@@ -677,8 +677,8 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 285,
-        "chroma": 0.08,
+        "hue": 220,
+        "chroma": 0.06,
         "lightness": 58
       }
     },
@@ -687,9 +687,9 @@
       "weight": 300,
       "style": "normal",
       "colorIntent": {
-        "hue": 48,
+        "hue": 50,
         "chroma": 0.22,
-        "lightness": 82
+        "lightness": 80
       }
     },
     "enchiridion": {
@@ -697,7 +697,7 @@
       "weight": 500,
       "style": "normal",
       "colorIntent": {
-        "hue": 42,
+        "hue": 38,
         "chroma": 0.18,
         "lightness": 52
       }
@@ -707,8 +707,8 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 285,
-        "chroma": 0.08,
+        "hue": 270,
+        "chroma": 0.06,
         "lightness": 52
       }
     },
@@ -717,7 +717,7 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 42,
+        "hue": 45,
         "chroma": 0.22,
         "lightness": 58
       }
@@ -727,9 +727,9 @@
       "weight": 300,
       "style": "normal",
       "colorIntent": {
-        "hue": 48,
-        "chroma": 0.12,
-        "lightness": 52
+        "hue": 55,
+        "chroma": 0.1,
+        "lightness": 48
       }
     },
     "erstwhile": {
@@ -737,9 +737,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 290,
+        "hue": 35,
         "chroma": 0.12,
-        "lightness": 52
+        "lightness": 50
       }
     },
     "escutcheon": {
@@ -747,9 +747,9 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 45,
-        "chroma": 0.12,
-        "lightness": 48
+        "hue": 5,
+        "chroma": 0.18,
+        "lightness": 45
       }
     },
     "eunoia": {
@@ -758,8 +758,8 @@
       "style": "italic",
       "colorIntent": {
         "hue": 35,
-        "chroma": 0.18,
-        "lightness": 72
+        "chroma": 0.2,
+        "lightness": 68
       }
     },
     "excogitate": {
@@ -767,9 +767,9 @@
       "weight": 500,
       "style": "normal",
       "colorIntent": {
-        "hue": 265,
+        "hue": 225,
         "chroma": 0.18,
-        "lightness": 48
+        "lightness": 50
       }
     },
     "fascicle": {
@@ -777,9 +777,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 105,
-        "chroma": 0.12,
-        "lightness": 52
+        "hue": 95,
+        "chroma": 0.1,
+        "lightness": 48
       }
     },
     "fernweh": {
@@ -787,9 +787,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 188,
-        "chroma": 0.12,
-        "lightness": 52
+        "hue": 190,
+        "chroma": 0.18,
+        "lightness": 55
       }
     },
     "firmament": {
@@ -797,8 +797,8 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 245,
-        "chroma": 0.18,
+        "hue": 240,
+        "chroma": 0.2,
         "lightness": 42
       }
     },
@@ -807,9 +807,9 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 195,
-        "chroma": 0.12,
-        "lightness": 42
+        "hue": 210,
+        "chroma": 0.15,
+        "lightness": 45
       }
     },
     "floccus": {
@@ -817,9 +817,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 280,
-        "chroma": 0.08,
-        "lightness": 78
+        "hue": 40,
+        "chroma": 0.06,
+        "lightness": 75
       }
     },
     "flummox": {
@@ -827,8 +827,8 @@
       "weight": 500,
       "style": "normal",
       "colorIntent": {
-        "hue": 315,
-        "chroma": 0.18,
+        "hue": 320,
+        "chroma": 0.2,
         "lightness": 58
       }
     },
@@ -837,9 +837,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 42,
-        "chroma": 0.18,
-        "lightness": 52
+        "hue": 45,
+        "chroma": 0.15,
+        "lightness": 55
       }
     },
     "fusillade": {
@@ -847,9 +847,9 @@
       "weight": 700,
       "style": "normal",
       "colorIntent": {
-        "hue": 25,
+        "hue": 15,
         "chroma": 0.28,
-        "lightness": 42
+        "lightness": 48
       }
     },
     "fylfot": {
@@ -857,9 +857,9 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 35,
+        "hue": 20,
         "chroma": 0.12,
-        "lightness": 42
+        "lightness": 40
       }
     },
     "gallimaufry": {
@@ -867,7 +867,7 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 45,
+        "hue": 35,
         "chroma": 0.18,
         "lightness": 55
       }
@@ -877,7 +877,7 @@
       "weight": 300,
       "style": "normal",
       "colorIntent": {
-        "hue": 255,
+        "hue": 220,
         "chroma": 0.12,
         "lightness": 72
       }
@@ -887,7 +887,7 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 318,
+        "hue": 310,
         "chroma": 0.22,
         "lightness": 58
       }
@@ -897,8 +897,8 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 295,
-        "chroma": 0.12,
+        "hue": 280,
+        "chroma": 0.18,
         "lightness": 38
       }
     },
@@ -917,8 +917,8 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 285,
-        "chroma": 0.12,
+        "hue": 270,
+        "chroma": 0.15,
         "lightness": 52
       }
     },
@@ -927,8 +927,8 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 45,
-        "chroma": 0.22,
+        "hue": 38,
+        "chroma": 0.2,
         "lightness": 58
       }
     },
@@ -937,9 +937,9 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 252,
+        "hue": 215,
         "chroma": 0.12,
-        "lightness": 45
+        "lightness": 48
       }
     },
     "incarnadine": {
@@ -947,8 +947,8 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 12,
-        "chroma": 0.22,
+        "hue": 5,
+        "chroma": 0.25,
         "lightness": 42
       }
     },
@@ -957,8 +957,8 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 268,
-        "chroma": 0.12,
+        "hue": 175,
+        "chroma": 0.15,
         "lightness": 62
       }
     },
@@ -967,8 +967,8 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 265,
-        "chroma": 0.18,
+        "hue": 215,
+        "chroma": 0.1,
         "lightness": 52
       }
     },
@@ -977,9 +977,9 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 45,
+        "hue": 48,
         "chroma": 0.28,
-        "lightness": 58
+        "lightness": 62
       }
     },
     "labile": {
@@ -987,9 +987,9 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 265,
-        "chroma": 0.12,
-        "lightness": 68
+        "hue": 185,
+        "chroma": 0.15,
+        "lightness": 62
       }
     },
     "lagniappe": {
@@ -997,7 +997,7 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 45,
+        "hue": 50,
         "chroma": 0.25,
         "lightness": 68
       }
@@ -1007,7 +1007,7 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 295,
+        "hue": 310,
         "chroma": 0.12,
         "lightness": 55
       }
@@ -1017,9 +1017,9 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 340,
-        "chroma": 0.22,
-        "lightness": 62
+        "hue": 345,
+        "chroma": 0.25,
+        "lightness": 55
       }
     },
     "liminal": {
@@ -1027,8 +1027,8 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 280,
-        "chroma": 0.12,
+        "hue": 275,
+        "chroma": 0.15,
         "lightness": 58
       }
     },
@@ -1038,8 +1038,8 @@
       "style": "italic",
       "colorIntent": {
         "hue": 35,
-        "chroma": 0.08,
-        "lightness": 52
+        "chroma": 0.06,
+        "lightness": 55
       }
     },
     "lithe": {
@@ -1047,9 +1047,9 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 135,
-        "chroma": 0.12,
-        "lightness": 68
+        "hue": 140,
+        "chroma": 0.18,
+        "lightness": 62
       }
     },
     "litotes": {
@@ -1057,7 +1057,7 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 135,
+        "hue": 145,
         "chroma": 0.08,
         "lightness": 52
       }
@@ -1069,7 +1069,7 @@
       "colorIntent": {
         "hue": 345,
         "chroma": 0.22,
-        "lightness": 42
+        "lightness": 48
       }
     },
     "malinger": {
@@ -1077,9 +1077,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 78,
-        "chroma": 0.12,
-        "lightness": 52
+        "hue": 100,
+        "chroma": 0.1,
+        "lightness": 48
       }
     },
     "mamihlapinatapai": {
@@ -1087,8 +1087,8 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 345,
-        "chroma": 0.12,
+        "hue": 5,
+        "chroma": 0.15,
         "lightness": 58
       }
     },
@@ -1097,7 +1097,7 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 285,
+        "hue": 275,
         "chroma": 0.12,
         "lightness": 58
       }
@@ -1107,9 +1107,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 18,
-        "chroma": 0.18,
-        "lightness": 58
+        "hue": 15,
+        "chroma": 0.2,
+        "lightness": 60
       }
     },
     "metanoia": {
@@ -1117,9 +1117,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 278,
-        "chroma": 0.18,
-        "lightness": 58
+        "hue": 170,
+        "chroma": 0.2,
+        "lightness": 52
       }
     },
     "miasma": {
@@ -1127,9 +1127,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 92,
-        "chroma": 0.13,
-        "lightness": 47
+        "hue": 85,
+        "chroma": 0.15,
+        "lightness": 45
       }
     },
     "mien": {
@@ -1137,8 +1137,8 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 265,
-        "chroma": 0.12,
+        "hue": 220,
+        "chroma": 0.1,
         "lightness": 52
       }
     },
@@ -1147,8 +1147,8 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 295,
-        "chroma": 0.12,
+        "hue": 285,
+        "chroma": 0.15,
         "lightness": 42
       }
     },
@@ -1157,8 +1157,8 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 258,
-        "chroma": 0.18,
+        "hue": 250,
+        "chroma": 0.15,
         "lightness": 52
       }
     },
@@ -1167,9 +1167,9 @@
       "weight": 800,
       "style": "normal",
       "colorIntent": {
-        "hue": 175,
+        "hue": 35,
         "chroma": 0.08,
-        "lightness": 40
+        "lightness": 42
       }
     },
     "mono no aware": {
@@ -1177,9 +1177,9 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 285,
-        "chroma": 0.12,
-        "lightness": 52
+        "hue": 340,
+        "chroma": 0.15,
+        "lightness": 58
       }
     },
     "moraine": {
@@ -1187,9 +1187,9 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 195,
+        "hue": 200,
         "chroma": 0.08,
-        "lightness": 52
+        "lightness": 48
       }
     },
     "mordicant": {
@@ -1197,8 +1197,8 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 78,
-        "chroma": 0.32,
+        "hue": 75,
+        "chroma": 0.25,
         "lightness": 52
       }
     },
@@ -1207,8 +1207,8 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 325,
-        "chroma": 0.08,
+        "hue": 290,
+        "chroma": 0.05,
         "lightness": 38
       }
     },
@@ -1217,9 +1217,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 290,
-        "chroma": 0.18,
-        "lightness": 48
+        "hue": 235,
+        "chroma": 0.2,
+        "lightness": 50
       }
     },
     "mountebank": {
@@ -1227,9 +1227,9 @@
       "weight": 700,
       "style": "normal",
       "colorIntent": {
-        "hue": 45,
-        "chroma": 0.22,
-        "lightness": 52
+        "hue": 42,
+        "chroma": 0.25,
+        "lightness": 55
       }
     },
     "nescience": {
@@ -1237,8 +1237,8 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 268,
-        "chroma": 0.12,
+        "hue": 230,
+        "chroma": 0.08,
         "lightness": 42
       }
     },
@@ -1247,9 +1247,9 @@
       "weight": 200,
       "style": "italic",
       "colorIntent": {
-        "hue": 175,
+        "hue": 195,
         "chroma": 0.12,
-        "lightness": 55
+        "lightness": 62
       }
     },
     "nihilartikel": {
@@ -1257,9 +1257,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 278,
+        "hue": 270,
         "chroma": 0.08,
-        "lightness": 45
+        "lightness": 48
       }
     },
     "noctilucent": {
@@ -1267,9 +1267,9 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 195,
-        "chroma": 0.18,
-        "lightness": 78
+        "hue": 190,
+        "chroma": 0.2,
+        "lightness": 72
       }
     },
     "noetic": {
@@ -1277,9 +1277,9 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 268,
+        "hue": 225,
         "chroma": 0.18,
-        "lightness": 52
+        "lightness": 55
       }
     },
     "nostrum": {
@@ -1287,9 +1287,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 42,
-        "chroma": 0.18,
-        "lightness": 48
+        "hue": 40,
+        "chroma": 0.15,
+        "lightness": 45
       }
     },
     "noumenon": {
@@ -1297,7 +1297,7 @@
       "weight": 300,
       "style": "normal",
       "colorIntent": {
-        "hue": 258,
+        "hue": 255,
         "chroma": 0.18,
         "lightness": 42
       }
@@ -1307,9 +1307,9 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 285,
-        "chroma": 0.08,
-        "lightness": 52
+        "hue": 240,
+        "chroma": 0.04,
+        "lightness": 42
       }
     },
     "nychthemeron": {
@@ -1317,9 +1317,9 @@
       "weight": 500,
       "style": "normal",
       "colorIntent": {
-        "hue": 265,
+        "hue": 250,
         "chroma": 0.18,
-        "lightness": 42
+        "lightness": 45
       }
     },
     "oneiric": {
@@ -1327,9 +1327,9 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 285,
-        "chroma": 0.12,
-        "lightness": 52
+        "hue": 275,
+        "chroma": 0.15,
+        "lightness": 62
       }
     },
     "ophidian": {
@@ -1337,9 +1337,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 115,
-        "chroma": 0.18,
-        "lightness": 38
+        "hue": 120,
+        "chroma": 0.2,
+        "lightness": 42
       }
     },
     "oronym": {
@@ -1347,9 +1347,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 285,
-        "chroma": 0.18,
-        "lightness": 62
+        "hue": 180,
+        "chroma": 0.15,
+        "lightness": 55
       }
     },
     "orrery": {
@@ -1357,8 +1357,8 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 45,
-        "chroma": 0.18,
+        "hue": 42,
+        "chroma": 0.2,
         "lightness": 52
       }
     },
@@ -1367,9 +1367,9 @@
       "weight": 500,
       "style": "normal",
       "colorIntent": {
-        "hue": 268,
-        "chroma": 0.12,
-        "lightness": 38
+        "hue": 270,
+        "chroma": 0.1,
+        "lightness": 32
       }
     },
     "oughtness": {
@@ -1377,7 +1377,7 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 260,
+        "hue": 230,
         "chroma": 0.12,
         "lightness": 42
       }
@@ -1387,8 +1387,8 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 42,
-        "chroma": 0.22,
+        "hue": 45,
+        "chroma": 0.25,
         "lightness": 58
       }
     },
@@ -1397,9 +1397,9 @@
       "weight": 300,
       "style": "normal",
       "colorIntent": {
-        "hue": 255,
-        "chroma": 0.12,
-        "lightness": 78
+        "hue": 220,
+        "chroma": 0.1,
+        "lightness": 75
       }
     },
     "pareidolia": {
@@ -1407,9 +1407,9 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 268,
-        "chroma": 0.18,
-        "lightness": 52
+        "hue": 270,
+        "chroma": 0.15,
+        "lightness": 55
       }
     },
     "pauciloquent": {
@@ -1417,9 +1417,9 @@
       "weight": 300,
       "style": "normal",
       "colorIntent": {
-        "hue": 278,
-        "chroma": 0.08,
-        "lightness": 55
+        "hue": 210,
+        "chroma": 0.06,
+        "lightness": 52
       }
     },
     "peregrine": {
@@ -1427,8 +1427,8 @@
       "weight": 500,
       "style": "normal",
       "colorIntent": {
-        "hue": 225,
-        "chroma": 0.12,
+        "hue": 215,
+        "chroma": 0.18,
         "lightness": 52
       }
     },
@@ -1437,9 +1437,9 @@
       "weight": 500,
       "style": "normal",
       "colorIntent": {
-        "hue": 285,
-        "chroma": 0.18,
-        "lightness": 42
+        "hue": 10,
+        "chroma": 0.22,
+        "lightness": 48
       }
     },
     "persiflage": {
@@ -1447,9 +1447,9 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 315,
+        "hue": 320,
         "chroma": 0.18,
-        "lightness": 68
+        "lightness": 65
       }
     },
     "petrichor": {
@@ -1457,9 +1457,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 135,
-        "chroma": 0.12,
-        "lightness": 52
+        "hue": 130,
+        "chroma": 0.15,
+        "lightness": 48
       }
     },
     "pettifog": {
@@ -1467,7 +1467,7 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 95,
+        "hue": 80,
         "chroma": 0.08,
         "lightness": 42
       }
@@ -1477,9 +1477,9 @@
       "weight": 200,
       "style": "normal",
       "colorIntent": {
-        "hue": 148,
+        "hue": 145,
         "chroma": 0.28,
-        "lightness": 78
+        "lightness": 72
       }
     },
     "portcullis": {
@@ -1487,8 +1487,8 @@
       "weight": 700,
       "style": "normal",
       "colorIntent": {
-        "hue": 25,
-        "chroma": 0.08,
+        "hue": 20,
+        "chroma": 0.06,
         "lightness": 38
       }
     },
@@ -1497,9 +1497,9 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 352,
+        "hue": 350,
         "chroma": 0.18,
-        "lightness": 42
+        "lightness": 45
       }
     },
     "primeval": {
@@ -1507,7 +1507,7 @@
       "weight": 800,
       "style": "normal",
       "colorIntent": {
-        "hue": 128,
+        "hue": 130,
         "chroma": 0.18,
         "lightness": 38
       }
@@ -1517,9 +1517,9 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 265,
-        "chroma": 0.12,
-        "lightness": 42
+        "hue": 270,
+        "chroma": 0.15,
+        "lightness": 45
       }
     },
     "propinquity": {
@@ -1528,7 +1528,7 @@
       "style": "italic",
       "colorIntent": {
         "hue": 345,
-        "chroma": 0.12,
+        "chroma": 0.15,
         "lightness": 55
       }
     },
@@ -1537,8 +1537,8 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 310,
-        "chroma": 0.12,
+        "hue": 15,
+        "chroma": 0.15,
         "lightness": 55
       }
     },
@@ -1549,7 +1549,7 @@
       "colorIntent": {
         "hue": 285,
         "chroma": 0.18,
-        "lightness": 62
+        "lightness": 58
       }
     },
     "psithurism": {
@@ -1557,9 +1557,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 135,
-        "chroma": 0.08,
-        "lightness": 55
+        "hue": 140,
+        "chroma": 0.1,
+        "lightness": 58
       }
     },
     "psychopomp": {
@@ -1567,9 +1567,9 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 275,
+        "hue": 265,
         "chroma": 0.18,
-        "lightness": 42
+        "lightness": 48
       }
     },
     "qualia": {
@@ -1577,9 +1577,9 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 285,
+        "hue": 35,
         "chroma": 0.18,
-        "lightness": 52
+        "lightness": 55
       }
     },
     "quidnunc": {
@@ -1587,8 +1587,8 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 315,
-        "chroma": 0.18,
+        "hue": 325,
+        "chroma": 0.2,
         "lightness": 52
       }
     },
@@ -1597,8 +1597,8 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 285,
-        "chroma": 0.12,
+        "hue": 175,
+        "chroma": 0.15,
         "lightness": 48
       }
     },
@@ -1607,9 +1607,9 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 85,
-        "chroma": 0.12,
-        "lightness": 48
+        "hue": 100,
+        "chroma": 0.1,
+        "lightness": 40
       }
     },
     "ragamuffin": {
@@ -1618,8 +1618,8 @@
       "style": "normal",
       "colorIntent": {
         "hue": 28,
-        "chroma": 0.15,
-        "lightness": 45
+        "chroma": 0.18,
+        "lightness": 48
       }
     },
     "ratiocination": {
@@ -1627,9 +1627,9 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 195,
-        "chroma": 0.18,
-        "lightness": 42
+        "hue": 215,
+        "chroma": 0.15,
+        "lightness": 48
       }
     },
     "revanchist": {
@@ -1647,8 +1647,8 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 175,
-        "chroma": 0.22,
+        "hue": 210,
+        "chroma": 0.2,
         "lightness": 55
       }
     },
@@ -1667,7 +1667,7 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 222,
+        "hue": 225,
         "chroma": 0.08,
         "lightness": 42
       }
@@ -1677,9 +1677,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 318,
-        "chroma": 0.11,
-        "lightness": 52
+        "hue": 325,
+        "chroma": 0.15,
+        "lightness": 48
       }
     },
     "scintilla": {
@@ -1687,9 +1687,9 @@
       "weight": 300,
       "style": "normal",
       "colorIntent": {
-        "hue": 50,
+        "hue": 48,
         "chroma": 0.22,
-        "lightness": 78
+        "lightness": 72
       }
     },
     "sennight": {
@@ -1697,9 +1697,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 258,
-        "chroma": 0.12,
-        "lightness": 48
+        "hue": 40,
+        "chroma": 0.1,
+        "lightness": 50
       }
     },
     "sequester": {
@@ -1707,8 +1707,8 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 265,
-        "chroma": 0.12,
+        "hue": 215,
+        "chroma": 0.1,
         "lightness": 48
       }
     },
@@ -1717,7 +1717,7 @@
       "weight": 300,
       "style": "normal",
       "colorIntent": {
-        "hue": 258,
+        "hue": 240,
         "chroma": 0.18,
         "lightness": 62
       }
@@ -1727,8 +1727,8 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 42,
-        "chroma": 0.18,
+        "hue": 40,
+        "chroma": 0.15,
         "lightness": 58
       }
     },
@@ -1737,7 +1737,7 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 285,
+        "hue": 310,
         "chroma": 0.12,
         "lightness": 52
       }
@@ -1747,8 +1747,8 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 25,
-        "chroma": 0.18,
+        "hue": 215,
+        "chroma": 0.12,
         "lightness": 58
       }
     },
@@ -1757,9 +1757,9 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 275,
-        "chroma": 0.18,
-        "lightness": 42
+        "hue": 280,
+        "chroma": 0.22,
+        "lightness": 48
       }
     },
     "surreptitious": {
@@ -1767,9 +1767,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 285,
-        "chroma": 0.28,
-        "lightness": 42
+        "hue": 165,
+        "chroma": 0.15,
+        "lightness": 38
       }
     },
     "susurrous": {
@@ -1777,9 +1777,9 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 152,
+        "hue": 150,
         "chroma": 0.08,
-        "lightness": 55
+        "lightness": 58
       }
     },
     "sylvan": {
@@ -1787,7 +1787,7 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 128,
+        "hue": 130,
         "chroma": 0.22,
         "lightness": 42
       }
@@ -1797,8 +1797,8 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 285,
-        "chroma": 0.18,
+        "hue": 175,
+        "chroma": 0.15,
         "lightness": 52
       }
     },
@@ -1807,9 +1807,9 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 265,
-        "chroma": 0.18,
-        "lightness": 38
+        "hue": 255,
+        "chroma": 0.22,
+        "lightness": 42
       }
     },
     "taciturn": {
@@ -1817,9 +1817,9 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 235,
-        "chroma": 0.08,
-        "lightness": 42
+        "hue": 220,
+        "chroma": 0.06,
+        "lightness": 40
       }
     },
     "tatterdemalion": {
@@ -1827,9 +1827,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 42,
-        "chroma": 0.11,
-        "lightness": 46
+        "hue": 35,
+        "chroma": 0.12,
+        "lightness": 42
       }
     },
     "tchotchke": {
@@ -1837,8 +1837,8 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 35,
-        "chroma": 0.18,
+        "hue": 38,
+        "chroma": 0.22,
         "lightness": 62
       }
     },
@@ -1847,7 +1847,7 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 280,
+        "hue": 250,
         "chroma": 0.08,
         "lightness": 32
       }
@@ -1857,9 +1857,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 85,
-        "chroma": 0.12,
-        "lightness": 52
+        "hue": 100,
+        "chroma": 0.15,
+        "lightness": 38
       }
     },
     "terraqueous": {
@@ -1867,7 +1867,7 @@
       "weight": 500,
       "style": "italic",
       "colorIntent": {
-        "hue": 172,
+        "hue": 175,
         "chroma": 0.18,
         "lightness": 50
       }
@@ -1877,7 +1877,7 @@
       "weight": 500,
       "style": "normal",
       "colorIntent": {
-        "hue": 268,
+        "hue": 260,
         "chroma": 0.12,
         "lightness": 38
       }
@@ -1887,7 +1887,7 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 268,
+        "hue": 180,
         "chroma": 0.18,
         "lightness": 52
       }
@@ -1898,8 +1898,8 @@
       "style": "italic",
       "colorIntent": {
         "hue": 265,
-        "chroma": 0.12,
-        "lightness": 42
+        "chroma": 0.15,
+        "lightness": 38
       }
     },
     "truculent": {
@@ -1907,7 +1907,7 @@
       "weight": 900,
       "style": "normal",
       "colorIntent": {
-        "hue": 18,
+        "hue": 10,
         "chroma": 0.28,
         "lightness": 42
       }
@@ -1927,9 +1927,9 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 18,
-        "chroma": 0.18,
-        "lightness": 38
+        "hue": 15,
+        "chroma": 0.22,
+        "lightness": 42
       }
     },
     "vade mecum": {
@@ -1937,7 +1937,7 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 45,
+        "hue": 42,
         "chroma": 0.18,
         "lightness": 52
       }
@@ -1967,9 +1967,9 @@
       "weight": 300,
       "style": "italic",
       "colorIntent": {
-        "hue": 268,
+        "hue": 30,
         "chroma": 0.18,
-        "lightness": 42
+        "lightness": 45
       }
     },
     "vouchsafe": {
@@ -1977,9 +1977,9 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 295,
-        "chroma": 0.18,
-        "lightness": 42
+        "hue": 235,
+        "chroma": 0.15,
+        "lightness": 45
       }
     },
     "wabi-sabi": {
@@ -1987,7 +1987,7 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 145,
+        "hue": 110,
         "chroma": 0.08,
         "lightness": 48
       }
@@ -1997,9 +1997,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 228,
+        "hue": 210,
         "chroma": 0.18,
-        "lightness": 78
+        "lightness": 75
       }
     },
     "wellaway": {
@@ -2007,9 +2007,9 @@
       "weight": 400,
       "style": "italic",
       "colorIntent": {
-        "hue": 285,
+        "hue": 270,
         "chroma": 0.12,
-        "lightness": 52
+        "lightness": 48
       }
     },
     "weltanschauung": {
@@ -2017,9 +2017,9 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 48,
-        "chroma": 0.12,
-        "lightness": 42
+        "hue": 225,
+        "chroma": 0.15,
+        "lightness": 45
       }
     },
     "weltschmerz": {
@@ -2028,7 +2028,7 @@
       "style": "italic",
       "colorIntent": {
         "hue": 265,
-        "chroma": 0.12,
+        "chroma": 0.1,
         "lightness": 42
       }
     },
@@ -2037,7 +2037,7 @@
       "weight": 400,
       "style": "normal",
       "colorIntent": {
-        "hue": 278,
+        "hue": 170,
         "chroma": 0.18,
         "lightness": 52
       }
@@ -2047,9 +2047,9 @@
       "weight": 700,
       "style": "normal",
       "colorIntent": {
-        "hue": 240,
-        "chroma": 0.08,
-        "lightness": 42
+        "hue": 355,
+        "chroma": 0.12,
+        "lightness": 38
       }
     }
   }
