@@ -140,6 +140,7 @@ function MasonryGalleryInner({ colorMode = "dark" }: MasonryGalleryProps) {
           style={{
             gap: `${tuning.gapY}px ${tuning.gapX}px`,
             padding: `${tuning.paddingY}px ${tuning.paddingX}px`,
+            paddingBottom: `${tuning.paddingY + 160}px`,
           }}
         >
           {orderedWords.map((entry, index) => (
