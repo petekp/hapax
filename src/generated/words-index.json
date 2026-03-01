@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-01-28T05:15:52.227Z",
+  "generatedAt": "2026-03-01T16:29:52.806Z",
   "words": {
     "abraxas": {
       "family": "Cinzel",
@@ -257,9 +257,9 @@
       "weight": 600,
       "style": "normal",
       "colorIntent": {
-        "hue": 18,
-        "chroma": 0.22,
-        "lightness": 62
+        "hue": 28,
+        "chroma": 0.3,
+        "lightness": 68
       }
     },
     "cacodoxy": {
