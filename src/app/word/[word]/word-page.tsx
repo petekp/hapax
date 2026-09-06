@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, forwardRef, useCallback } from "react"
 import { motion } from "motion/react"
-import Link from "next/link"
+import { BackButtonLink } from "@/components/back-button"
 import { useRouter } from "next/navigation"
 import type { FontVariant } from "@/lib/schemas"
 import { deriveColor, deriveTintedTextColor, deriveTintedMutedColor, deriveTintedMutedColorHex } from "@/lib/color"
@@ -318,33 +318,11 @@ export default function WordPage({ word, initialContent }: WordPageProps) {
         animate={{ backgroundColor: tintColors.bg }}
         transition={{ type: "spring", stiffness: 100, damping: 30 }}
       >
-        <Link
-          href="/"
+        <BackButtonLink
           onClick={handleBackClick}
-          className="fixed left-0 top-0 h-full z-10 flex items-center justify-start pl-4 transition-colors duration-200 cursor-pointer"
-          style={{
-            width: "max(4rem, calc(50vw - 24rem - 1.5rem))",
-            color: backArrowColor,
-            opacity: isExiting ? 0 : 1,
-            transition: "opacity 200ms ease-out, color 200ms ease-out",
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = "#ffffff")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = backArrowColor)}
-          aria-label="Back to home"
-        >
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M19 12H5M12 19l-7-7 7-7" />
-          </svg>
-        </Link>
+          color={backArrowColor}
+          opacity={isExiting ? 0 : 1}
+        />
 
       <main className="flex flex-col items-center px-6 pt-32 pb-48">
         <motion.div

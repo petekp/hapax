@@ -18,8 +18,12 @@ const BACK_ARROW_SVG = (
   </svg>
 )
 
+// Sticky zero-height wrapper keeps the zone pinned while staying in the scroll
+// container's flow; a fixed element would swallow wheel and touch scrolling over it.
+const WRAPPER_CLASSES = "sticky top-0 z-10 h-0"
+
 const BASE_CLASSES =
-  "fixed left-0 top-0 h-full z-10 flex items-center justify-start pl-4 transition-colors duration-200 cursor-pointer"
+  "absolute left-0 top-0 h-dvh flex items-center justify-start pl-4 transition-colors duration-200 cursor-pointer"
 
 const DYNAMIC_WIDTH = "max(4rem, calc(50vw - 24rem - 1.5rem))"
 
@@ -41,22 +45,24 @@ export function BackButtonLink({
   ariaLabel = "Back to home",
 }: BackButtonLinkProps) {
   return (
-    <Link
-      href={href}
-      onClick={onClick}
-      className={BASE_CLASSES}
-      style={{
-        width: DYNAMIC_WIDTH,
-        color,
-        opacity,
-        transition: "opacity 200ms ease-out, color 200ms ease-out",
-      }}
-      onMouseEnter={(e) => (e.currentTarget.style.color = hoverColor)}
-      onMouseLeave={(e) => (e.currentTarget.style.color = color)}
-      aria-label={ariaLabel}
-    >
-      {BACK_ARROW_SVG}
-    </Link>
+    <div className={WRAPPER_CLASSES}>
+      <Link
+        href={href}
+        onClick={onClick}
+        className={BASE_CLASSES}
+        style={{
+          width: DYNAMIC_WIDTH,
+          color,
+          opacity,
+          transition: "opacity 200ms ease-out, color 200ms ease-out",
+        }}
+        onMouseEnter={(e) => (e.currentTarget.style.color = hoverColor)}
+        onMouseLeave={(e) => (e.currentTarget.style.color = color)}
+        aria-label={ariaLabel}
+      >
+        {BACK_ARROW_SVG}
+      </Link>
+    </div>
   )
 }
 
@@ -83,38 +89,42 @@ export function BackButton({
 }: BackButtonProps) {
   if (fadeIn) {
     return (
-      <motion.button
+      <div className={WRAPPER_CLASSES}>
+        <motion.button
+          onClick={onClick}
+          className={BASE_CLASSES}
+          style={{
+            width: DYNAMIC_WIDTH,
+            color,
+          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, transition: { duration: fadeInDuration, delay: fadeInDelay } }}
+          exit={{ opacity: 0, transition: { duration: fadeOutDuration } }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = hoverColor)}
+          onMouseLeave={(e) => (e.currentTarget.style.color = color)}
+          aria-label={ariaLabel}
+        >
+          {BACK_ARROW_SVG}
+        </motion.button>
+      </div>
+    )
+  }
+
+  return (
+    <div className={WRAPPER_CLASSES}>
+      <button
         onClick={onClick}
         className={BASE_CLASSES}
         style={{
           width: DYNAMIC_WIDTH,
           color,
         }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1, transition: { duration: fadeInDuration, delay: fadeInDelay } }}
-        exit={{ opacity: 0, transition: { duration: fadeOutDuration } }}
         onMouseEnter={(e) => (e.currentTarget.style.color = hoverColor)}
         onMouseLeave={(e) => (e.currentTarget.style.color = color)}
         aria-label={ariaLabel}
       >
         {BACK_ARROW_SVG}
-      </motion.button>
-    )
-  }
-
-  return (
-    <button
-      onClick={onClick}
-      className={BASE_CLASSES}
-      style={{
-        width: DYNAMIC_WIDTH,
-        color,
-      }}
-      onMouseEnter={(e) => (e.currentTarget.style.color = hoverColor)}
-      onMouseLeave={(e) => (e.currentTarget.style.color = color)}
-      aria-label={ariaLabel}
-    >
-      {BACK_ARROW_SVG}
-    </button>
+      </button>
+    </div>
   )
 }
