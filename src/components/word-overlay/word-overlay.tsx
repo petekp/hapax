@@ -140,7 +140,6 @@ export function WordOverlay() {
               </div>
 
               <OverlayContent
-                word={selectedWord}
                 variant={variant}
                 content={content}
                 isLoading={isLoading}

@@ -12,34 +12,6 @@ import { getFontLoader } from "@/lib/font-loader"
 import { useReducedMotion } from "@/hooks/use-reduced-motion"
 import type { WordContent } from "@/lib/words"
 import { MdxContent } from "@/components/mdx-content"
-import { ScrollRevealSection } from "@/components/scroll-reveal-section"
-
-interface Definition {
-  partOfSpeech: string
-  definitions: Array<{
-    definition: string
-    example?: string
-  }>
-}
-
-interface DictionaryEntry {
-  word: string
-  phonetic?: string
-  meanings: Definition[]
-}
-
-async function fetchDefinition(word: string): Promise<DictionaryEntry | null> {
-  try {
-    const response = await fetch(
-      `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`
-    )
-    if (!response.ok) return null
-    const data = await response.json()
-    return data[0] || null
-  } catch {
-    return null
-  }
-}
 
 type LetterAnimation = {
   initial: Record<string, number | string>
@@ -281,8 +253,6 @@ export default function WordPage({ word, initialContent }: WordPageProps) {
   const wordRef = useRef<HTMLSpanElement>(null)
   const router = useRouter()
 
-  const [definition, setDefinition] = useState<DictionaryEntry | null>(null)
-  const [definitionLoaded, setDefinitionLoaded] = useState(false)
   const [fontLoaded, setFontLoaded] = useState(false)
   const [isExiting, setIsExiting] = useState(false)
 
@@ -312,13 +282,6 @@ export default function WordPage({ word, initialContent }: WordPageProps) {
     }, 200)
   }, [router])
 
-  useEffect(() => {
-    fetchDefinition(word).then((entry) => {
-      setDefinition(entry)
-      setDefinitionLoaded(true)
-    })
-  }, [word])
-
   const colorIntent = initialContent?.frontmatter.style.colorIntent
   useEffect(() => {
     if (colorIntent) {
@@ -334,8 +297,8 @@ export default function WordPage({ word, initialContent }: WordPageProps) {
   }
 
   const variant = initialContent?.frontmatter.style || fallbackVariant
-  const phonetic = initialContent?.frontmatter.phonetic || definition?.phonetic
-  const partOfSpeech = initialContent?.frontmatter.partOfSpeech || definition?.meanings[0]?.partOfSpeech
+  const phonetic = initialContent?.frontmatter.phonetic
+  const partOfSpeech = initialContent?.frontmatter.partOfSpeech
   const hasMdxContent = initialContent && initialContent.content.length > 0
 
   useEffect(() => {
@@ -343,7 +306,7 @@ export default function WordPage({ word, initialContent }: WordPageProps) {
     fontLoader.requestFont(variant, word, () => setFontLoaded(true))
   }, [variant, word])
 
-  const ready = definitionLoaded && fontLoaded
+  const ready = fontLoaded
   const textColor = ready ? deriveTintedTextColor(variant.colorIntent) : undefined
   const mutedColor = ready ? deriveTintedMutedColor(variant.colorIntent) : undefined
   const backArrowColor = ready ? deriveTintedMutedColorHex(variant.colorIntent) : "#71717a"
@@ -422,54 +385,6 @@ export default function WordPage({ word, initialContent }: WordPageProps) {
                 mutedColor={mutedColor}
                 reducedMotion={prefersReducedMotion}
               />
-            ) : definition ? (
-              <div className="max-w-3xl mx-auto">
-              <div className="space-y-16">
-                {definition.meanings.map((meaning, i) => (
-                  <ScrollRevealSection key={i} reducedMotion={prefersReducedMotion} delay={i * 0.1}>
-                    <section>
-                      {i > 0 && (
-                        <div
-                          className="mb-16 flex justify-center transition-colors duration-700"
-                          style={{ color: mutedColor || "var(--tint-muted)", opacity: 0.3 }}
-                          aria-hidden="true"
-                        >
-                          <span className="text-lg tracking-[0.5em]">· · ·</span>
-                        </div>
-                      )}
-
-                      <ol className="space-y-10">
-                        {meaning.definitions.slice(0, 3).map((def, j) => (
-                          <li key={j} className="flex gap-7">
-                            <span className="font-sans text-zinc-600 text-[length:var(--text-fluid-base)] tabular-nums flex-shrink-0 pt-1 select-none">
-                              {j + 1}.
-                            </span>
-
-                            <div className="space-y-7">
-                              <p
-                                className={`text-[length:var(--text-fluid-body)] leading-[1.7] font-normal transition-colors duration-700 text-pretty ${i === 0 && j === 0 ? "drop-cap" : ""}`}
-                                style={{ color: textColor || "var(--tint-text)" }}
-                              >
-                                {def.definition}
-                              </p>
-
-                              {def.example && (
-                                <p
-                                  className="text-[length:var(--text-fluid-quote)] leading-[1.5] italic transition-colors duration-700 -mx-8 px-8 md:-mx-16 md:px-16 lg:-mx-24 lg:px-24 text-balance text-center typography-display"
-                                  style={{ color: mutedColor || "var(--tint-muted)" }}
-                                >
-                                  &ldquo;{def.example}&rdquo;
-                                </p>
-                              )}
-                            </div>
-                          </li>
-                        ))}
-                      </ol>
-                    </section>
-                  </ScrollRevealSection>
-                ))}
-              </div>
-              </div>
             ) : (
               <p className="text-zinc-500 text-center text-[length:var(--text-fluid-caption)]">
                 No definition found.
