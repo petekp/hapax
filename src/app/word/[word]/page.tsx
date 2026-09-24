@@ -79,7 +79,8 @@ export default async function Page({ params }: PageProps) {
         // eslint-disable-next-line react/no-danger -- JSON-LD from trusted server-side data
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <WordPage word={decodedWord} initialContent={wordContent} />
+      {/* Keyed so moving between words starts each page fresh */}
+      <WordPage key={decodedWord} word={decodedWord} initialContent={wordContent} />
     </>
   )
 }

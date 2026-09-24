@@ -1,8 +1,8 @@
 "use client"
 
-import { useEffect, useCallback, useRef, useState } from "react"
+import { useEffect, useCallback, useLayoutEffect, useRef, useState } from "react"
 import { motion, AnimatePresence } from "motion/react"
-import { useOverlay } from "./overlay-context"
+import { useOverlay, type OverlayHistoryState } from "./overlay-context"
 import { OverlayContent } from "./overlay-content"
 import { BackButton } from "@/components/back-button"
 import { useActiveColor } from "@/lib/active-color-context"
@@ -32,7 +32,7 @@ function calculateOverlayFontSize(wordLength: number): string {
 }
 
 export function WordOverlay() {
-  const { isOpen, isClosing, selectedWord, variant, content, isLoading, resetOverlay } = useOverlay()
+  const { isOpen, isClosing, selectedWord, variant, content, isLoading, depth, followWord, resetOverlay } = useOverlay()
   const { setActiveColor, tintColors } = useActiveColor()
   const tuning = useTuning()
   const prefersReducedMotion = useReducedMotion()
@@ -54,9 +54,16 @@ export function WordOverlay() {
     fontLoader.requestFont(variant, selectedWord, () => setFontLoaded(true))
   }, [isOpen, variant, selectedWord])
 
+  // Unwind every word visited in the overlay, back to the gallery
   const handleClose = useCallback(() => {
-    window.history.back()
+    const entry = window.history.state as Partial<OverlayHistoryState> | null
+    window.history.go(-(entry?.depth ?? 1))
   }, [])
+
+  // Each new word starts at the top of the page
+  useLayoutEffect(() => {
+    scrollContainerRef.current?.scrollTo({ top: 0 })
+  }, [selectedWord])
 
   useEffect(() => {
     if (!isOpen) return
@@ -77,7 +84,13 @@ export function WordOverlay() {
 
   const backArrowColor = variant ? deriveTintedMutedColorHex(variant.colorIntent) : "#71717a"
 
-  const layoutId = selectedWord ? `word-${selectedWord.toLowerCase()}` : undefined
+  // Only a word opened from the gallery flies in from its spot there; words reached
+  // from a related-word link make their own entrance
+  const fromGallery = depth <= 1
+  const layoutId = selectedWord && fromGallery ? `word-${selectedWord.toLowerCase()}` : undefined
+  const entrance = fromGallery || prefersReducedMotion
+    ? undefined
+    : { initial: { opacity: 0, y: 18, filter: "blur(8px)" }, animate: { opacity: 1, y: 0, filter: "blur(0px)" } }
   const inkVariables = variant ? deriveInkVariables(variant.colorIntent) : undefined
   const fontSize = selectedWord ? calculateOverlayFontSize(selectedWord.length) : "3rem"
 
@@ -88,9 +101,16 @@ export function WordOverlay() {
           <motion.div
             key="backdrop"
             className="fixed inset-0 z-40"
-            style={{ backgroundColor: tintColors.bg }}
-            initial={{ opacity: 0, pointerEvents: "none" as const }}
-            animate={{ opacity: 1, transition: { duration: backdropDuration } }}
+            initial={{ opacity: 0, backgroundColor: tintColors.bg, pointerEvents: "none" as const }}
+            animate={{
+              opacity: 1,
+              backgroundColor: tintColors.bg,
+              transition: {
+                opacity: { duration: backdropDuration },
+                // Drift between hues when moving from word to word
+                backgroundColor: { duration: prefersReducedMotion ? 0 : 0.9, ease: "easeInOut" },
+              },
+            }}
             exit={{ opacity: 0, pointerEvents: "none" as const, transition: { duration: contentFadeOutDuration } }}
             onClick={handleClose}
           />
@@ -115,8 +135,11 @@ export function WordOverlay() {
             <div className="flex flex-col items-center pt-32 pb-48 min-h-screen">
               <div className="text-center mb-4" style={inkVariables}>
                 <motion.span
+                  key={fromGallery ? "from-gallery" : selectedWord}
                   layoutId={layoutId}
                   className="ink"
+                  initial={entrance?.initial}
+                  animate={entrance?.animate}
                   style={{
                     display: "inline-block",
                     color: fontLoaded ? undefined : "transparent",
@@ -133,7 +156,9 @@ export function WordOverlay() {
                       damping: tuning.overlaySpringDamping,
                       mass: tuning.overlaySpringMass,
                     },
-                    opacity: { duration: 0 },
+                    opacity: entrance ? { duration: 0.7, ease: "easeOut" } : { duration: 0 },
+                    y: { type: "spring", stiffness: 70, damping: 18 },
+                    filter: { duration: 0.7, ease: "easeOut" },
                   }}
                 >
                   {selectedWord}
@@ -144,6 +169,7 @@ export function WordOverlay() {
                 variant={variant}
                 content={content}
                 isLoading={isLoading}
+                onNavigate={followWord}
               />
             </div>
           </motion.div>

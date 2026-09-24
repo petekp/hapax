@@ -3,19 +3,27 @@
 import { useEffect, useRef } from "react"
 import { LayoutGroup, motion } from "motion/react"
 import { MasonryGallery } from "@/components/gallery"
-import { OverlayProvider, WordOverlay, useOverlay } from "@/components/word-overlay"
+import { OverlayProvider, WordOverlay, useOverlay, type OverlayHistoryState } from "@/components/word-overlay"
 import { useActiveColor } from "@/lib/active-color-context"
 import { useTuning } from "@/components/gallery/masonry/tuning-context"
 
 function HomeContent() {
   const { tintColors, setActiveColor } = useActiveColor()
-  const { isOpen, closeWord } = useOverlay()
+  const { isOpen, selectedWord, closeWord, restoreWord } = useOverlay()
   const tuning = useTuning()
   const initializedRef = useRef(false)
 
   useEffect(() => {
     const handlePopState = (e: PopStateEvent) => {
-      if (!e.state?.overlay && isOpen) {
+      const entry = e.state as Partial<OverlayHistoryState> | null
+
+      // Back or forward between words inside the overlay
+      if (entry?.overlay && entry.word && entry.variant) {
+        if (entry.word !== selectedWord) restoreWord(entry as OverlayHistoryState)
+        return
+      }
+
+      if (!entry?.overlay && isOpen) {
         closeWord()
         setActiveColor(null)
       }
@@ -23,7 +31,7 @@ function HomeContent() {
 
     window.addEventListener("popstate", handlePopState)
     return () => window.removeEventListener("popstate", handlePopState)
-  }, [isOpen, closeWord, setActiveColor])
+  }, [isOpen, selectedWord, closeWord, restoreWord, setActiveColor])
 
   useEffect(() => {
     if (initializedRef.current) return

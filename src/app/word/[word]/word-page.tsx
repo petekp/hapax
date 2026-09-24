@@ -362,6 +362,8 @@ export default function WordPage({ word, initialContent }: WordPageProps) {
                 textColor={textColor}
                 mutedColor={mutedColor}
                 reducedMotion={prefersReducedMotion}
+                relatedStyles={initialContent!.relatedStyles}
+                colophon={{ variant, designer: initialContent!.designer, note: initialContent!.frontmatter.note }}
               />
             ) : (
               <p className="text-zinc-500 text-center text-[length:var(--text-fluid-caption)]">
