@@ -22,6 +22,7 @@ Hapax is a gallery of rare words where each word has its own unique font and col
 - Related words that are in the collection render in their own typeface and color and navigate: the overlay pushes a history entry per word (Back = previous word, close = gallery)
 - Word pages end with a colophon: typeface (set in itself), designer credit from Google Fonts metadata, color, and an optional curator's `note`
 - Performance registry (`src/components/performances/`); petrichor is the first hero word (drying, rain soaking into the letters, rain atmosphere)
+- saccade: never glides between gallery and overlay (latency, undershoot, corrective jump via `flight`), and an eye-tracking trace plays over its definition (`[data-definition]` marks the paragraph performances can draw on)
 
 **Why:** Clipping had erased half the collection's lightness intent and shifted page hues (gold pages rendered red); word pages were dead ends; the goal is words that act out their meaning.
 

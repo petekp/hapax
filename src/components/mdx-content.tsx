@@ -77,10 +77,12 @@ function SectionParagraph({
   isFirst?: boolean
 }) {
   return (
-    <div className="max-w-3xl mx-auto">
+    // Positioned so performances can draw over the text
+    <div className="relative max-w-3xl mx-auto">
       <p
         className={`text-[length:var(--text-fluid-body)] leading-[1.8] font-normal transition-colors duration-700 text-pretty ${isFirst ? "drop-cap" : ""}`}
         style={{ color: textColor || "var(--tint-text)" }}
+        data-definition={isFirst || undefined}
       >
         {formatInlineMarkdown(content)}
       </p>

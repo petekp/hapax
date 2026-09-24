@@ -159,7 +159,7 @@ export function WordOverlay() {
                     lineHeight: 1.1,
                   }}
                   transition={{
-                    layout: {
+                    layout: wordPerformance?.flight ?? {
                       type: "spring",
                       stiffness: tuning.overlaySpringStiffness,
                       damping: tuning.overlaySpringDamping,

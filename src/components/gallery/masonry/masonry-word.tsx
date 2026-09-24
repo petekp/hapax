@@ -8,6 +8,7 @@ import { getFontLoader } from "@/lib/font-loader"
 import { useActiveColor } from "@/lib/active-color-context"
 import { useReducedMotion } from "@/hooks/use-reduced-motion"
 import { useOverlay } from "@/components/word-overlay"
+import { getPerformance } from "@/components/performances"
 import { useMousePosition } from "./mouse-context"
 import { type TuningValues, tuningDefaults } from "./tuning-context"
 
@@ -204,7 +205,8 @@ export const MasonryWord = memo(function MasonryWord({
               delay: entranceDelay,
               restDelta: 0.0005,
             },
-            layout: {
+            // Words that act out their meaning may travel their own way
+            layout: getPerformance(word)?.flight ?? {
               type: "spring",
               stiffness: tuning.overlaySpringStiffness,
               damping: tuning.overlaySpringDamping,

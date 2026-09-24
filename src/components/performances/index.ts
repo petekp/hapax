@@ -1,11 +1,13 @@
 import type { Performance } from "./types"
 import { petrichor } from "./petrichor"
+import { saccade } from "./saccade"
 
 export type { Performance, PerformanceTitleProps, AtmosphereProps } from "./types"
 
 // Words that act out their meaning, keyed by lowercase word
 const performances: Record<string, Performance> = {
   petrichor,
+  saccade,
 }
 
 export function getPerformance(word: string): Performance | undefined {
