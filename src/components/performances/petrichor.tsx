@@ -15,8 +15,8 @@ import { hashString, seededRandom } from "@/lib/hash"
 import type { AtmosphereProps, Performance, PerformanceTitleProps } from "./types"
 
 // Petrichor: the smell of rain on dry ground. The word pales as if dried out,
-// the first drops strike it letter by letter, each letter darkens as the water
-// soaks down through it, and once it's all wet a faint scent rises.
+// then the first drops strike it letter by letter and each letter darkens as
+// the water soaks down through it.
 
 // Pale dust, the color of the ground before rain
 const DRY = "oklch(80% 0.02 85)"
@@ -128,48 +128,6 @@ function Splash() {
   )
 }
 
-// Thin strands of scent rising off different letters: position across the word (%) and delay (s)
-const WISPS = [
-  { x: 16, delay: 0 },
-  { x: 58, delay: 0.3 },
-  { x: 37, delay: 0.75 },
-  { x: 80, delay: 1.1 },
-]
-
-// The scent lifting off the wet word, wavering like steam
-function Scent() {
-  return (
-    <>
-      {WISPS.map((wisp) => (
-        <motion.span
-          key={wisp.x}
-          aria-hidden
-          className="absolute pointer-events-none"
-          style={{
-            left: `${wisp.x}%`,
-            top: "0.05em",
-            width: "0.06em",
-            height: "0.9em",
-            marginLeft: "-0.03em",
-            borderRadius: "0.03em",
-            background: "linear-gradient(to top, transparent, color-mix(in oklch, var(--ink) 30%, white), transparent)",
-            filter: "blur(0.015em)",
-            transformOrigin: "50% 100%",
-          }}
-          initial={{ y: "0em", x: "0em", opacity: 0, scaleY: 0.5 }}
-          animate={{
-            y: "-1.2em",
-            x: ["0em", "0.07em", "-0.05em", "0.05em", "0em"],
-            opacity: [0, 0.38, 0],
-            scaleY: 1.3,
-          }}
-          transition={{ duration: 3.8, delay: wisp.delay, ease: "easeOut" }}
-        />
-      ))}
-    </>
-  )
-}
-
 function PetrichorTitle({ word, ready, origin, reducedMotion }: PerformanceTitleProps) {
   const letters = useMemo(() => [...word], [word])
   const startsWet = origin === "gallery" || reducedMotion
@@ -177,7 +135,6 @@ function PetrichorTitle({ word, ready, origin, reducedMotion }: PerformanceTitle
 
   const [falling, setFalling] = useState<ReadonlySet<number>>(new Set())
   const [splashed, setSplashed] = useState<ReadonlySet<number>>(new Set())
-  const [scentRising, setScentRising] = useState(false)
   const soakAnimations = useRef<AnimationPlaybackControls[]>([])
 
   useEffect(() => {
@@ -202,9 +159,6 @@ function PetrichorTitle({ word, ready, origin, reducedMotion }: PerformanceTitle
         setFalling((prev) => new Set(prev).add(letterIndex))
       }, times[k] * 1000))
     })
-
-    const lastLanding = times[times.length - 1] + FALL_SECONDS
-    timers.push(setTimeout(() => setScentRising(true), (lastLanding + 1) * 1000))
 
     return () => {
       timers.forEach(clearTimeout)
@@ -243,7 +197,6 @@ function PetrichorTitle({ word, ready, origin, reducedMotion }: PerformanceTitle
           </span>
         ))}
       </span>
-      {scentRising && <Scent />}
     </motion.span>
   )
 }
