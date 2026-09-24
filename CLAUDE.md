@@ -38,7 +38,7 @@ A gallery of rare words where each word has its own font and color palette.
 
 **Ink:** Word colors render through `deriveInkVariables` + the `.ink` class, which gamut-map the intent separately for sRGB and P3 screens. Don't set a word's `color` from a raw `oklch()` string: browsers clip out-of-gamut colors and shift the hue.
 
-**Performance:** A word can act out its meaning with a `Title` (how the word itself moves) and an optional `Atmosphere` (the page's weather). Register it in `src/components/performances/index.ts`. Reduced motion must show a still, finished state.
+**Performance:** A word can act out its meaning with a `Title` (how the word itself moves), an optional `Atmosphere` (the page's weather), and an optional `flight` (how it travels between gallery and overlay). Register it in `src/components/performances/index.ts`. Reduced motion must show a still, finished state.
 
 ## Patterns
 

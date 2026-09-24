@@ -1,4 +1,5 @@
 import type { ComponentType } from "react"
+import type { Transition } from "motion/react"
 import type { FontVariant } from "@/lib/schemas"
 
 export interface PerformanceTitleProps {
@@ -23,4 +24,6 @@ export interface AtmosphereProps {
 export interface Performance {
   Title: ComponentType<PerformanceTitleProps>
   Atmosphere?: ComponentType<AtmosphereProps>
+  // How the word travels between the gallery and the overlay, in place of the usual spring
+  flight?: Transition
 }
