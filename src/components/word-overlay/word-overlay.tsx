@@ -146,6 +146,8 @@ export function WordOverlay() {
                 <motion.span
                   key={fromGallery ? "from-gallery" : selectedWord}
                   layoutId={layoutId}
+                  // A custom flight keeps the word fully visible while it travels
+                  layoutCrossfade={!wordPerformance?.flight}
                   className="ink"
                   initial={entrance?.initial}
                   animate={entrance?.animate}
