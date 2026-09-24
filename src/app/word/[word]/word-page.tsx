@@ -12,6 +12,7 @@ import { getFontLoader } from "@/lib/font-loader"
 import { useReducedMotion } from "@/hooks/use-reduced-motion"
 import type { WordContent } from "@/lib/words"
 import { MdxContent } from "@/components/mdx-content"
+import { getPerformance } from "@/components/performances"
 
 type LetterAnimation = {
   initial: Record<string, number | string>
@@ -181,6 +182,32 @@ const StyledWord = forwardRef<HTMLSpanElement, StyledWordProps>(
     const letters = word.split("")
     const fontSize = calculateFluidFontSize(word.length)
 
+    // Words that act out their meaning perform in place of the letter entrance
+    const wordPerformance = getPerformance(word)
+    if (wordPerformance) {
+      return (
+        <span
+          ref={ref}
+          style={{
+            ...inkVariables,
+            fontFamily: `"${variant.family}", sans-serif`,
+            fontWeight: variant.weight,
+            fontStyle: variant.style,
+            fontSize,
+          }}
+          className="ink inline-flex typography-display"
+        >
+          <wordPerformance.Title
+            word={word}
+            variant={variant}
+            ready={ready}
+            origin="entrance"
+            reducedMotion={reducedMotion}
+          />
+        </span>
+      )
+    }
+
     // For reduced motion, show all letters immediately
     if (reducedMotion) {
       return (
@@ -297,6 +324,7 @@ export default function WordPage({ word, initialContent }: WordPageProps) {
   }
 
   const variant = initialContent?.frontmatter.style || fallbackVariant
+  const Atmosphere = getPerformance(word)?.Atmosphere
   const phonetic = initialContent?.frontmatter.phonetic
   const partOfSpeech = initialContent?.frontmatter.partOfSpeech
   const hasMdxContent = initialContent && initialContent.content.length > 0
@@ -324,7 +352,13 @@ export default function WordPage({ word, initialContent }: WordPageProps) {
           opacity={isExiting ? 0 : 1}
         />
 
-      <main className="flex flex-col items-center px-6 pt-32 pb-48">
+      {Atmosphere && !prefersReducedMotion && (
+        <div aria-hidden className="pointer-events-none fixed inset-0 z-0">
+          <Atmosphere variant={variant} />
+        </div>
+      )}
+
+      <main className="relative z-10 flex flex-col items-center px-6 pt-32 pb-48">
         <motion.div
           className="flex flex-col items-center w-full"
           initial={{ opacity: 0 }}
