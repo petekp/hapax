@@ -5,7 +5,7 @@ import { motion } from "motion/react"
 import { BackButtonLink } from "@/components/back-button"
 import { useRouter } from "next/navigation"
 import type { FontVariant } from "@/lib/schemas"
-import { deriveColor, deriveTintedTextColor, deriveTintedMutedColor, deriveTintedMutedColorHex } from "@/lib/color"
+import { deriveInkVariables, deriveTintedTextColor, deriveTintedMutedColor, deriveTintedMutedColorHex } from "@/lib/color"
 import { hashString } from "@/lib/hash"
 import { useActiveColor } from "@/lib/active-color-context"
 import { getFontLoader } from "@/lib/font-loader"
@@ -173,7 +173,7 @@ interface StyledWordProps {
 
 const StyledWord = forwardRef<HTMLSpanElement, StyledWordProps>(
   function StyledWord({ word, variant, ready, reducedMotion }, ref) {
-    const color = deriveColor(variant.colorIntent, "dark")
+    const inkVariables = deriveInkVariables(variant.colorIntent)
 
     // Pick animation based on word hash (deterministic for SSR)
     const animation = letterAnimations[hashString(word) % letterAnimations.length]
@@ -187,13 +187,13 @@ const StyledWord = forwardRef<HTMLSpanElement, StyledWordProps>(
         <span
           ref={ref}
           style={{
+            ...inkVariables,
             fontFamily: `"${variant.family}", sans-serif`,
             fontWeight: variant.weight,
             fontStyle: variant.style,
             fontSize,
-            color,
           }}
-          className="inline-flex typography-display"
+          className="ink inline-flex typography-display"
         >
           {word}
         </span>
@@ -209,19 +209,19 @@ const StyledWord = forwardRef<HTMLSpanElement, StyledWordProps>(
       <span
         ref={ref}
         style={{
+          ...inkVariables,
           fontFamily: `"${variant.family}", sans-serif`,
           fontWeight: variant.weight,
           fontStyle: variant.style,
           perspective: "1000px",
           fontSize,
         }}
-        className="inline-flex typography-display"
+        className="ink inline-flex typography-display"
       >
         {letters.map((letter, i) => (
           <motion.span
             key={i}
             style={{
-              color,
               display: "inline-block",
               whiteSpace: letter === " " ? "pre" : "normal",
             }}

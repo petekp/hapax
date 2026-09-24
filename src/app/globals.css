@@ -205,6 +205,19 @@
   }
 }
 
+/* A word's color, gamut-mapped per display (see deriveInkVariables).
+   Descendants can use var(--ink) too. */
+.ink {
+  --ink: var(--ink-srgb);
+  color: var(--ink);
+}
+
+@media (color-gamut: p3) {
+  .ink {
+    --ink: var(--ink-p3);
+  }
+}
+
 /* Enhanced typography for display text (rare words, quotes) */
 .typography-display {
   font-feature-settings: "kern" 1, "liga" 1, "dlig" 1, "calt" 1;

@@ -3,7 +3,7 @@
 import { useState, useEffect, useLayoutEffect, useCallback, useRef, memo } from "react"
 import { motion } from "motion/react"
 import type { FontVariant } from "@/lib/schemas"
-import { deriveColor } from "@/lib/color"
+import { deriveColor, deriveInkVariables } from "@/lib/color"
 import { getFontLoader } from "@/lib/font-loader"
 import { useActiveColor } from "@/lib/active-color-context"
 import { useReducedMotion } from "@/hooks/use-reduced-motion"
@@ -131,7 +131,9 @@ export const MasonryWord = memo(function MasonryWord({
     fontLoader.requestFont(variant, word, handleFontLoaded)
   }, [variant, word, handleFontLoaded])
 
-  const color = deriveColor(variant.colorIntent, colorMode)
+  // Dark mode gets display-aware ink via the .ink class; light mode keeps a plain color
+  const inkVariables = colorMode === "dark" ? deriveInkVariables(variant.colorIntent) : null
+  const color = inkVariables ? undefined : deriveColor(variant.colorIntent, colorMode)
 
   const depthRange = tuning.parallaxDepthMax - tuning.parallaxDepthMin
   const normalizedDepth = depthRange > 0 ? (parallaxDepth - tuning.parallaxDepthMin) / depthRange : 0
@@ -147,7 +149,7 @@ export const MasonryWord = memo(function MasonryWord({
   const mouseTransitionEasing = `cubic-bezier(${tuning.mouseEasingX1}, ${tuning.mouseEasingY1}, ${tuning.mouseEasingX2}, ${tuning.mouseEasingY2})`
 
   return (
-    <div ref={wrapperRef} style={scrollParallaxStyle}>
+    <div ref={wrapperRef} style={{ ...scrollParallaxStyle, ...inkVariables }}>
       <button
         onClick={handleClick}
         className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 rounded bg-transparent border-none p-0"
@@ -157,6 +159,7 @@ export const MasonryWord = memo(function MasonryWord({
         <motion.span
           ref={elementRef}
           layoutId={layoutId}
+          className={inkVariables ? "ink" : undefined}
           style={{
             display: "block",
             color: fontLoaded ? color : "transparent",

@@ -8,7 +8,7 @@ import { BackButton } from "@/components/back-button"
 import { useActiveColor } from "@/lib/active-color-context"
 import { useTuning } from "@/components/gallery/masonry/tuning-context"
 import { useReducedMotion } from "@/hooks/use-reduced-motion"
-import { deriveColor, deriveTintedMutedColorHex } from "@/lib/color"
+import { deriveInkVariables, deriveTintedMutedColorHex } from "@/lib/color"
 import { getFontLoader } from "@/lib/font-loader"
 
 function calculateOverlayFontSize(wordLength: number): string {
@@ -78,7 +78,7 @@ export function WordOverlay() {
   const backArrowColor = variant ? deriveTintedMutedColorHex(variant.colorIntent) : "#71717a"
 
   const layoutId = selectedWord ? `word-${selectedWord.toLowerCase()}` : undefined
-  const color = variant ? deriveColor(variant.colorIntent, "dark") : "transparent"
+  const inkVariables = variant ? deriveInkVariables(variant.colorIntent) : undefined
   const fontSize = selectedWord ? calculateOverlayFontSize(selectedWord.length) : "3rem"
 
   return (
@@ -113,12 +113,13 @@ export function WordOverlay() {
             />
 
             <div className="flex flex-col items-center pt-32 pb-48 min-h-screen">
-              <div className="text-center mb-4">
+              <div className="text-center mb-4" style={inkVariables}>
                 <motion.span
                   layoutId={layoutId}
+                  className="ink"
                   style={{
                     display: "inline-block",
-                    color: fontLoaded ? color : "transparent",
+                    color: fontLoaded ? undefined : "transparent",
                     fontFamily: `"${variant.family}", sans-serif`,
                     fontWeight: variant.weight,
                     fontStyle: variant.style,

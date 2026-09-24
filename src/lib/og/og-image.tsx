@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og"
 import type { FontVariant } from "../schemas"
+import { deriveBackgroundColor, deriveColorHex } from "../color"
 
 export const size = {
   width: 1200,
@@ -7,52 +8,6 @@ export const size = {
 }
 
 export const contentType = "image/png"
-
-// Convert OKLCH to hex for Satori (which doesn't support OKLCH)
-function oklchToHex(l: number, c: number, h: number): string {
-  if (c < 0.001) {
-    const gray = Math.round(l * 2.55)
-    return `#${gray.toString(16).padStart(2, "0").repeat(3)}`
-  }
-
-  const hRad = (h * Math.PI) / 180
-  const a = c * Math.cos(hRad)
-  const b = c * Math.sin(hRad)
-
-  const L = l / 100
-  const l_ = L + 0.3963377774 * a + 0.2158037573 * b
-  const m_ = L - 0.1055613458 * a - 0.0638541728 * b
-  const s_ = L - 0.0894841775 * a - 1.2914855480 * b
-
-  const l3 = l_ * l_ * l_
-  const m3 = m_ * m_ * m_
-  const s3 = s_ * s_ * s_
-
-  let r = 4.0767416621 * l3 - 3.3077115913 * m3 + 0.2309699292 * s3
-  let g = -1.2684380046 * l3 + 2.6097574011 * m3 - 0.3413193965 * s3
-  let bl = -0.0041960863 * l3 - 0.7034186147 * m3 + 1.7076147010 * s3
-
-  const toSRGB = (x: number) => {
-    x = Math.max(0, Math.min(1, x))
-    return x <= 0.0031308 ? 12.92 * x : 1.055 * Math.pow(x, 1 / 2.4) - 0.055
-  }
-
-  r = Math.round(Math.max(0, Math.min(255, toSRGB(r) * 255)))
-  g = Math.round(Math.max(0, Math.min(255, toSRGB(g) * 255)))
-  bl = Math.round(Math.max(0, Math.min(255, toSRGB(bl) * 255)))
-
-  return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${bl.toString(16).padStart(2, "0")}`
-}
-
-function deriveColorHex(hue: number, chroma: number, lightness: number): string {
-  const l = Math.max(50, Math.min(90, lightness))
-  return oklchToHex(l, chroma, hue)
-}
-
-function deriveBackgroundHex(hue: number, chroma: number): string {
-  // Match word page: 12% lightness, 60% chroma
-  return oklchToHex(12, chroma * 0.6, hue)
-}
 
 function calculateFontSize(word: string): number {
   const maxSize = 220
@@ -113,9 +68,9 @@ export async function generateWordOgImage(
   word: string,
   variant: FontVariant
 ): Promise<ImageResponse> {
-  const { hue, chroma, lightness } = variant.colorIntent
-  const color = deriveColorHex(hue, chroma, lightness)
-  const bgColor = deriveBackgroundHex(hue, chroma)
+  // Hex, since Satori doesn't take oklch(); matches the word page
+  const color = deriveColorHex(variant.colorIntent)
+  const bgColor = deriveBackgroundColor(variant.colorIntent)
   const fontSize = calculateFontSize(word)
 
   const [fontData, brandFontData] = await Promise.all([
