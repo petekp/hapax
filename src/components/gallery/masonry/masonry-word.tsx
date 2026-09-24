@@ -40,6 +40,8 @@ export const MasonryWord = memo(function MasonryWord({
   const prefersReducedMotion = useReducedMotion()
   const { subscribe } = useMousePosition()
   const layoutId = `word-${word.toLowerCase()}`
+  // Words that act out their meaning may travel their own way
+  const flight = getPerformance(word)?.flight
   const isThisWordSelected = selectedWord?.toLowerCase() === word.toLowerCase()
   const shouldHide = isOpen && !isClosing && isThisWordSelected
 
@@ -160,6 +162,7 @@ export const MasonryWord = memo(function MasonryWord({
         <motion.span
           ref={elementRef}
           layoutId={layoutId}
+          layoutCrossfade={!flight}
           className={inkVariables ? "ink" : undefined}
           style={{
             display: "block",
@@ -205,8 +208,7 @@ export const MasonryWord = memo(function MasonryWord({
               delay: entranceDelay,
               restDelta: 0.0005,
             },
-            // Words that act out their meaning may travel their own way
-            layout: getPerformance(word)?.flight ?? {
+            layout: flight ?? {
               type: "spring",
               stiffness: tuning.overlaySpringStiffness,
               damping: tuning.overlaySpringDamping,
