@@ -12,12 +12,14 @@ interface OverlayContentProps {
   variant: FontVariant
   content: WordContent | null
   isLoading: boolean
+  onNavigate?: (word: string, variant: FontVariant) => void
 }
 
 export function OverlayContent({
   variant,
   content,
   isLoading,
+  onNavigate,
 }: OverlayContentProps) {
   const prefersReducedMotion = useReducedMotion()
   const tuning = useTuning()
@@ -65,6 +67,9 @@ export function OverlayContent({
             textColor={textColor}
             mutedColor={mutedColor}
             reducedMotion={prefersReducedMotion}
+            relatedStyles={content!.relatedStyles}
+            onNavigate={onNavigate}
+            colophon={{ variant, designer: content!.designer, note: content!.frontmatter.note }}
           />
         ) : (
           !isLoading && (

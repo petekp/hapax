@@ -1,7 +1,11 @@
 "use client"
 
-import { useMemo } from "react"
-import { parseMarkdown, parseRelatedWordItem, type ParsedSection } from "@/lib/markdown"
+import { useEffect, useMemo, useState } from "react"
+import Link from "next/link"
+import type { FontVariant } from "@/lib/schemas"
+import { deriveInkVariables } from "@/lib/color"
+import { getFontLoader } from "@/lib/font-loader"
+import { findRelatedWordsListIndices, parseMarkdown, parseRelatedWordItem } from "@/lib/markdown"
 import { ScrollRevealSection } from "./scroll-reveal-section"
 
 function formatInlineMarkdown(text: string): React.ReactNode {
@@ -106,39 +110,96 @@ function SectionBlockquote({
   )
 }
 
+// A related word that's in the collection, set in its own typeface and color
+function RelatedWordLink({
+  word,
+  variant,
+  onNavigate,
+}: {
+  word: string
+  variant: FontVariant
+  onNavigate?: (word: string, variant: FontVariant) => void
+}) {
+  const [fontLoaded, setFontLoaded] = useState(false)
+
+  useEffect(() => {
+    getFontLoader().requestFont(variant, word, () => setFontLoaded(true))
+  }, [variant, word])
+
+  const className =
+    "ink self-start text-left underline-offset-[0.18em] decoration-[0.05em] hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 rounded-sm transition-opacity duration-500"
+  const style = {
+    ...deriveInkVariables(variant.colorIntent),
+    fontFamily: `"${variant.family}", serif`,
+    fontWeight: variant.weight,
+    fontStyle: variant.style,
+    fontSize: "var(--text-fluid-body)",
+    lineHeight: 1.2,
+    opacity: fontLoaded ? 1 : 0,
+    textDecorationColor: "color-mix(in oklch, currentColor 45%, transparent)",
+  }
+
+  if (onNavigate) {
+    return (
+      <button type="button" className={className} style={style} onClick={() => onNavigate(word, variant)}>
+        {word}
+      </button>
+    )
+  }
+
+  return (
+    <Link href={`/word/${encodeURIComponent(word.toLowerCase())}`} className={className} style={style}>
+      {word}
+    </Link>
+  )
+}
+
 function RelatedWordsList({
   items,
   textColor,
+  relatedStyles,
+  onNavigate,
 }: {
   items: { word: string; description: string }[]
   textColor?: string
+  relatedStyles?: Record<string, FontVariant>
+  onNavigate?: (word: string, variant: FontVariant) => void
 }) {
   return (
     <div className="max-w-3xl mx-auto">
       <div className="grid grid-cols-2 gap-x-8 gap-y-10">
-        {items.map((item, j) => (
-          <div key={j} className="flex flex-col">
-            <span
-              className="font-medium transition-colors duration-700"
-              style={{
-                color: textColor || "var(--tint-text)",
-                fontSize: "calc(var(--text-fluid-body) * 0.9)",
-              }}
-            >
-              {item.word}
-            </span>
-            <span
-              className="leading-relaxed mt-1.5 transition-colors duration-700 text-pretty italic"
-              style={{
-                color: textColor || "var(--tint-text)",
-                opacity: 0.65,
-                fontSize: "calc(var(--text-fluid-body) * 0.7)",
-              }}
-            >
-              {item.description}
-            </span>
-          </div>
-        ))}
+        {items.map((item, j) => {
+          const variant = relatedStyles?.[item.word.toLowerCase()]
+          return (
+            <div key={j} className="flex flex-col">
+              {variant ? (
+                <RelatedWordLink word={item.word} variant={variant} onNavigate={onNavigate} />
+              ) : (
+                // Not in the collection, so it recedes behind the words you can visit
+                <span
+                  className="font-medium transition-colors duration-700"
+                  style={{
+                    color: textColor || "var(--tint-text)",
+                    fontSize: "calc(var(--text-fluid-body) * 0.9)",
+                    opacity: 0.55,
+                  }}
+                >
+                  {item.word}
+                </span>
+              )}
+              <span
+                className="leading-relaxed mt-1.5 transition-colors duration-700 text-pretty italic"
+                style={{
+                  color: textColor || "var(--tint-text)",
+                  opacity: 0.65,
+                  fontSize: "calc(var(--text-fluid-body) * 0.7)",
+                }}
+              >
+                {item.description}
+              </span>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
@@ -175,20 +236,92 @@ function SectionList({
   )
 }
 
-function computeRelatedWordsIndices(sections: ParsedSection[]): Set<number> {
-  const indices = new Set<number>()
-  let inRelatedWordsSection = false
-  sections.forEach((section, i) => {
-    if (section.type === "heading" && section.level === 2) {
-      inRelatedWordsSection = section.content.toLowerCase() === "related words"
-    } else if (section.type === "list" && inRelatedWordsSection) {
-      indices.add(i)
-      inRelatedWordsSection = false
-    } else {
-      inRelatedWordsSection = false
-    }
-  })
-  return indices
+const WEIGHT_NAMES: Record<number, string> = {
+  100: "Thin",
+  200: "ExtraLight",
+  300: "Light",
+  400: "Regular",
+  500: "Medium",
+  600: "SemiBold",
+  700: "Bold",
+  800: "ExtraBold",
+  900: "Black",
+}
+
+// "Alegreya Italic", "Cinzel SemiBold", "Space Mono Regular"
+function typefaceName(variant: FontVariant): string {
+  const italic = variant.style === "italic"
+  const weight = variant.weight === 400 && italic ? "" : WEIGHT_NAMES[variant.weight]
+  return [variant.family, weight, italic ? "Italic" : ""].filter(Boolean).join(" ")
+}
+
+export interface ColophonInfo {
+  variant: FontVariant
+  designer: string | null
+  note?: string
+}
+
+// Credits for the word's typeface and color, and the curator's reasoning
+function Colophon({
+  variant,
+  designer,
+  note,
+  textColor,
+  mutedColor,
+}: ColophonInfo & { textColor?: string; mutedColor?: string }) {
+  const name = typefaceName(variant)
+  const [fontLoaded, setFontLoaded] = useState(false)
+
+  useEffect(() => {
+    getFontLoader().requestFont(variant, name, () => setFontLoaded(true))
+  }, [variant, name])
+
+  const { hue, chroma, lightness } = variant.colorIntent
+  const smallText = { color: mutedColor || "var(--tint-muted)", fontSize: "calc(var(--text-fluid-body) * 0.7)" }
+
+  return (
+    <div className="max-w-3xl mx-auto" style={deriveInkVariables(variant.colorIntent)}>
+      <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
+        <div>
+          {/* The typeface's name, set in the typeface */}
+          <p
+            className="ink transition-opacity duration-500"
+            style={{
+              fontFamily: `"${variant.family}", serif`,
+              fontWeight: variant.weight,
+              fontStyle: variant.style,
+              fontSize: "var(--text-fluid-body)",
+              lineHeight: 1.2,
+              opacity: fontLoaded ? 1 : 0,
+            }}
+          >
+            {name}
+          </p>
+          {designer && (
+            <p className="mt-1.5 leading-relaxed" style={smallText}>
+              {designer}
+            </p>
+          )}
+        </div>
+        <p className="flex items-center gap-3 sm:justify-self-end tabular-nums" style={smallText}>
+          <span aria-hidden className="ink inline-block size-[0.9em] rounded-full" style={{ backgroundColor: "currentColor" }} />
+          oklch({lightness}% {chroma} {hue})
+        </p>
+      </div>
+      {note && (
+        <p
+          className="mt-10 leading-[1.7] italic text-pretty transition-colors duration-700"
+          style={{
+            color: textColor || "var(--tint-text)",
+            opacity: 0.8,
+            fontSize: "calc(var(--text-fluid-body) * 0.8)",
+          }}
+        >
+          {formatInlineMarkdown(note)}
+        </p>
+      )}
+    </div>
+  )
 }
 
 interface MdxContentProps {
@@ -196,6 +329,10 @@ interface MdxContentProps {
   textColor?: string
   mutedColor?: string
   reducedMotion: boolean
+  relatedStyles?: Record<string, FontVariant>
+  // Called when a linked related word is chosen; without it, related words are page links
+  onNavigate?: (word: string, variant: FontVariant) => void
+  colophon?: ColophonInfo
 }
 
 export function MdxContent({
@@ -203,10 +340,13 @@ export function MdxContent({
   textColor,
   mutedColor,
   reducedMotion,
+  relatedStyles,
+  onNavigate,
+  colophon,
 }: MdxContentProps) {
   const sections = useMemo(() => parseMarkdown(content), [content])
   const relatedWordsIndices = useMemo(
-    () => computeRelatedWordsIndices(sections),
+    () => findRelatedWordsListIndices(sections),
     [sections]
   )
   const firstParagraphIndex = useMemo(
@@ -254,7 +394,12 @@ export function MdxContent({
             if (parsedItems.length > 0) {
               return (
                 <ScrollRevealSection key={i} reducedMotion={reducedMotion} delay={delay}>
-                  <RelatedWordsList items={parsedItems} textColor={textColor} />
+                  <RelatedWordsList
+                    items={parsedItems}
+                    textColor={textColor}
+                    relatedStyles={relatedStyles}
+                    onNavigate={onNavigate}
+                  />
                 </ScrollRevealSection>
               )
             }
@@ -269,6 +414,17 @@ export function MdxContent({
 
         return null
       })}
+
+      {colophon && (
+        <>
+          <ScrollRevealSection reducedMotion={reducedMotion}>
+            <SectionHeading content="Colophon" mutedColor={mutedColor} />
+          </ScrollRevealSection>
+          <ScrollRevealSection reducedMotion={reducedMotion}>
+            <Colophon {...colophon} textColor={textColor} mutedColor={mutedColor} />
+          </ScrollRevealSection>
+        </>
+      )}
     </div>
   )
 }

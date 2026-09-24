@@ -3,6 +3,9 @@ import path from "path"
 import matter from "gray-matter"
 import { z } from "zod/v4"
 import { FontVariant } from "./schemas"
+import { extractRelatedWords } from "./markdown"
+import { getVettedStyle } from "./vetted-cache"
+import fontDesigners from "@/data/font-designers.json"
 
 const CONTENT_DIR = path.join(process.cwd(), "src/content/words")
 
@@ -18,12 +21,27 @@ export const WordFrontmatter = z.object({
   partOfSpeech: PartOfSpeech.optional(),
   status: WordStatus,
   style: FontVariant,
+  // Curator's note on why this typeface and color, shown in the colophon
+  note: z.string().optional(),
 })
 export type WordFrontmatter = z.infer<typeof WordFrontmatter>
 
 export interface WordContent {
   frontmatter: WordFrontmatter
   content: string
+  // Styles of the related words that are in the collection, keyed by lowercase word
+  relatedStyles: Record<string, FontVariant>
+  // Who designed the word's typeface, from Google Fonts metadata
+  designer: string | null
+}
+
+function getRelatedStyles(content: string): Record<string, FontVariant> {
+  const styles: Record<string, FontVariant> = {}
+  for (const word of extractRelatedWords(content)) {
+    const style = getVettedStyle(word)
+    if (style) styles[word.toLowerCase()] = style
+  }
+  return styles
 }
 
 export function getWordFilePath(word: string): string {
@@ -53,6 +71,8 @@ export function getWordContent(word: string): WordContent | null {
   return {
     frontmatter: parsed.data,
     content: content.trim(),
+    relatedStyles: getRelatedStyles(content),
+    designer: (fontDesigners as Record<string, string>)[parsed.data.style.family] ?? null,
   }
 }
 

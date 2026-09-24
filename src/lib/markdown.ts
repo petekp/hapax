@@ -62,3 +62,32 @@ export function parseRelatedWordItem(
   }
   return null
 }
+
+// Indices of lists that sit directly under a "Related Words" heading
+export function findRelatedWordsListIndices(sections: ParsedSection[]): Set<number> {
+  const indices = new Set<number>()
+  let inRelatedWordsSection = false
+  sections.forEach((section, i) => {
+    if (section.type === "heading" && section.level === 2) {
+      inRelatedWordsSection = section.content.toLowerCase() === "related words"
+    } else if (section.type === "list" && inRelatedWordsSection) {
+      indices.add(i)
+      inRelatedWordsSection = false
+    } else {
+      inRelatedWordsSection = false
+    }
+  })
+  return indices
+}
+
+export function extractRelatedWords(content: string): string[] {
+  const sections = parseMarkdown(content)
+  const words: string[] = []
+  for (const i of findRelatedWordsListIndices(sections)) {
+    for (const item of sections[i].items ?? []) {
+      const parsed = parseRelatedWordItem(item)
+      if (parsed) words.push(parsed.word)
+    }
+  }
+  return words
+}

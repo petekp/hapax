@@ -15,7 +15,8 @@
     "generate-definitions": "tsx scripts/generate-definitions.ts",
     "merge-definitions": "tsx scripts/merge-definitions.ts",
     "sync-styles": "tsx scripts/sync-styles.ts",
-    "lint-styles": "tsx scripts/lint-styles.ts"
+    "lint-styles": "tsx scripts/lint-styles.ts",
+    "font-designers": "tsx scripts/fetch-font-designers.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.2",
