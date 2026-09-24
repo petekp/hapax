@@ -10,6 +10,7 @@ import { useTuning } from "@/components/gallery/masonry/tuning-context"
 import { useReducedMotion } from "@/hooks/use-reduced-motion"
 import { deriveInkVariables, deriveTintedMutedColorHex } from "@/lib/color"
 import { getFontLoader } from "@/lib/font-loader"
+import { getPerformance } from "@/components/performances"
 
 function calculateOverlayFontSize(wordLength: number): string {
   const charWidthRatio = 0.55
@@ -88,7 +89,9 @@ export function WordOverlay() {
   // from a related-word link make their own entrance
   const fromGallery = depth <= 1
   const layoutId = selectedWord && fromGallery ? `word-${selectedWord.toLowerCase()}` : undefined
-  const entrance = fromGallery || prefersReducedMotion
+  // Words that act out their meaning bring their own entrance and weather
+  const wordPerformance = selectedWord ? getPerformance(selectedWord) : undefined
+  const entrance = fromGallery || prefersReducedMotion || wordPerformance
     ? undefined
     : { initial: { opacity: 0, y: 18, filter: "blur(8px)" }, animate: { opacity: 1, y: 0, filter: "blur(0px)" } }
   const inkVariables = variant ? deriveInkVariables(variant.colorIntent) : undefined
@@ -123,6 +126,12 @@ export function WordOverlay() {
             animate={{ opacity: 1, pointerEvents: "auto" as const }}
             exit={{ opacity: 0, pointerEvents: "none" as const, transition: { duration: contentFadeOutDuration } }}
           >
+            {wordPerformance?.Atmosphere && !prefersReducedMotion && (
+              <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
+                <wordPerformance.Atmosphere key={selectedWord} variant={variant} />
+              </div>
+            )}
+
             <BackButton
               onClick={handleClose}
               color={backArrowColor}
@@ -161,7 +170,18 @@ export function WordOverlay() {
                     filter: { duration: 0.7, ease: "easeOut" },
                   }}
                 >
-                  {selectedWord}
+                  {wordPerformance ? (
+                    <wordPerformance.Title
+                      key={selectedWord}
+                      word={selectedWord}
+                      variant={variant}
+                      ready={fontLoaded}
+                      origin={fromGallery ? "gallery" : "entrance"}
+                      reducedMotion={prefersReducedMotion}
+                    />
+                  ) : (
+                    selectedWord
+                  )}
                 </motion.span>
               </div>
 
