@@ -1,7 +1,7 @@
 # Agent Changelog
 
 > This file helps coding agents understand project evolution, key decisions,
-> and deprecated patterns. Updated: 2026-02-03
+> and deprecated patterns. Updated: 2026-09-24
 
 ## Current State Summary
 
@@ -14,6 +14,23 @@ Hapax is a gallery of rare words where each word has its own unique font and col
 | `src/components/gallery/search-bar.tsx` | Unused component | SearchBar is exported but not rendered anywhere | 2026-01-21 |
 
 ## Timeline
+
+### 2026-09-24 - Remaster: Faithful Color, Linked Words, First Performance
+
+**What changed:**
+- Color fidelity: word colors are gamut-mapped per display (`.ink` class + `deriveInkVariables`), dark lightness intents are compressed instead of floored at 50, page tints keep their hue, and the gallery hover tint is visible
+- Related words that are in the collection render in their own typeface and color and navigate: the overlay pushes a history entry per word (Back = previous word, close = gallery)
+- Word pages end with a colophon: typeface (set in itself), designer credit from Google Fonts metadata, color, and an optional curator's `note`
+- Performance registry (`src/components/performances/`); petrichor is the first hero word (drying, rain soaking into the letters, rising scent, rain atmosphere)
+
+**Why:** Clipping had erased half the collection's lightness intent and shifted page hues (gold pages rendered red); word pages were dead ends; the goal is words that act out their meaning.
+
+**Agent impact:**
+- Render word colors with `deriveInkVariables` + `className="ink"`, not raw `oklch()` strings
+- Add hero words to `src/components/performances/index.ts`; keep reduced motion still
+- Run `pnpm font-designers` after adding a new font family
+
+---
 
 ### 2026-02-03 - Plan File Cleanup
 
